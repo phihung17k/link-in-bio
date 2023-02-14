@@ -88,10 +88,10 @@ class _BottomBarWidgetState extends State<BottomBarWidget> {
                           label: "Remove",
                           iconData: Icons.remove_circle_outline_outlined,
                           onPressed: () {
-                            if (deleteController!.isDismissed) {
-                              deleteController!.forward();
+                            if (deleteController.isDismissed) {
+                              deleteController.forward();
                             } else {
-                              deleteController!.reverse();
+                              deleteController.reverse();
                             }
                           }),
                       BottomBarButton(

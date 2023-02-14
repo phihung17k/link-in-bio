@@ -50,7 +50,9 @@ class ItemWidget extends StatelessWidget {
                 sizeFactor:
                     Tween<double>(begin: 0, end: 1).animate(deleteController!),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    context.read<HomeBloc>().add(DeletingItemEvent(index!));
+                  },
                   icon: const Icon(
                     Icons.delete_rounded,
                   ),

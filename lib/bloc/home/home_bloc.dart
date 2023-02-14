@@ -12,6 +12,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<UpdatingBottomStatusEvent>(_updateBottomStatus);
     on<AddingItemEvent>(_addItem);
     on<UpdatingItemEvent>(_updateItem);
+    on<DeletingItemEvent>(_deleteItem);
   }
 
   FutureOr<void> _onDumpData(
@@ -37,6 +38,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> _addItem(AddingItemEvent event, Emitter<HomeState> emit) {
     List<ItemModel> tempList = state.itemList!.toList();
     tempList.add(event.item);
+    emit.call(state.copyWith(itemList: tempList));
+  }
+
+  FutureOr<void> _deleteItem(DeletingItemEvent event, Emitter<HomeState> emit) {
+    List<ItemModel> tempList = state.itemList!.toList();
+    tempList.removeAt(event.index);
     emit.call(state.copyWith(itemList: tempList));
   }
 }

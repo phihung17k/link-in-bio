@@ -29,3 +29,9 @@ class AddingItemEvent extends HomeEvent {
 
   AddingItemEvent(this.item);
 }
+
+class DeletingItemEvent extends HomeEvent {
+  final int index;
+
+  DeletingItemEvent(this.index);
+}

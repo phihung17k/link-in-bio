@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/app_icons.dart';
@@ -5,6 +7,7 @@ import 'package:link_in_bio/bloc/home/home_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_state.dart';
 import 'package:link_in_bio/models/item_model.dart';
 import 'package:link_in_bio/pages/home/widgets/bottom_bar_widget.dart';
+import 'package:link_in_bio/pages/home/widgets/floating_button.dart';
 
 import '../../bloc/home/home_event.dart';
 import '../../routes.dart';
@@ -22,20 +25,29 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomeBloc get bloc => widget.bloc;
 
-  // bool isDragUpBottom = true;
-  double itemRadius = 20;
-  // Map<String, String> itemList = {};
-  // List<ItemModel> items = [];
-  // double deletedIconWidth = 0.0;
+  // double itemRadius = 20;
 
   AnimationController? deleteController;
 
+  AnimationController? floatingButtonController;
+  Animation? expandAnimation;
+  Animation? rotateAnimation;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    deleteController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 1));
+    deleteController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 600));
+
+    floatingButtonController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 600));
+
+    expandAnimation = Tween<double>(begin: 0, end: 60).animate(CurvedAnimation(
+        parent: floatingButtonController!, curve: const Interval(0.7, 1)));
+
+    rotateAnimation = Tween<double>(begin: 0, end: pi / 4).animate(
+        CurvedAnimation(
+            parent: floatingButtonController!, curve: const Interval(0, 0.4)));
 
     //for test
     bloc.add(AddingItemTestEvent());
@@ -56,7 +68,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   padding: const EdgeInsets.all(8),
                   width: size.width,
                   child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const CircleAvatar(
@@ -94,10 +105,77 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                     ],
                   )),
-              BottomBarWidget(
-                size: size,
-                deleteController: deleteController,
-              )
+              // BottomBarWidget(
+              //   size: size,
+              //   deleteController: deleteController,
+              // ),
+
+              //multiple animations with
+              // - Staggered Animations: order by time
+              //    + ex: Total time is 1, animation 1 (0 - 0.5), animation 2(0.5 - 1)
+              //    + using Interval
+              // - Tween Chaining: using TweenSequence (for a animation)
+              FloatingButton(
+                floatingButtonController: floatingButtonController,
+                expandAnimation: expandAnimation,
+                lastAnimatedHeight: 188,
+                label: "Create",
+                iconData: Icons.add_circle_outline_outlined,
+                onTap: () {
+                  Navigator.pushNamed(context, Routes.itemCategoryChoosing)
+                      .then((value) {
+                    if (value is PopWithResults<ItemModel>) {
+                      if (value.toPage == Routes.home) {
+                        bloc.add(AddingItemEvent(value.result));
+                      }
+                    }
+                  });
+                },
+              ),
+              FloatingButton(
+                  floatingButtonController: floatingButtonController,
+                  expandAnimation: expandAnimation,
+                  lastAnimatedHeight: 134,
+                  label: "Remove",
+                  iconData: Icons.remove_circle_outline_outlined,
+                  onTap: () {
+                    if (deleteController!.isDismissed) {
+                      deleteController!.forward();
+                    } else {
+                      deleteController!.reverse();
+                    }
+                  }),
+              FloatingButton(
+                floatingButtonController: floatingButtonController,
+                expandAnimation: expandAnimation,
+                lastAnimatedHeight: 80,
+                label: "Share",
+                iconData: AppIcons.share,
+                onTap: () {},
+              ),
+              Positioned(
+                right: 15,
+                bottom: 15,
+                child: FloatingActionButton(
+                  onPressed: () {
+                    floatingButtonController!.isDismissed
+                        ? floatingButtonController!.forward()
+                        : floatingButtonController!.reverse();
+                  },
+                  child: AnimatedBuilder(
+                    animation: floatingButtonController!,
+                    child:
+                        Icon(Icons.add, size: IconTheme.of(context).size! + 5),
+                    builder: (context, child) {
+                      return Transform.rotate(
+                        angle: rotateAnimation!.value,
+                        alignment: Alignment.center,
+                        child: child,
+                      );
+                    },
+                  ),
+                ),
+              ),
             ]);
           },
         ),
@@ -107,6 +185,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
+    print("dispose");
+    deleteController!.dispose();
+    floatingButtonController!.dispose();
     bloc.close();
     super.dispose();
   }

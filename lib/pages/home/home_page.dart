@@ -25,8 +25,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomeBloc get bloc => widget.bloc;
 
-  // double itemRadius = 20;
-
   AnimationController? deleteController;
 
   AnimationController? floatingButtonController;

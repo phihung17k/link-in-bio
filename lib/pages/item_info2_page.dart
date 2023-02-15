@@ -9,14 +9,14 @@ import 'package:qr_flutter/qr_flutter.dart';
 import '../app_icons.dart';
 import '../utils/pop_with_results.dart';
 
-class ItemInfoPage extends StatefulWidget {
-  const ItemInfoPage({super.key});
+class ItemInfo2Page extends StatefulWidget {
+  const ItemInfo2Page({super.key});
 
   @override
-  State<ItemInfoPage> createState() => _ItemInfoPageState();
+  State<ItemInfo2Page> createState() => _ItemInfo2PageState();
 }
 
-class _ItemInfoPageState extends State<ItemInfoPage> {
+class _ItemInfo2PageState extends State<ItemInfo2Page> {
   TextEditingController? textController;
   bool isValidateTextField = true;
 

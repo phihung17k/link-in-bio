@@ -18,7 +18,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   FutureOr<void> _onDumpData(
       AddingItemTestEvent event, Emitter<HomeState> emit) {
     emit.call(state.copyWith(itemList: [
-      ItemModel(name: "Test", symbolPath: "assets/images/default_avatar.png")
+      ItemModel(name: "Test", category: "assets/images/default_avatar.png")
     ]));
   }
 

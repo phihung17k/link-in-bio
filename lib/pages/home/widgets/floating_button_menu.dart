@@ -59,8 +59,15 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
           label: "Create",
           iconData: Icons.add_circle_outline_outlined,
           onTap: () {
-            Navigator.pushNamed(context, Routes.itemCategoryChoosing)
-                .then((value) {
+            // Navigator.pushNamed(context, Routes.itemCategoryChoosing)
+            //     .then((value) {
+            //   if (value is PopWithResults<ItemModel>) {
+            //     if (value.toPage == Routes.home) {
+            //       context.read<HomeBloc>().add(AddingItemEvent(value.result));
+            //     }
+            //   }
+            // });
+            Navigator.pushNamed(context, Routes.itemInfo).then((value) {
               if (value is PopWithResults<ItemModel>) {
                 if (value.toPage == Routes.home) {
                   context.read<HomeBloc>().add(AddingItemEvent(value.result));

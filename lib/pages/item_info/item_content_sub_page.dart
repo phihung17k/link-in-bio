@@ -6,17 +6,17 @@ import 'package:link_in_bio/pages/qrcode_sharing_page.dart';
 import 'package:link_in_bio/routes.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
-import '../app_icons.dart';
-import '../utils/pop_with_results.dart';
+import '../../app_icons.dart';
+import '../../utils/pop_with_results.dart';
 
-class ItemInfo2Page extends StatefulWidget {
-  const ItemInfo2Page({super.key});
+class ItemContentSubPage extends StatefulWidget {
+  const ItemContentSubPage({super.key});
 
   @override
-  State<ItemInfo2Page> createState() => _ItemInfo2PageState();
+  State<ItemContentSubPage> createState() => _ItemContentSubPageState();
 }
 
-class _ItemInfo2PageState extends State<ItemInfo2Page> {
+class _ItemContentSubPageState extends State<ItemContentSubPage> {
   TextEditingController? textController;
   bool isValidateTextField = true;
 
@@ -69,7 +69,7 @@ class _ItemInfo2PageState extends State<ItemInfo2Page> {
                       builder: (context) => QrCodeSharingPage(
                         item: ItemModel(
                             name: item!.name!,
-                            symbolPath: item!.symbolPath,
+                            category: item!.category,
                             url: textController?.text ?? ""),
                       ),
                     ));
@@ -98,7 +98,7 @@ class _ItemInfo2PageState extends State<ItemInfo2Page> {
                   children: [
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage(item!.symbolPath!),
+                      backgroundImage: AssetImage(item!.category!),
                     ),
                     SizedBox(
                       height: 10,
@@ -164,7 +164,7 @@ class _ItemInfo2PageState extends State<ItemInfo2Page> {
                                       toPage: Routes.home,
                                       result: ItemModel(
                                           name: item!.name!,
-                                          symbolPath: item!.symbolPath,
+                                          category: item!.category,
                                           url: textController!.text)));
                             } else {
                               // Navigator.of(context).pop(ItemModel(
@@ -178,7 +178,7 @@ class _ItemInfo2PageState extends State<ItemInfo2Page> {
                                       toPage: Routes.home,
                                       result: ItemModel(
                                           name: item!.name!,
-                                          symbolPath: item!.symbolPath,
+                                          category: item!.category,
                                           url: textController!.text)));
                             }
                           }

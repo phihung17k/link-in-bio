@@ -1,26 +1,19 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 class ItemModel extends Equatable {
-  String? name;
-  String? symbolPath;
-  String? url;
+  final String? name;
+  final String? category; // path
+  final String? url;
 
-  ItemModel({this.name, this.symbolPath, this.url});
+  const ItemModel({this.name, this.category, this.url});
+
+  ItemModel copyWith({String? name, String? category, String? url}) {
+    return ItemModel(
+        name: name ?? this.name,
+        category: category ?? this.category,
+        url: url ?? this.url);
+  }
 
   @override
-  List<Object?> get props => [name, symbolPath, url];
-
-  // @override
-  // bool operator ==(Object other) {
-  //   if (identical(this, other)) return true;
-  //   if (other.runtimeType != runtimeType) return false;
-  //   return other is ItemModel &&
-  //       other.name == name &&
-  //       other.symbolPath == symbolPath &&
-  //       other.url == other.url;
-  // }
-
-  // @override
-  // int get hashCode => Object.hash(name, symbolPath, url);
+  List<Object?> get props => [name, category, url];
 }

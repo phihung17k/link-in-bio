@@ -1,36 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
+import 'package:link_in_bio/pages/pages.dart';
 
 class ItemInfoPage extends StatefulWidget {
-  const ItemInfoPage({super.key});
+  final ItemInfoBloc bloc;
+  const ItemInfoPage(this.bloc, {super.key});
 
   @override
   State<ItemInfoPage> createState() => _ItemInfoPageState();
 }
 
 class _ItemInfoPageState extends State<ItemInfoPage> {
+  ItemInfoBloc get bloc => widget.bloc;
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            bottom: const TabBar(
-              //controller: ,
-              tabs: [
-                Tab(icon: Icon(Icons.category)),
-                Tab(icon: Icon(Icons.directions_transit)),
-                Tab(icon: Icon(Icons.directions_bike)),
+        initialIndex: 0,
+        child: BlocProvider.value(
+          value: bloc,
+          child: Scaffold(
+            appBar: AppBar(
+              bottom: const TabBar(
+                //controller: ,
+
+                tabs: [
+                  Tab(text: "Category", icon: Icon(Icons.category)),
+                  Tab(text: "Test", icon: Icon(Icons.directions_transit)),
+                  Tab(icon: Icon(Icons.directions_bike)),
+                ],
+              ),
+              title: const Text('Settings'),
+              centerTitle: true,
+            ),
+            body: TabBarView(
+              children: [
+                ItemCategorySubPage(),
+                ItemContentSubPage(key: UniqueKey()),
+                Builder(builder: (context) {
+                  return IconButton(
+                      onPressed: () {
+                        DefaultTabController.of(context)!.animateTo(0);
+                      },
+                      icon: Icon(Icons.directions_bike));
+                }),
               ],
             ),
-            title: const Text('Settings'),
-            centerTitle: true,
-          ),
-          body: const TabBarView(
-            children: [
-              Icon(Icons.directions_car),
-              Icon(Icons.directions_transit),
-              Icon(Icons.directions_bike),
-            ],
           ),
         ));
   }

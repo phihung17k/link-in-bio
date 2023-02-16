@@ -9,6 +9,7 @@ class SetItemEvent extends ItemInfoEvent {
   final String? name;
   final String? category;
   final String? url;
+  final int? categoryIndex;
 
-  SetItemEvent({this.name, this.category, this.url});
+  SetItemEvent({this.name, this.category, this.url, this.categoryIndex});
 }

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
 import 'package:link_in_bio/pages/pages.dart';
 
+import '../../bloc/item_info/item_info_event.dart';
+
 class ItemInfoPage extends StatefulWidget {
   final ItemInfoBloc bloc;
   const ItemInfoPage(this.bloc, {super.key});
@@ -13,6 +15,12 @@ class ItemInfoPage extends StatefulWidget {
 
 class _ItemInfoPageState extends State<ItemInfoPage> {
   ItemInfoBloc get bloc => widget.bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc.add(LoadingCategoryEvent());
+  }
 
   @override
   Widget build(BuildContext context) {

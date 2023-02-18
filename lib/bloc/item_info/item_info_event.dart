@@ -13,3 +13,5 @@ class SetItemEvent extends ItemInfoEvent {
 
   SetItemEvent({this.name, this.category, this.url, this.categoryIndex});
 }
+
+class LoadingCategoryEvent extends ItemInfoEvent {}

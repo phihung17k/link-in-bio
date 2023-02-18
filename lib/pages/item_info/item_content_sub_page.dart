@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
+import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
 import 'package:link_in_bio/models/item_model.dart';
 import 'package:link_in_bio/pages/qrcode_sharing_page.dart';
 import 'package:link_in_bio/routes.dart';
@@ -18,6 +21,9 @@ class ItemContentSubPage extends StatefulWidget {
 
 class _ItemContentSubPageState extends State<ItemContentSubPage> {
   TextEditingController? textController;
+
+  ItemInfoBloc? bloc;
+
   bool isValidateTextField = true;
 
   ItemModel? item;
@@ -28,15 +34,15 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
   Map<String, String> maps = {
     'Facebook': 'https://www.facebook.com/',
     'Tiktok': 'https://www.tiktok.com/',
-    'Zalo': 'assets/images/default_avatar.png',
-    'Twitter': 'assets/images/default_avatar.png',
-    'Instagram': 'assets/images/default_avatar.png',
-    'Youtube': 'assets/images/default_avatar.png',
-    'Amazon': 'assets/images/default_avatar.png',
-    'Shopee': 'assets/images/default_avatar.png',
-    'Lazada': 'assets/images/default_avatar.png',
-    'Tiki': 'assets/images/default_avatar.png',
-    'Link': 'assets/images/default_avatar.png',
+    'Zalo': 'http://zaloapp.com/qr/',
+    'Twitter': 'https://twitter.com/',
+    'Instagram': 'https://www.instagram.com/',
+    'Youtube': 'https://www.youtube.com/',
+    'Amazon': '',
+    'Shopee': 'https://shopee.vn/',
+    'Lazada': 'https://www.lazada.vn/',
+    'Tiki': 'https://tiki.vn/',
+    'Link': '',
   };
 
   @override
@@ -44,6 +50,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
     super.initState();
 
     textController = TextEditingController();
+    bloc = context.read<ItemInfoBloc>();
 
     // item =
     //     ItemModel(name: "Test", symbolPath: "assets/images/default_avatar.png");
@@ -68,29 +75,36 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.all(10),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          TextField(
-            controller: textController,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                // gapPadding:
-              ),
-              labelText: "Facebook ID",
-            ),
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: Text(
-              "www.facebook.com/data",
-              style: TextStyle(color: Colors.grey),
-            ),
-          )
-        ]),
+        margin: const EdgeInsets.all(10),
+        child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
+          bloc: bloc,
+          builder: (context, state) {
+            return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: textController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        // gapPadding:
+                      ),
+                      labelText: "Facebook ID",
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      "www.facebook.com/data",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  )
+                ]);
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {

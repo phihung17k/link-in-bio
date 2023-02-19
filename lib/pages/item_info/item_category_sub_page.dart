@@ -3,66 +3,67 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
+import 'package:link_in_bio/models/item_category_model.dart';
 
 class ItemCategorySubPage extends StatelessWidget {
-  ItemCategorySubPage({super.key});
+  const ItemCategorySubPage({super.key});
 
   // name, path image
-  final Map<String, String> maps = {
-    'Facebook': 'assets/images/default_avatar.png',
-    'Tiktok': 'assets/images/default_avatar.png',
-    'Zalo': 'assets/images/default_avatar.png',
-    'Twitter': 'assets/images/default_avatar.png',
-    'Instagram': 'assets/images/default_avatar.png',
-    'Youtube': 'assets/images/default_avatar.png',
-    'Amazon': 'assets/images/default_avatar.png',
-    'Shopee': 'assets/images/default_avatar.png',
-    'Lazada': 'assets/images/default_avatar.png',
-    'Tiki': 'assets/images/default_avatar.png',
-    'Link': 'assets/images/default_avatar.png',
-  };
+  // final Map<String, String> maps = {
+  //   'Facebook': 'assets/images/default_avatar.png',
+  //   'Tiktok': 'assets/images/default_avatar.png',
+  //   'Zalo': 'assets/images/default_avatar.png',
+  //   'Twitter': 'assets/images/default_avatar.png',
+  //   'Instagram': 'assets/images/default_avatar.png',
+  //   'Youtube': 'assets/images/default_avatar.png',
+  //   'Amazon': 'assets/images/default_avatar.png',
+  //   'Shopee': 'assets/images/default_avatar.png',
+  //   'Lazada': 'assets/images/default_avatar.png',
+  //   'Tiki': 'assets/images/default_avatar.png',
+  //   'Link': 'assets/images/default_avatar.png',
+  // };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-          child: GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 8 / 7,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-            itemCount: maps.length,
-            itemBuilder: (context, index) {
-              MapEntry<String, String> pair = maps.entries.elementAt(index);
-              // ItemModel item = ItemModel(name: pair.key, category: pair.value);
-              return InkWell(
-                onTap: () {
-                  // Navigator.pushNamed(context, Routes.itemInfo, arguments: item)
-                  //     .then((results) {
-                  //   if (results is PopWithResults<ItemModel>) {
-                  //     Navigator.of(context).pop(results);
-                  //   }
-                  // });
-                  context.read<ItemInfoBloc>().add(SetItemEvent(
-                      name: pair.key,
-                      category: pair.value,
-                      categoryIndex: index));
-                },
-                highlightColor: Colors.blue,
-                child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
-                  bloc: context.read<ItemInfoBloc>(),
-                  buildWhen: (previous, current) {
-                    return previous.categoryIndex != current.categoryIndex;
-                  },
-                  builder: (context, state) {
-                    return Card(
+          child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
+            bloc: context.read<ItemInfoBloc>(),
+            buildWhen: (previous, current) {
+              // print(
+              //     "previous.itemCategories != current.itemCategories ${previous.itemCategories != current.itemCategories}");
+              return previous.itemCategories != current.itemCategories;
+            },
+            builder: (context, state) {
+              if (state.itemCategories == null ||
+                  state.itemCategories!.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              return GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 8 / 7,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10),
+                itemCount: state.itemCategories!.length,
+                itemBuilder: (context, index) {
+                  ItemCategoryModel selectedCategory =
+                      state.itemCategories![index];
+                  return InkWell(
+                    onTap: () {
+                      context.read<ItemInfoBloc>().add(SetItemEvent(
+                          category: selectedCategory,
+                          selectedCategoryIndex: index,
+                          url: ""));
+                    },
+                    highlightColor: Colors.blue,
+                    child: Card(
                       elevation: 2,
                       shape: context
                                   .watch<ItemInfoBloc>()
                                   .state
-                                  .categoryIndex ==
+                                  .selectedCategoryIndex ==
                               index
                           ? const RoundedRectangleBorder(
                               side: BorderSide(color: Colors.blue, width: 3))
@@ -74,17 +75,17 @@ class ItemCategorySubPage extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Image.asset(
-                                pair.value,
+                                selectedCategory.imageURL!,
                                 width: 80,
                                 height: 80,
                                 fit: BoxFit.fitHeight,
                               ),
-                              Text(pair.key)
+                              Text(selectedCategory.name!)
                             ]),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               );
             },
           )),

@@ -26,14 +26,12 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 3,
-        initialIndex: 1,
+        initialIndex: 0,
         child: BlocProvider.value(
           value: bloc,
           child: Scaffold(
             appBar: AppBar(
               bottom: const TabBar(
-                //controller: ,
-
                 tabs: [
                   Tab(text: "Category", icon: Icon(Icons.category)),
                   Tab(text: "Test", icon: Icon(Icons.directions_transit)),
@@ -45,8 +43,8 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
             ),
             body: TabBarView(
               children: [
-                ItemCategorySubPage(),
-                ItemContentSubPage(),
+                const ItemCategorySubPage(),
+                const ItemContentSubPage(),
                 Builder(builder: (context) {
                   return IconButton(
                       onPressed: () {

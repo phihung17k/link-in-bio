@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -6,31 +7,51 @@ import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
 import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/models/item_model.dart';
+import 'package:link_in_bio/repository/item_category_repository.dart';
 
 class ItemInfoBloc extends Bloc<ItemInfoEvent, ItemInfoState> {
   ItemInfoBloc()
-      : super(const ItemInfoState(itemCategories: [], categoryIndex: 0)) {
+      : super(
+            const ItemInfoState(itemCategories: [], selectedCategoryIndex: 0)) {
     on<LoadingCategoryEvent>(loadCategories);
-    on<SetItemEvent>(setItemCategory);
+    on<SetItemEvent>(setItem);
   }
 
-  Future<String> loadAsset() async {
-    return await rootBundle.loadString('assets/text/item_category.txt');
+  Future<List<ItemCategoryModel>> loadAsset() async {
+    return await rootBundle.loadStructuredData(
+      'assets/text/item_category.txt',
+      (value) {
+        LineSplitter ls = const LineSplitter();
+        List<ItemCategoryModel> categories =
+            ls.convert(value).map<ItemCategoryModel>((line) {
+          List<String> sectors = line.split("[space]");
+          String baseURL = sectors[2].trim();
+          return ItemCategoryModel(
+              name: sectors[0].trim(),
+              imageURL: sectors[1].trim(),
+              baseURL: baseURL == "empty" ? "" : baseURL);
+        }).toList();
+        return Future.value(categories);
+      },
+    );
   }
 
   FutureOr<void> loadCategories(
       LoadingCategoryEvent event, Emitter<ItemInfoState> emit) async {
-    String temp = await loadAsset();
-    List<ItemCategoryModel> itemCategories = [];
-    emit.call(state);
+    ItemCategoryRepository categoryRepo = ItemCategoryRepository.instance;
+    if (categoryRepo.itemCategories.isEmpty) {
+      categoryRepo.itemCategories = await loadAsset();
+    }
+    emit.call(state.copyWith(itemCategories: categoryRepo.itemCategories));
   }
 
-  FutureOr<void> setItemCategory(
-      SetItemEvent event, Emitter<ItemInfoState> emit) {
+  FutureOr<void> setItem(SetItemEvent event, Emitter<ItemInfoState> emit) {
     ItemModel item = state.item ?? const ItemModel();
     emit.call(state.copyWith(
         item: item.copyWith(
-            name: event.name, category: event.category, url: event.url),
-        categoryIndex: event.categoryIndex));
+            name: event.name ?? event.category?.name,
+            category: event.category,
+            url: event.url),
+        selectedCategoryIndex: event.selectedCategoryIndex));
   }
 }

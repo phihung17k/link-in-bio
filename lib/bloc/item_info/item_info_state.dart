@@ -5,16 +5,23 @@ import 'package:link_in_bio/models/item_model.dart';
 class ItemInfoState extends Equatable {
   final List<ItemCategoryModel>? itemCategories;
   final ItemModel? item;
-  final int? categoryIndex;
+  final int? selectedCategoryIndex;
 
-  const ItemInfoState({this.itemCategories, this.item, this.categoryIndex});
+  const ItemInfoState(
+      {this.itemCategories, this.item, this.selectedCategoryIndex});
 
-  ItemInfoState copyWith({ItemModel? item, int? categoryIndex}) {
+  ItemInfoState copyWith(
+      {List<ItemCategoryModel>? itemCategories,
+      ItemModel? item,
+      int? selectedCategoryIndex,
+      bool? isChangedLink}) {
     return ItemInfoState(
+        itemCategories: itemCategories ?? this.itemCategories,
         item: item ?? this.item,
-        categoryIndex: categoryIndex ?? this.categoryIndex);
+        selectedCategoryIndex:
+            selectedCategoryIndex ?? this.selectedCategoryIndex);
   }
 
   @override
-  List<Object?> get props => [itemCategories, item, categoryIndex];
+  List<Object?> get props => [itemCategories, item, selectedCategoryIndex];
 }

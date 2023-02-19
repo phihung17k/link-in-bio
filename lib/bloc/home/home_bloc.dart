@@ -7,20 +7,20 @@ import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  HomeBloc() : super(HomeState(isDragUpBottom: true, itemList: [])) {
-    on<AddingItemTestEvent>(_onDumpData);
+  HomeBloc() : super(const HomeState(isDragUpBottom: true, itemList: [])) {
+    // on<AddingItemTestEvent>(_onDumpData);
     on<UpdatingBottomStatusEvent>(_updateBottomStatus);
     on<AddingItemEvent>(_addItem);
     on<UpdatingItemEvent>(_updateItem);
     on<DeletingItemEvent>(_deleteItem);
   }
 
-  FutureOr<void> _onDumpData(
-      AddingItemTestEvent event, Emitter<HomeState> emit) {
-    emit.call(state.copyWith(itemList: [
-      ItemModel(name: "Test", category: "assets/images/default_avatar.png")
-    ]));
-  }
+  // FutureOr<void> _onDumpData(
+  //     AddingItemTestEvent event, Emitter<HomeState> emit) {
+  //   emit.call(state.copyWith(itemList: [
+  //     ItemModel(name: "Test", category: "assets/images/default_avatar.png")
+  //   ]));
+  // }
 
   FutureOr<void> _updateItem(UpdatingItemEvent event, Emitter<HomeState> emit) {
     if (event.index < state.itemList!.length) {

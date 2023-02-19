@@ -1,17 +1,20 @@
 import 'package:equatable/equatable.dart';
 
+import '../../models/item_category_model.dart';
+
 abstract class ItemInfoEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
 class SetItemEvent extends ItemInfoEvent {
-  final String? name;
-  final String? category;
+  final ItemCategoryModel? category;
   final String? url;
-  final int? categoryIndex;
+  final int? selectedCategoryIndex;
+  final String? name;
 
-  SetItemEvent({this.name, this.category, this.url, this.categoryIndex});
+  SetItemEvent(
+      {this.category, this.url, this.selectedCategoryIndex, this.name});
 }
 
 class LoadingCategoryEvent extends ItemInfoEvent {}

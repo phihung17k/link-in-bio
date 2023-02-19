@@ -43,7 +43,7 @@ class ItemWidget extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: itemRadius,
-                backgroundImage: AssetImage(item!.category!),
+                backgroundImage: AssetImage(item!.category!.imageURL!),
               ),
               Text("${item!.name!}, ${item!.url}"),
               SizeTransition(

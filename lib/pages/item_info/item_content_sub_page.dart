@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
+import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
+import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/models/item_model.dart';
 import 'package:link_in_bio/pages/qrcode_sharing_page.dart';
 import 'package:link_in_bio/routes.dart';
@@ -20,7 +22,8 @@ class ItemContentSubPage extends StatefulWidget {
 }
 
 class _ItemContentSubPageState extends State<ItemContentSubPage> {
-  TextEditingController? textController;
+  TextEditingController? nameTextController;
+  TextEditingController? urlTextController;
 
   ItemInfoBloc? bloc;
 
@@ -30,43 +33,51 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
 
   Timer? debounce;
 
-  // name, placeholder link
-  Map<String, String> maps = {
-    'Facebook': 'https://www.facebook.com/',
-    'Tiktok': 'https://www.tiktok.com/',
-    'Zalo': 'http://zaloapp.com/qr/',
-    'Twitter': 'https://twitter.com/',
-    'Instagram': 'https://www.instagram.com/',
-    'Youtube': 'https://www.youtube.com/',
-    'Amazon': '',
-    'Shopee': 'https://shopee.vn/',
-    'Lazada': 'https://www.lazada.vn/',
-    'Tiki': 'https://tiki.vn/',
-    'Link': '',
-  };
-
   @override
   void initState() {
     super.initState();
 
-    textController = TextEditingController();
+    nameTextController = TextEditingController();
+    urlTextController = TextEditingController();
     bloc = context.read<ItemInfoBloc>();
-
-    // item =
-    //     ItemModel(name: "Test", symbolPath: "assets/images/default_avatar.png");
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    RouteSettings setting = ModalRoute.of(context)!.settings;
-    if (setting.arguments != null) {
-      if (setting.arguments is ItemModel) {
-        item = setting.arguments as ItemModel;
-        if (item!.url != null) {
-          textController!.text = item!.url!;
-        }
-      }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   RouteSettings setting = ModalRoute.of(context)!.settings;
+  //   if (setting.arguments != null) {
+  //     if (setting.arguments is ItemModel) {
+  //       item = setting.arguments as ItemModel;
+  //       if (item!.url != null) {
+  //         textController!.text = item!.url!;
+  //       }
+  //     }
+  //   }
+  // }
+
+  String getLabel(String name) {
+    switch (name.toLowerCase()) {
+      case "facebook":
+        return "Facebook ID";
+      case "tiktok":
+        return "Tiktok ID";
+      case "zalo":
+        return "Zalo ID";
+      case "twitter":
+        return "Twitter ID";
+      case "instagram":
+        return "Instagram ID";
+      case "youtube":
+        return "Youtube Channel";
+      case "amazon":
+        return "Amazon ID";
+      case "shopee":
+        return "Shopee ID";
+      case "lazada":
+        return "Lazada ID";
+      default:
+        return "Link";
     }
   }
 
@@ -78,28 +89,74 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         margin: const EdgeInsets.all(10),
         child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
           bloc: bloc,
+          buildWhen: (previous, current) {
+            // print(
+            //     "previous.selectedCategoryIndex != current.selectedCategoryIndex ${previous.selectedCategoryIndex != current.selectedCategoryIndex}");
+            return previous.selectedCategoryIndex !=
+                current.selectedCategoryIndex;
+          },
           builder: (context, state) {
+            ItemCategoryModel category =
+                state.itemCategories![state.selectedCategoryIndex!];
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  const Text("Label"),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   TextField(
-                    controller: textController,
+                    controller: nameTextController,
                     decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        // gapPadding:
-                      ),
-                      labelText: "Facebook ID",
-                    ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        labelText: category.name,
+                        labelStyle: const TextStyle(color: Colors.grey)),
+                    onChanged: (value) {
+                      if (debounce?.isActive ?? false) debounce?.cancel();
+                      debounce = Timer(
+                        const Duration(milliseconds: 500),
+                        () {
+                          bloc!.add(
+                              SetItemEvent(name: nameTextController!.text));
+                        },
+                      );
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const Text("URL"),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextField(
+                    controller: urlTextController,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        labelText: getLabel(category.name!),
+                        labelStyle: const TextStyle(color: Colors.grey)),
+                    onChanged: (value) {
+                      if (debounce?.isActive ?? false) debounce?.cancel();
+                      debounce = Timer(
+                        const Duration(milliseconds: 500),
+                        () {
+                          bloc!.add(SetItemEvent(url: urlTextController!.text));
+                        },
+                      );
+                    },
                   ),
                   const SizedBox(
                     height: 10,
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 10),
+                    padding: const EdgeInsets.only(left: 10),
                     child: Text(
-                      "www.facebook.com/data",
-                      style: TextStyle(color: Colors.grey),
+                      "${category.baseURL}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
+                      style: const TextStyle(color: Colors.grey),
                     ),
                   )
                 ]);
@@ -252,5 +309,13 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
     //             )
     //           : SizedBox()),
     // );
+  }
+
+  @override
+  void dispose() {
+    debounce?.cancel();
+    urlTextController?.dispose();
+    nameTextController?.dispose();
+    super.dispose();
   }
 }

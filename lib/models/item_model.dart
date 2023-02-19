@@ -1,13 +1,14 @@
 import 'package:equatable/equatable.dart';
+import 'package:link_in_bio/models/item_category_model.dart';
 
 class ItemModel extends Equatable {
   final String? name;
-  final String? category; // path
+  final ItemCategoryModel? category;
   final String? url;
 
   const ItemModel({this.name, this.category, this.url});
 
-  ItemModel copyWith({String? name, String? category, String? url}) {
+  ItemModel copyWith({String? name, ItemCategoryModel? category, String? url}) {
     return ItemModel(
         name: name ?? this.name,
         category: category ?? this.category,

@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         vsync: this, duration: const Duration(milliseconds: 600));
 
     //for test
-    bloc.add(AddingItemTestEvent());
+    // bloc.add(AddingItemTestEvent());
   }
 
   @override

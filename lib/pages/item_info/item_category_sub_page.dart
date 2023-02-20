@@ -8,21 +8,6 @@ import 'package:link_in_bio/models/item_category_model.dart';
 class ItemCategorySubPage extends StatelessWidget {
   const ItemCategorySubPage({super.key});
 
-  // name, path image
-  // final Map<String, String> maps = {
-  //   'Facebook': 'assets/images/default_avatar.png',
-  //   'Tiktok': 'assets/images/default_avatar.png',
-  //   'Zalo': 'assets/images/default_avatar.png',
-  //   'Twitter': 'assets/images/default_avatar.png',
-  //   'Instagram': 'assets/images/default_avatar.png',
-  //   'Youtube': 'assets/images/default_avatar.png',
-  //   'Amazon': 'assets/images/default_avatar.png',
-  //   'Shopee': 'assets/images/default_avatar.png',
-  //   'Lazada': 'assets/images/default_avatar.png',
-  //   'Tiki': 'assets/images/default_avatar.png',
-  //   'Link': 'assets/images/default_avatar.png',
-  // };
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

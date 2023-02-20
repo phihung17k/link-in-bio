@@ -13,8 +13,7 @@ class ItemInfoState extends Equatable {
   ItemInfoState copyWith(
       {List<ItemCategoryModel>? itemCategories,
       ItemModel? item,
-      int? selectedCategoryIndex,
-      bool? isChangedLink}) {
+      int? selectedCategoryIndex}) {
     return ItemInfoState(
         itemCategories: itemCategories ?? this.itemCategories,
         item: item ?? this.item,

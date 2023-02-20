@@ -4,6 +4,7 @@ import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
 import 'package:link_in_bio/pages/pages.dart';
 
 import '../../bloc/item_info/item_info_event.dart';
+import '../../models/item_model.dart';
 
 class ItemInfoPage extends StatefulWidget {
   final ItemInfoBloc bloc;
@@ -20,12 +21,31 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
   void initState() {
     super.initState();
     bloc.add(LoadingCategoryEvent());
+
+    bloc.listenerStream.listen((event) {
+      if (event is BackingHomePageEvent) {
+        Navigator.pop(context, bloc.state.item);
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    RouteSettings setting = ModalRoute.of(context)!.settings;
+    if (setting.arguments != null && setting.arguments is ItemModel) {
+      // item = setting.arguments as ItemModel;
+      //   if (item!.url != null) {
+      //     textController!.text = item!.url!;
+      //   }
+      bloc.add(UpdatingCurrentItemEvent(setting.arguments as ItemModel));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
+        length: 2,
         initialIndex: 0,
         child: BlocProvider.value(
           value: bloc,
@@ -34,25 +54,14 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
               bottom: const TabBar(
                 tabs: [
                   Tab(text: "Category", icon: Icon(Icons.category)),
-                  Tab(text: "Test", icon: Icon(Icons.directions_transit)),
-                  Tab(icon: Icon(Icons.directions_bike)),
+                  Tab(text: "Test", icon: Icon(Icons.directions_transit))
                 ],
               ),
               title: const Text('Settings'),
               centerTitle: true,
             ),
-            body: TabBarView(
-              children: [
-                const ItemCategorySubPage(),
-                const ItemContentSubPage(),
-                Builder(builder: (context) {
-                  return IconButton(
-                      onPressed: () {
-                        DefaultTabController.of(context)!.animateTo(0);
-                      },
-                      icon: Icon(Icons.directions_bike));
-                }),
-              ],
+            body: const TabBarView(
+              children: [ItemCategorySubPage(), ItemContentSubPage()],
             ),
           ),
         ));

@@ -8,9 +8,9 @@ import '../../../routes.dart';
 import '../../../utils/pop_with_results.dart';
 
 class ItemWidget extends StatelessWidget {
+  final double itemRadius = 20;
   final int? index;
   final ItemModel? item;
-  final double itemRadius = 20;
   final AnimationController? deleteController;
   const ItemWidget(
       {super.key,
@@ -22,14 +22,16 @@ class ItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, Routes.itemInfo, arguments: item)
-            .then((value) {
-          if (value is PopWithResults<ItemModel>) {
-            context
-                .read<HomeBloc>()
-                .add(UpdatingItemEvent(index!, value.result));
-          }
-        });
+        // Navigator.pushNamed(context, Routes.itemInfo, arguments: item)
+        //     .then((value) {
+        //   if (value is PopWithResults<ItemModel>) {
+        //     context
+        //         .read<HomeBloc>()
+        //         .add(UpdatingItemEvent(index!, value.result));
+        //   }
+        // });
+        context.read<HomeBloc>().addNavigatedEvent(
+            NavigatorItemInfoPageForUpdatingEvent(index!, item!));
       },
       child: Card(
         elevation: 5,

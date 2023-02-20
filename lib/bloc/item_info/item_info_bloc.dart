@@ -9,12 +9,15 @@ import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/models/item_model.dart';
 import 'package:link_in_bio/repository/item_category_repository.dart';
 
-class ItemInfoBloc extends Bloc<ItemInfoEvent, ItemInfoState> {
+import '../base_bloc.dart';
+
+class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
   ItemInfoBloc()
       : super(
             const ItemInfoState(itemCategories: [], selectedCategoryIndex: 0)) {
     on<LoadingCategoryEvent>(loadCategories);
     on<SetItemEvent>(setItem);
+    on<UpdatingCurrentItemEvent>(updateCurrentItem);
   }
 
   Future<List<ItemCategoryModel>> loadAsset() async {
@@ -45,6 +48,7 @@ class ItemInfoBloc extends Bloc<ItemInfoEvent, ItemInfoState> {
     emit.call(state.copyWith(itemCategories: categoryRepo.itemCategories));
   }
 
+  //for create
   FutureOr<void> setItem(SetItemEvent event, Emitter<ItemInfoState> emit) {
     ItemModel item = state.item ?? const ItemModel();
     emit.call(state.copyWith(
@@ -53,5 +57,14 @@ class ItemInfoBloc extends Bloc<ItemInfoEvent, ItemInfoState> {
             category: event.category,
             url: event.url),
         selectedCategoryIndex: event.selectedCategoryIndex));
+  }
+
+  FutureOr<void> updateCurrentItem(
+      UpdatingCurrentItemEvent event, Emitter<ItemInfoState> emit) {
+    ItemModel item = event.item;
+    int? categoryIndex = state.itemCategories
+        ?.indexWhere((category) => category.name == item.category?.name);
+    emit.call(
+        state.copyWith(item: event.item, selectedCategoryIndex: categoryIndex));
   }
 }

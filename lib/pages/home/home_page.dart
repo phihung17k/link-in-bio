@@ -1,11 +1,11 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_state.dart';
+import 'package:link_in_bio/models/item_model.dart';
 
 import '../../bloc/home/home_event.dart';
+import '../../routes.dart';
 import 'widgets/floating_button_menu.dart';
 import 'widgets/item_widget.dart';
 
@@ -30,6 +30,25 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     //for test
     // bloc.add(AddingItemTestEvent());
+
+    bloc.listenerStream.listen((event) {
+      if (event is NavigatorItemInfoPageForCreatingEvent) {
+        Navigator.pushNamed(context, Routes.itemInfo).then((item) {
+          if (item is ItemModel) {
+            bloc.add(AddingItemEvent(item));
+          }
+        });
+      } else if (event is NavigatorItemInfoPageForUpdatingEvent) {
+        Navigator.pushNamed(context, Routes.itemInfo, arguments: event.item)
+            .then((value) {
+          // if (value is PopWithResults<ItemModel>) {
+          //   context
+          //       .read<HomeBloc>()
+          //       .add(UpdatingItemEvent(index!, value.result));
+          // }
+        });
+      }
+    });
   }
 
   @override

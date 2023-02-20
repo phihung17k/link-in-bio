@@ -49,7 +49,7 @@ class _FloatingButtonState extends State<FloatingButton> {
       animation: floatingButtonController,
       builder: (context, child) {
         return Positioned(
-          right: 15,
+          right: 18,
           bottom: translateAnimation!.value,
           child: InkWell(
             onTap: onTap,

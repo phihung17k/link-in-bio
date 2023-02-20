@@ -35,3 +35,12 @@ class DeletingItemEvent extends HomeEvent {
 
   DeletingItemEvent(this.index);
 }
+
+class NavigatorItemInfoPageForCreatingEvent extends HomeEvent {}
+
+class NavigatorItemInfoPageForUpdatingEvent extends HomeEvent {
+  final int index;
+  final ItemModel item;
+
+  NavigatorItemInfoPageForUpdatingEvent(this.index, this.item);
+}

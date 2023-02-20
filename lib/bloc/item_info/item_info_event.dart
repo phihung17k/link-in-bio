@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:link_in_bio/models/item_model.dart';
 
 import '../../models/item_category_model.dart';
 
@@ -18,3 +19,11 @@ class SetItemEvent extends ItemInfoEvent {
 }
 
 class LoadingCategoryEvent extends ItemInfoEvent {}
+
+class BackingHomePageEvent extends ItemInfoEvent {}
+
+class UpdatingCurrentItemEvent extends ItemInfoEvent {
+  final ItemModel item;
+
+  UpdatingCurrentItemEvent(this.item);
+}

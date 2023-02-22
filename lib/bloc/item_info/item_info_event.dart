@@ -8,17 +8,25 @@ abstract class ItemInfoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SetItemEvent extends ItemInfoEvent {
-  final ItemCategoryModel? category;
-  final String? url;
-  final int? selectedCategoryIndex;
+class SetItemNameEvent extends ItemInfoEvent {
   final String? name;
 
-  SetItemEvent(
-      {this.category, this.url, this.selectedCategoryIndex, this.name});
+  SetItemNameEvent({this.name});
 }
 
-class LoadingCategoryEvent extends ItemInfoEvent {}
+class SetCategoryIndexEvent extends ItemInfoEvent {
+  final int? selectedCategoryIndex;
+
+  SetCategoryIndexEvent({this.selectedCategoryIndex});
+}
+
+class SetItemURLEvent extends ItemInfoEvent {
+  final String? url;
+
+  SetItemURLEvent({this.url});
+}
+
+class InitialDataEvent extends ItemInfoEvent {}
 
 class BackingHomePageEvent extends ItemInfoEvent {}
 

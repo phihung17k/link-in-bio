@@ -41,11 +41,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       } else if (event is NavigatorItemInfoPageForUpdatingEvent) {
         Navigator.pushNamed(context, Routes.itemInfo, arguments: event.item)
             .then((value) {
-          // if (value is PopWithResults<ItemModel>) {
-          //   context
-          //       .read<HomeBloc>()
-          //       .add(UpdatingItemEvent(index!, value.result));
-          // }
+          if (value is ItemModel) {
+            bloc.add(UpdatingItemEvent(event.index, value));
+          }
         });
       }
     });

@@ -37,10 +37,8 @@ class ItemCategorySubPage extends StatelessWidget {
                       state.itemCategories![index];
                   return InkWell(
                     onTap: () {
-                      context.read<ItemInfoBloc>().add(SetItemEvent(
-                          category: selectedCategory,
-                          selectedCategoryIndex: index,
-                          url: ""));
+                      context.read<ItemInfoBloc>().add(
+                          SetCategoryIndexEvent(selectedCategoryIndex: index));
                     },
                     highlightColor: Colors.blue,
                     child: Card(

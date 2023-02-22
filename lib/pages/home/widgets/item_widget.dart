@@ -47,7 +47,12 @@ class ItemWidget extends StatelessWidget {
                 radius: itemRadius,
                 backgroundImage: AssetImage(item!.category!.imageURL!),
               ),
-              Text("${item!.name!}, ${item!.url}"),
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.only(left: 15, right: 15),
+                  child: Text(item!.name!, overflow: TextOverflow.ellipsis),
+                ),
+              ),
               SizeTransition(
                 sizeFactor:
                     Tween<double>(begin: 0, end: 1).animate(deleteController!),

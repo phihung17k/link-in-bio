@@ -20,11 +20,15 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
   @override
   void initState() {
     super.initState();
-    bloc.add(LoadingCategoryEvent());
+    bloc.add(InitialDataEvent());
 
     bloc.listenerStream.listen((event) {
       if (event is BackingHomePageEvent) {
-        Navigator.pop(context, bloc.state.item);
+        ItemModel item = bloc.state.item!;
+        if (item.name == null || item.name!.trim().isEmpty) {
+          item = item.copyWith(name: item.category!.name);
+        }
+        Navigator.pop(context, item);
       }
     });
   }
@@ -34,11 +38,11 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
     super.didChangeDependencies();
     RouteSettings setting = ModalRoute.of(context)!.settings;
     if (setting.arguments != null && setting.arguments is ItemModel) {
-      // item = setting.arguments as ItemModel;
-      //   if (item!.url != null) {
-      //     textController!.text = item!.url!;
-      //   }
-      bloc.add(UpdatingCurrentItemEvent(setting.arguments as ItemModel));
+      ItemModel item = setting.arguments as ItemModel;
+      // if (item.url != null) {
+      //   textController!.text = item.url!;
+      // }
+      bloc.add(UpdatingCurrentItemEvent(item));
     }
   }
 

@@ -32,7 +32,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
     super.initState();
 
     floatingButtonController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 600));
+        vsync: this, duration: const Duration(milliseconds: 500));
 
     expandAnimation = Tween<double>(begin: 0, end: 60).animate(CurvedAnimation(
         parent: floatingButtonController!, curve: const Interval(0.7, 1)));

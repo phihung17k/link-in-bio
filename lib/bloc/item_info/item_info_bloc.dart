@@ -15,8 +15,10 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
   ItemInfoBloc()
       : super(
             const ItemInfoState(itemCategories: [], selectedCategoryIndex: 0)) {
-    on<LoadingCategoryEvent>(loadCategories);
-    on<SetItemEvent>(setItem);
+    on<InitialDataEvent>(initData);
+    on<SetItemNameEvent>(setItemName);
+    on<SetCategoryIndexEvent>(setCategoryIndex);
+    on<SetItemURLEvent>(setItemURL);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
   }
 
@@ -39,24 +41,45 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     );
   }
 
-  FutureOr<void> loadCategories(
-      LoadingCategoryEvent event, Emitter<ItemInfoState> emit) async {
+  FutureOr<void> initData(
+      InitialDataEvent event, Emitter<ItemInfoState> emit) async {
     ItemCategoryRepository categoryRepo = ItemCategoryRepository.instance;
     if (categoryRepo.itemCategories.isEmpty) {
       categoryRepo.itemCategories = await loadAsset();
     }
-    emit.call(state.copyWith(itemCategories: categoryRepo.itemCategories));
+    ItemCategoryModel category = categoryRepo.itemCategories.first;
+    emit.call(state.copyWith(
+        itemCategories: categoryRepo.itemCategories,
+        item: ItemModel(name: category.name, category: category, url: "")));
   }
 
   //for create
-  FutureOr<void> setItem(SetItemEvent event, Emitter<ItemInfoState> emit) {
+  FutureOr<void> setItemName(
+      SetItemNameEvent event, Emitter<ItemInfoState> emit) {
     ItemModel item = state.item ?? const ItemModel();
     emit.call(state.copyWith(
         item: item.copyWith(
-            name: event.name ?? event.category?.name,
-            category: event.category,
-            url: event.url),
-        selectedCategoryIndex: event.selectedCategoryIndex));
+            name:
+                event.name ?? state.item?.name ?? state.item?.category!.name)));
+  }
+
+  FutureOr<void> setCategoryIndex(
+      SetCategoryIndexEvent event, Emitter<ItemInfoState> emit) {
+    if (event.selectedCategoryIndex != state.selectedCategoryIndex) {
+      ItemCategoryModel category =
+          state.itemCategories![event.selectedCategoryIndex!];
+      emit.call(state.copyWith(
+          selectedCategoryIndex: event.selectedCategoryIndex,
+          item: state.item!.copyWith(
+              name: category.name,
+              category: state.itemCategories![event.selectedCategoryIndex!],
+              url: "")));
+    }
+  }
+
+  FutureOr<void> setItemURL(
+      SetItemURLEvent event, Emitter<ItemInfoState> emit) {
+    emit.call(state.copyWith(item: state.item?.copyWith(url: event.url)));
   }
 
   FutureOr<void> updateCurrentItem(

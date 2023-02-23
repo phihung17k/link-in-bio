@@ -15,7 +15,9 @@ import '../../app_icons.dart';
 import '../../utils/pop_with_results.dart';
 
 class ItemContentSubPage extends StatefulWidget {
-  const ItemContentSubPage({super.key});
+  final String? initialName;
+  final String? initialURL;
+  const ItemContentSubPage({super.key, this.initialName, this.initialURL});
 
   @override
   State<ItemContentSubPage> createState() => _ItemContentSubPageState();
@@ -27,19 +29,14 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
 
   ItemInfoBloc? bloc;
 
-  bool isValidateTextField = true;
-
-  ItemModel? item;
-
-  Timer? debounce;
-
   @override
   void initState() {
     super.initState();
-
-    nameTextController = TextEditingController();
-    urlTextController = TextEditingController();
     bloc = context.read<ItemInfoBloc>();
+    String? initialName = bloc?.state.item?.name;
+    String? initialURL = bloc?.state.item?.url;
+    nameTextController = TextEditingController(text: initialName);
+    urlTextController = TextEditingController(text: initialURL);
   }
 
   String getLabel(String name) {
@@ -75,9 +72,6 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
           bloc: bloc,
           buildWhen: (previous, current) {
-            // print(
-            //     "previous.selectedCategoryIndex != current.selectedCategoryIndex ${previous.selectedCategoryIndex != current.selectedCategoryIndex}");
-
             return previous.selectedCategoryIndex !=
                 current.selectedCategoryIndex;
           },
@@ -99,14 +93,8 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                         ),
                         labelText: category.name),
                     onChanged: (value) {
-                      if (debounce?.isActive ?? false) debounce?.cancel();
-                      debounce = Timer(
-                        const Duration(milliseconds: 500),
-                        () {
-                          bloc!.add(
-                              SetItemEvent(name: nameTextController!.text));
-                        },
-                      );
+                      bloc!.add(
+                          SetItemNameEvent(name: nameTextController!.text));
                     },
                   ),
                   const SizedBox(
@@ -124,7 +112,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                         ),
                         labelText: getLabel(category.name!)),
                     onChanged: (value) {
-                      bloc!.add(SetItemEvent(url: urlTextController!.text));
+                      bloc!.add(SetItemURLEvent(url: urlTextController!.text));
                     },
                   ),
                   const SizedBox(
@@ -151,7 +139,6 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
 
   @override
   void dispose() {
-    debounce?.cancel();
     urlTextController?.dispose();
     nameTextController?.dispose();
     super.dispose();

@@ -11,13 +11,12 @@ class ItemCategorySubPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.cyan[50],
       body: Container(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
           child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
             bloc: context.read<ItemInfoBloc>(),
             buildWhen: (previous, current) {
-              // print(
-              //     "previous.itemCategories != current.itemCategories ${previous.itemCategories != current.itemCategories}");
               return previous.itemCategories != current.itemCategories;
             },
             builder: (context, state) {

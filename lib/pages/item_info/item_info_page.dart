@@ -39,9 +39,6 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
     RouteSettings setting = ModalRoute.of(context)!.settings;
     if (setting.arguments != null && setting.arguments is ItemModel) {
       ItemModel item = setting.arguments as ItemModel;
-      // if (item.url != null) {
-      //   textController!.text = item.url!;
-      // }
       bloc.add(UpdatingCurrentItemEvent(item));
     }
   }
@@ -55,12 +52,10 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
           value: bloc,
           child: Scaffold(
             appBar: AppBar(
-              bottom: const TabBar(
-                tabs: [
-                  Tab(text: "Category", icon: Icon(Icons.category)),
-                  Tab(text: "Test", icon: Icon(Icons.directions_transit))
-                ],
-              ),
+              bottom: const TabBar(tabs: [
+                Tab(text: "Category", icon: Icon(Icons.category)),
+                Tab(text: "Detail", icon: Icon(Icons.directions_transit))
+              ]),
               title: const Text('Settings'),
               centerTitle: true,
             ),

@@ -69,84 +69,81 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.cyan[50],
-      body: Container(
-        margin: const EdgeInsets.all(10),
-        child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
-          bloc: bloc,
-          buildWhen: (previous, current) {
-            return previous.selectedCategoryIndex !=
-                current.selectedCategoryIndex;
-          },
-          builder: (context, state) {
-            ItemCategoryModel category =
-                state.itemCategories![state.selectedCategoryIndex!];
-            return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ItemDetailCard(
-                    child: Column(
+      body: BlocBuilder<ItemInfoBloc, ItemInfoState>(
+        bloc: bloc,
+        buildWhen: (previous, current) {
+          return previous.selectedCategoryIndex !=
+              current.selectedCategoryIndex;
+        },
+        builder: (context, state) {
+          ItemCategoryModel category =
+              state.itemCategories![state.selectedCategoryIndex!];
+          return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ItemDetailCard(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Label",
+                          style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      TextField(
+                        controller: nameTextController,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            labelText: category.name),
+                        onChanged: (value) {
+                          bloc!.add(
+                              SetItemNameEvent(name: nameTextController!.text));
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 15,
+                ),
+                ItemDetailCard(
+                  child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Label",
+                        Text("URL",
                             style: Theme.of(context).textTheme.titleMedium),
                         const SizedBox(
                           height: 15,
                         ),
                         TextField(
-                          controller: nameTextController,
+                          controller: urlTextController,
                           decoration: InputDecoration(
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              labelText: category.name),
+                              labelText: getLabel(category.name!)),
                           onChanged: (value) {
-                            bloc!.add(SetItemNameEvent(
-                                name: nameTextController!.text));
+                            bloc!.add(
+                                SetItemURLEvent(url: urlTextController!.text));
                           },
                         ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 15,
-                  ),
-                  ItemDetailCard(
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("URL",
-                              style: Theme.of(context).textTheme.titleMedium),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          TextField(
-                            controller: urlTextController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                labelText: getLabel(category.name!)),
-                            onChanged: (value) {
-                              bloc!.add(SetItemURLEvent(
-                                  url: urlTextController!.text));
-                            },
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                                "${category.baseURL}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
-                                style: const TextStyle(color: Colors.grey)),
-                          )
-                        ]),
-                  )
-                ]);
-          },
-        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8),
+                          child: Text(
+                              "${category.baseURL}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
+                              style: const TextStyle(color: Colors.grey)),
+                        )
+                      ]),
+                )
+              ]);
+        },
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {

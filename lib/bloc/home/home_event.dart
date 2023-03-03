@@ -44,3 +44,10 @@ class NavigatorItemInfoPageForUpdatingEvent extends HomeEvent {
 
   NavigatorItemInfoPageForUpdatingEvent(this.index, this.item);
 }
+
+class ReorderItemEvent extends HomeEvent {
+  final int? oldIndex;
+  final int? newIndex;
+
+  ReorderItemEvent({required this.oldIndex, required this.newIndex});
+}

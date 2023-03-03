@@ -39,9 +39,6 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
     RouteSettings setting = ModalRoute.of(context)!.settings;
     if (setting.arguments != null && setting.arguments is ItemModel) {
       ItemModel item = setting.arguments as ItemModel;
-      // if (item.url != null) {
-      //   textController!.text = item.url!;
-      // }
       bloc.add(UpdatingCurrentItemEvent(item));
     }
   }
@@ -49,25 +46,62 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
-        initialIndex: 0,
-        child: BlocProvider.value(
-          value: bloc,
-          child: Scaffold(
+      length: 2,
+      initialIndex: 0,
+      child: BlocProvider.value(
+        value: bloc,
+        child: Scaffold(
+            backgroundColor: Colors.cyan[50],
             appBar: AppBar(
-              bottom: const TabBar(
-                tabs: [
-                  Tab(text: "Category", icon: Icon(Icons.category)),
-                  Tab(text: "Test", icon: Icon(Icons.directions_transit))
-                ],
-              ),
               title: const Text('Settings'),
               centerTitle: true,
             ),
-            body: const TabBarView(
-              children: [ItemCategorySubPage(), ItemContentSubPage()],
-            ),
-          ),
-        ));
+            body: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(children: [
+                Container(
+                  margin:
+                      const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(25),
+                      color: Colors.grey[300]),
+                  child: TabBar(
+                      indicator: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: Colors.blue),
+                      labelColor: Colors.white,
+                      unselectedLabelColor: Colors.black,
+                      tabs: [
+                        Tab(
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                              Icon(Icons.category),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("Category")
+                            ])),
+                        Tab(
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                              Icon(Icons.info_rounded),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Text("Detail")
+                            ]))
+                      ]),
+                ),
+                const Expanded(
+                  child: TabBarView(
+                    children: [ItemCategorySubPage(), ItemContentSubPage()],
+                  ),
+                )
+              ]),
+            )),
+      ),
+    );
   }
 }

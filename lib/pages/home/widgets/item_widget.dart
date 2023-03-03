@@ -4,8 +4,6 @@ import 'package:link_in_bio/bloc/home/home_bloc.dart';
 
 import '../../../bloc/home/home_event.dart';
 import '../../../models/item_model.dart';
-import '../../../routes.dart';
-import '../../../utils/pop_with_results.dart';
 
 class ItemWidget extends StatelessWidget {
   final double itemRadius = 20;
@@ -22,14 +20,6 @@ class ItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        // Navigator.pushNamed(context, Routes.itemInfo, arguments: item)
-        //     .then((value) {
-        //   if (value is PopWithResults<ItemModel>) {
-        //     context
-        //         .read<HomeBloc>()
-        //         .add(UpdatingItemEvent(index!, value.result));
-        //   }
-        // });
         context.read<HomeBloc>().addNavigatedEvent(
             NavigatorItemInfoPageForUpdatingEvent(index!, item!));
       },

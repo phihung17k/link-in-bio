@@ -14,6 +14,7 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
     on<AddingItemEvent>(_addItem);
     on<UpdatingItemEvent>(_updateItem);
     on<DeletingItemEvent>(_deleteItem);
+    on<ReorderItemEvent>(_reorderItem);
   }
 
   // FutureOr<void> _onDumpData(
@@ -46,5 +47,16 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
     List<ItemModel> tempList = state.itemList!.toList();
     tempList.removeAt(event.index);
     emit.call(state.copyWith(itemList: tempList));
+  }
+
+  FutureOr<void> _reorderItem(ReorderItemEvent event, Emitter<HomeState> emit) {
+    int oldIndex = event.oldIndex!;
+    int newIndex = event.newIndex!;
+
+    if (oldIndex < newIndex) newIndex -= 1;
+    List<ItemModel> items = state.itemList!.toList();
+    ItemModel item = items.removeAt(oldIndex);
+    items.insert(newIndex, item);
+    emit.call(state.copyWith(itemList: items));
   }
 }

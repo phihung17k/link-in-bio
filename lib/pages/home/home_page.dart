@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_state.dart';
+import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/models/item_model.dart';
 
 import '../../bloc/home/home_event.dart';
@@ -85,17 +87,38 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                         height: 10,
                       ),
                       Flexible(
-                        child: ListView.builder(
-                          itemCount: state.itemList!.length,
-                          itemBuilder: (context, index) {
-                            return ItemWidget(
-                              index: index,
-                              item: state.itemList![index],
+                          child: ReorderableListView(
+                        onReorder: (oldIndex, newIndex) {
+                          bloc.add(ReorderItemEvent(
+                              oldIndex: oldIndex, newIndex: newIndex));
+                        },
+                        children: [
+                          for (int i = 0; i < state.itemList!.length; i++)
+                            ItemWidget(
+                              key: UniqueKey(),
+                              index: i,
+                              item: state.itemList![i],
                               deleteController: deleteController,
-                            );
-                          },
-                        ),
-                      ),
+                            )
+                        ],
+                      )
+
+                          //     ReorderableListView.builder(
+                          //   onReorder: (oldIndex, newIndex) {
+                          //     bloc.add(ReorderItemEvent(
+                          //         oldIndex: oldIndex, newIndex: newIndex));
+                          //   },
+                          //   itemCount: state.itemList!.length,
+                          //   itemBuilder: (context, index) {
+                          //     return ItemWidget(
+                          //       key: UniqueKey(),
+                          //       index: index,
+                          //       item: state.itemList![index],
+                          //       deleteController: deleteController,
+                          //     );
+                          //   },
+                          // )
+                          ),
                       SizedBox(
                         height: size.height / 4,
                       ),

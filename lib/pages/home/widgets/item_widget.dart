@@ -18,7 +18,7 @@ class ItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         context.read<HomeBloc>().addNavigatedEvent(
             NavigatorItemInfoPageForUpdatingEvent(index!, item!));
@@ -48,8 +48,16 @@ class ItemWidget extends StatelessWidget {
                     Tween<double>(begin: 0, end: 1).animate(deleteController!),
                 child: IconButton(
                   onPressed: () {
-                    context.read<HomeBloc>().add(DeletingItemEvent(index!));
+                    HomeBloc bloc = context.read<HomeBloc>();
+                    if (bloc.state.itemList?.length == 1 &&
+                        deleteController!.isCompleted) {
+                      deleteController!.reverse();
+                    }
+                    bloc.add(DeletingItemEvent(index!));
                   },
+                  padding: const EdgeInsets.only(right: 5),
+                  constraints:
+                      const BoxConstraints(minHeight: 10, maxHeight: 24),
                   icon: const Icon(
                     Icons.delete_rounded,
                   ),

@@ -51,31 +51,34 @@ class _FloatingButtonState extends State<FloatingButton> {
         return Positioned(
           right: 18,
           bottom: translateAnimation!.value,
-          child: InkWell(
-            onTap: onTap,
-            child: Container(
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(50),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Colors.grey,
-                    offset: Offset(0.0, 1.0), //(x,y)
-                    blurRadius: 5.0,
-                  ),
-                ],
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(iconData),
-                SizedBox(
-                  width: expandAnimation.value,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 5),
-                    child: Text(expandAnimation.value > 57 ? label : ""),
-                  ),
+          child: Visibility(
+            visible: floatingButtonController.isDismissed ? false : true,
+            child: InkWell(
+              onTap: onTap,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: color,
+                  borderRadius: BorderRadius.circular(50),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.grey,
+                      offset: Offset(0.0, 1.0), //(x,y)
+                      blurRadius: 5.0,
+                    ),
+                  ],
                 ),
-              ]),
+                padding: const EdgeInsets.all(10),
+                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                  Icon(iconData),
+                  SizedBox(
+                    width: expandAnimation.value,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 5),
+                      child: Text(expandAnimation.value > 57 ? label : ""),
+                    ),
+                  ),
+                ]),
+              ),
             ),
           ),
         );

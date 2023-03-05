@@ -37,30 +37,39 @@ class ItemCategorySubPage extends StatelessWidget {
                       .add(SetCategoryIndexEvent(selectedCategoryIndex: index));
                 },
                 highlightColor: Colors.blue,
-                child: Card(
-                  elevation: 2,
-                  shape: context
-                              .watch<ItemInfoBloc>()
-                              .state
-                              .selectedCategoryIndex ==
-                          index
-                      ? const RoundedRectangleBorder(
-                          side: BorderSide(color: Colors.blue, width: 3))
-                      : null,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Image.asset(
-                            selectedCategory.imageURL!,
-                            width: 80,
-                            height: 80,
-                            fit: BoxFit.fitHeight,
-                          ),
-                          Text(selectedCategory.name!)
-                        ]),
+                child: GestureDetector(
+                  onTap: () {
+                    context.read<ItemInfoBloc>().add(
+                        SetCategoryIndexEvent(selectedCategoryIndex: index));
+                  },
+                  child: Card(
+                    elevation: 2,
+                    shape: context
+                                .watch<ItemInfoBloc>()
+                                .state
+                                .selectedCategoryIndex ==
+                            index
+                        ? const RoundedRectangleBorder(
+                            side: BorderSide(color: Colors.blue, width: 3))
+                        : null,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Flexible(
+                              child: Image.asset(
+                                selectedCategory.imageURL!,
+                                // width: MediaQuery.of(context).size.width / 5,
+                                // height: MediaQuery.of(context).size.width / 5,
+                                // fit: BoxFit.fitWidth,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Text(selectedCategory.name!)
+                          ]),
+                    ),
                   ),
                 ),
               );

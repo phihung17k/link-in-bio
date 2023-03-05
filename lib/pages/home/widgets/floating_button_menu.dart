@@ -6,9 +6,6 @@ import 'package:link_in_bio/bloc/home/home_bloc.dart';
 
 import '../../../app_icons.dart';
 import '../../../bloc/home/home_event.dart';
-import '../../../models/item_model.dart';
-import '../../../routes.dart';
-import '../../../utils/pop_with_results.dart';
 import 'floating_button.dart';
 
 class FloatingButtonMenu extends StatefulWidget {
@@ -72,11 +69,9 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
             label: "Remove",
             iconData: Icons.remove_circle_outline_outlined,
             onTap: () {
-              if (deleteController.isDismissed) {
-                deleteController.forward();
-              } else {
-                deleteController.reverse();
-              }
+              deleteController.isDismissed
+                  ? deleteController.forward()
+                  : deleteController.reverse();
             }),
         FloatingButton(
           key: UniqueKey(),

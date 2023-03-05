@@ -8,9 +8,8 @@ import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
-  HomeBloc() : super(const HomeState(isDragUpBottom: true, itemList: [])) {
+  HomeBloc() : super(const HomeState(itemList: [])) {
     // on<AddingItemTestEvent>(_onDumpData);
-    on<UpdatingBottomStatusEvent>(_updateBottomStatus);
     on<AddingItemEvent>(_addItem);
     on<UpdatingItemEvent>(_updateItem);
     on<DeletingItemEvent>(_deleteItem);
@@ -30,11 +29,6 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
       tempList[event.index] = event.item;
       emit.call(state.copyWith(itemList: tempList));
     }
-  }
-
-  FutureOr<void> _updateBottomStatus(
-      UpdatingBottomStatusEvent event, Emitter<HomeState> emit) {
-    emit.call(state.copyWith(isDragUpBottom: event.bottomStatus));
   }
 
   FutureOr<void> _addItem(AddingItemEvent event, Emitter<HomeState> emit) {

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,7 +30,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     deleteController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 600));
+        vsync: this, duration: const Duration(milliseconds: 500));
 
     //for test
     // bloc.add(AddingItemTestEvent());
@@ -61,78 +63,97 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         body: BlocBuilder<HomeBloc, HomeState>(
           bloc: bloc,
           builder: (context, state) {
-            return Stack(children: [
-              Container(
-                  padding: const EdgeInsets.all(8),
-                  width: size.width,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      const CircleAvatar(
-                        radius: 50,
-                        backgroundImage:
-                            AssetImage('assets/images/default_avatar.png'),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text("Name",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      const Text("Personal information"),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Flexible(
-                          child: ReorderableListView(
-                        onReorder: (oldIndex, newIndex) {
-                          bloc.add(ReorderItemEvent(
-                              oldIndex: oldIndex, newIndex: newIndex));
-                        },
-                        children: [
-                          for (int i = 0; i < state.itemList!.length; i++)
-                            ItemWidget(
-                              key: UniqueKey(),
-                              index: i,
-                              item: state.itemList![i],
-                              deleteController: deleteController,
-                            )
-                        ],
-                      )
+            return SafeArea(
+              child: Stack(children: [
+                Container(
+                    padding: const EdgeInsets.all(8),
+                    width: size.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              AssetImage('assets/images/default_avatar.png'),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text("Name",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        const Text("Personal information"),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Flexible(
+                            child: ReorderableListView(
+                          onReorder: (oldIndex, newIndex) {
+                            bloc.add(ReorderItemEvent(
+                                oldIndex: oldIndex, newIndex: newIndex));
+                          },
+                          proxyDecorator: (child, index, animation) {
+                            return AnimatedBuilder(
+                              animation: animation,
+                              builder: (BuildContext context, Widget? child) {
+                                final double animValue =
+                                    Curves.easeInOut.transform(animation.value);
+                                final double elevation =
+                                    lerpDouble(0, 6, animValue)!;
+                                return Material(
+                                    elevation: elevation,
+                                    color: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                    child: child);
+                              },
+                              child: child,
+                            );
+                          },
+                          children: [
+                            for (int i = 0; i < state.itemList!.length; i++)
+                              ItemWidget(
+                                key: UniqueKey(),
+                                index: i,
+                                item: state.itemList![i],
+                                deleteController: deleteController,
+                              )
+                          ],
+                        )
 
-                          //     ReorderableListView.builder(
-                          //   onReorder: (oldIndex, newIndex) {
-                          //     bloc.add(ReorderItemEvent(
-                          //         oldIndex: oldIndex, newIndex: newIndex));
-                          //   },
-                          //   itemCount: state.itemList!.length,
-                          //   itemBuilder: (context, index) {
-                          //     return ItemWidget(
-                          //       key: UniqueKey(),
-                          //       index: index,
-                          //       item: state.itemList![index],
-                          //       deleteController: deleteController,
-                          //     );
-                          //   },
-                          // )
-                          ),
-                      SizedBox(
-                        height: size.height / 4,
-                      ),
-                    ],
-                  )),
-              // BottomBarWidget(
-              //   size: size,
-              //   deleteController: deleteController,
-              // ),
-              FloatingButtonMenu(
-                key: UniqueKey(),
-                deleteController: deleteController,
-              )
-            ]);
+                            //     ReorderableListView.builder(
+                            //   onReorder: (oldIndex, newIndex) {
+                            //     bloc.add(ReorderItemEvent(
+                            //         oldIndex: oldIndex, newIndex: newIndex));
+                            //   },
+                            //   itemCount: state.itemList!.length,
+                            //   itemBuilder: (context, index) {
+                            //     return ItemWidget(
+                            //       key: UniqueKey(),
+                            //       index: index,
+                            //       item: state.itemList![index],
+                            //       deleteController: deleteController,
+                            //     );
+                            //   },
+                            // )
+                            ),
+                        SizedBox(
+                          height: size.height / 4,
+                        ),
+                      ],
+                    )),
+                // BottomBarWidget(
+                //   size: size,
+                //   deleteController: deleteController,
+                // ),
+                FloatingButtonMenu(
+                  key: UniqueKey(),
+                  deleteController: deleteController,
+                )
+              ]),
+            );
           },
         ),
       ),

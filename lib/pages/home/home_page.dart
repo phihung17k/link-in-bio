@@ -49,6 +49,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             bloc.add(UpdatingItemEvent(event.index, value));
           }
         });
+      } else if (event is NavigatorQRSharingPageEvent) {
+        // Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: event.item)
+        //     .then((value) {
+        //   if (value is ItemModel) {
+        //     bloc.add(UpdatingItemEvent(event.index, value));
+        //   }
+        // });
+
       }
     });
   }
@@ -121,33 +129,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 deleteController: deleteController,
                               )
                           ],
-                        )
-
-                            //     ReorderableListView.builder(
-                            //   onReorder: (oldIndex, newIndex) {
-                            //     bloc.add(ReorderItemEvent(
-                            //         oldIndex: oldIndex, newIndex: newIndex));
-                            //   },
-                            //   itemCount: state.itemList!.length,
-                            //   itemBuilder: (context, index) {
-                            //     return ItemWidget(
-                            //       key: UniqueKey(),
-                            //       index: index,
-                            //       item: state.itemList![index],
-                            //       deleteController: deleteController,
-                            //     );
-                            //   },
-                            // )
-                            ),
+                        )),
                         SizedBox(
                           height: size.height / 4,
                         ),
                       ],
                     )),
-                // BottomBarWidget(
-                //   size: size,
-                //   deleteController: deleteController,
-                // ),
                 FloatingButtonMenu(
                   key: UniqueKey(),
                   deleteController: deleteController,

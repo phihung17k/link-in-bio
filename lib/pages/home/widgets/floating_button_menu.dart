@@ -18,6 +18,8 @@ class FloatingButtonMenu extends StatefulWidget {
 
 class _FloatingButtonMenuState extends State<FloatingButtonMenu>
     with TickerProviderStateMixin {
+  HomeBloc? bloc;
+
   AnimationController? floatingButtonController;
   Animation? expandAnimation;
   Animation? rotateAnimation;
@@ -37,6 +39,8 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
     rotateAnimation = Tween<double>(begin: 0, end: pi / 4).animate(
         CurvedAnimation(
             parent: floatingButtonController!, curve: const Interval(0, 0.4)));
+
+    bloc = context.read<HomeBloc>();
   }
 
   @override
@@ -56,9 +60,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
           label: "Create",
           iconData: Icons.add_circle_outline_outlined,
           onTap: () {
-            context
-                .read<HomeBloc>()
-                .addNavigatedEvent(NavigatorItemInfoPageForCreatingEvent());
+            bloc!.addNavigatedEvent(NavigatorItemInfoPageForCreatingEvent());
           },
         ),
         FloatingButton(
@@ -79,8 +81,26 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
           expandAnimation: expandAnimation,
           lastAnimatedHeight: 134,
           label: "Share",
-          iconData: AppIcons.share,
-          onTap: () {},
+          iconData: Icons.share_rounded,
+          onTap: () {
+            // showBottomSheet(
+            //   context: context,
+            //   builder: (context) {
+            // return Container(
+            //   color: Colors.amber,
+            // );
+            //   },
+            // );
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                return Container(
+                    // color: Colors.amber,
+                    );
+              },
+            );
+            // bloc!.addNavigatedEvent(NavigatorQRSharingPageEvent());
+          },
         ),
         FloatingButton(
           key: UniqueKey(),

@@ -3,7 +3,6 @@ import 'package:get_it/get_it.dart';
 
 class Routes {
   static String get home => "home";
-  static String get itemCategoryChoosing => "itemCategoryChoosing";
   static String get itemInfo => "itemInfo";
   static String get qrCodeSharing => "qrCodeSharing";
 

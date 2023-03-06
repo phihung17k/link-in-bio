@@ -51,3 +51,5 @@ class ReorderItemEvent extends HomeEvent {
 
   ReorderItemEvent({required this.oldIndex, required this.newIndex});
 }
+
+class NavigatorQRSharingPageEvent extends HomeEvent {}

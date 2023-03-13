@@ -83,20 +83,33 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
           label: "Share",
           iconData: Icons.share_rounded,
           onTap: () {
-            // showBottomSheet(
-            //   context: context,
-            //   builder: (context) {
-            // return Container(
-            //   color: Colors.amber,
-            // );
-            //   },
-            // );
             showModalBottomSheet(
               context: context,
+              isScrollControlled: true,
+              // isDismissible: true,
+              // shape: const RoundedRectangleBorder(
+              //   borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+              // ),
               builder: (context) {
-                return Container(
-                    // color: Colors.amber,
+                return DraggableScrollableSheet(
+                  initialChildSize: 0.5,
+                  minChildSize: 0.3,
+                  maxChildSize: 0.8,
+                  expand: false,
+                  builder: (context, scrollController) {
+                    return Container(
+                      color: Colors.amber,
+                      child: ListView.builder(
+                        controller: scrollController,
+                        itemCount: 100,
+                        itemBuilder: (context, index) => ListTile(
+                          title: Text(index.toString()),
+                          onTap: () => Navigator.of(context).pop(index),
+                        ),
+                      ),
                     );
+                  },
+                );
               },
             );
             // bloc!.addNavigatedEvent(NavigatorQRSharingPageEvent());

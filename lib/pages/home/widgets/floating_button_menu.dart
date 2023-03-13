@@ -93,20 +93,41 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
               builder: (context) {
                 return DraggableScrollableSheet(
                   initialChildSize: 0.5,
-                  minChildSize: 0.3,
-                  maxChildSize: 0.8,
+                  minChildSize: 0.4,
+                  maxChildSize: 0.7,
                   expand: false,
                   builder: (context, scrollController) {
-                    return Container(
-                      color: Colors.amber,
-                      child: ListView.builder(
-                        controller: scrollController,
-                        itemCount: 100,
-                        itemBuilder: (context, index) => ListTile(
-                          title: Text(index.toString()),
-                          onTap: () => Navigator.of(context).pop(index),
-                        ),
-                      ),
+                    return CustomScrollView(
+                      controller: scrollController,
+                      slivers: <Widget>[
+                        SliverAppBar(
+                            automaticallyImplyLeading: false,
+                            titleSpacing: 0,
+                            pinned: true,
+                            title: Row(
+                              children: [
+                                Expanded(
+                                  child: CheckboxListTile(
+                                    controlAffinity:
+                                        ListTileControlAffinity.leading,
+                                    value: false,
+                                    onChanged: (value) {},
+                                    title: const Text("Heading"),
+                                  ),
+                                ),
+                              ],
+                            )),
+                        SliverList(
+                            delegate:
+                                SliverChildBuilderDelegate((context, index) {
+                          return CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            value: false,
+                            onChanged: (value) {},
+                            title: Text("number $index"),
+                          );
+                        }, childCount: 50))
+                      ],
                     );
                   },
                 );

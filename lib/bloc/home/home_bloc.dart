@@ -8,7 +8,9 @@ import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
-  HomeBloc() : super(const HomeState(itemList: [], selectedItemList: [])) {
+  HomeBloc()
+      : super(const HomeState(
+            itemList: [], selectedItemList: [], isSelectAll: false)) {
     // on<AddingItemTestEvent>(_onDumpData);
     on<AddingItemEvent>(_addItem);
     on<UpdatingItemEvent>(_updateItem);
@@ -17,6 +19,8 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
 
     on<AddingSelectedItemEvent>(_addSelectedItem);
     on<DeletingSelectedItemEvent>(_deleteSelectedItem);
+    on<ResetSelectedItemsEvent>(_resetSelectedItems);
+    on<SelectingAllItemEvent>(_selectAllItem);
   }
 
   // FutureOr<void> _onDumpData(
@@ -61,13 +65,29 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
       AddingSelectedItemEvent event, Emitter<HomeState> emit) {
     List<ItemModel> selectedItems = state.selectedItemList!.toList();
     selectedItems.add(event.item!);
-    emit.call(state.copyWith(selectedItemList: selectedItems));
+    emit.call(state.copyWith(
+        selectedItemList: selectedItems,
+        isSelectAll: selectedItems.length == state.itemList!.length));
   }
 
   FutureOr<void> _deleteSelectedItem(
       DeletingSelectedItemEvent event, Emitter<HomeState> emit) {
     List<ItemModel> selectedItems = state.selectedItemList!.toList();
     selectedItems.remove(event.item!);
-    emit.call(state.copyWith(selectedItemList: selectedItems));
+    emit.call(state.copyWith(
+        selectedItemList: selectedItems,
+        isSelectAll: selectedItems.length == state.itemList!.length));
+  }
+
+  FutureOr<void> _resetSelectedItems(
+      ResetSelectedItemsEvent event, Emitter<HomeState> emit) {
+    emit.call(state.copyWith(selectedItemList: [], isSelectAll: false));
+  }
+
+  FutureOr<void> _selectAllItem(
+      SelectingAllItemEvent event, Emitter<HomeState> emit) {
+    List<ItemModel> selectedItems = state.itemList!.toList();
+    emit.call(
+        state.copyWith(selectedItemList: selectedItems, isSelectAll: true));
   }
 }

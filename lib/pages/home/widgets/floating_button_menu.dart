@@ -46,14 +46,9 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
 
   Future showSharingBottomSheet(BuildContext context) {
     List<ItemModel>? items = bloc?.state.itemList;
-    List<ItemModel>? selectedItems = bloc?.state.selectedItemList;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      // isDismissible: true,
-      // shape: const RoundedRectangleBorder(
-      //   borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-      // ),
       builder: (context) {
         return DraggableScrollableSheet(
           initialChildSize: 0.5,
@@ -71,11 +66,27 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                     title: Row(
                       children: [
                         Expanded(
-                          child: CheckboxListTile(
-                            controlAffinity: ListTileControlAffinity.leading,
-                            value: false,
-                            onChanged: (value) {},
-                            title: const Text("Select all"),
+                          child: BlocBuilder<HomeBloc, HomeState>(
+                            bloc: bloc,
+                            buildWhen: (previous, current) {
+                              return previous.isSelectAll !=
+                                  current.isSelectAll;
+                            },
+                            builder: (context, state) {
+                              return CheckboxListTile(
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                                value: state.isSelectAll,
+                                onChanged: (value) {
+                                  if (value!) {
+                                    bloc!.add(SelectingAllItemEvent());
+                                  } else {
+                                    bloc!.add(ResetSelectedItemsEvent());
+                                  }
+                                },
+                                title: const Text("Select all"),
+                              );
+                            },
                           ),
                         ),
                       ],
@@ -83,7 +94,6 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                 SliverList(
                     delegate: SliverChildBuilderDelegate((context, index) {
                   ItemModel item = items![index];
-                  // print("bool ${selectedItems!.contains(item)}");
                   return BlocBuilder<HomeBloc, HomeState>(
                     bloc: bloc,
                     builder: (context, state) {
@@ -91,8 +101,6 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                         controlAffinity: ListTileControlAffinity.leading,
                         value: state.selectedItemList!.contains(item),
                         onChanged: (value) {
-                          // print(
-                          //     "value $value and ${state.selectedItemList!.length}");
                           if (value!) {
                             bloc!.add(AddingSelectedItemEvent(item));
                           } else {
@@ -154,9 +162,14 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
           label: "Share",
           iconData: Icons.share_rounded,
           onTap: () {
-            showSharingBottomSheet(context).whenComplete(() {
-              print("end");
+            showSharingBottomSheet(context).then((value) {
+              if (value == null) {
+                bloc!.add(ResetSelectedItemsEvent());
+              } else {}
             });
+            // whenComplete(() {
+            //   print("end");
+            // });
             // bloc!.addNavigatedEvent(NavigatorQRSharingPageEvent());
           },
         ),

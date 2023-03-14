@@ -66,3 +66,7 @@ class DeletingSelectedItemEvent extends HomeEvent {
 
   DeletingSelectedItemEvent(this.item);
 }
+
+class ResetSelectedItemsEvent extends HomeEvent {}
+
+class SelectingAllItemEvent extends HomeEvent {}

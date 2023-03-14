@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:link_in_bio/models/item_category_model.dart';
 
 class ItemModel extends Equatable {
+  // String? id;
   final String? name;
   final ItemCategoryModel? category;
   final String? url;

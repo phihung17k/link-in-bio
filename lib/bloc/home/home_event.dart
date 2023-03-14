@@ -53,3 +53,16 @@ class ReorderItemEvent extends HomeEvent {
 }
 
 class NavigatorQRSharingPageEvent extends HomeEvent {}
+
+//sharing
+class AddingSelectedItemEvent extends HomeEvent {
+  final ItemModel? item;
+
+  AddingSelectedItemEvent(this.item);
+}
+
+class DeletingSelectedItemEvent extends HomeEvent {
+  final ItemModel? item;
+
+  DeletingSelectedItemEvent(this.item);
+}

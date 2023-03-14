@@ -8,12 +8,15 @@ import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
-  HomeBloc() : super(const HomeState(itemList: [])) {
+  HomeBloc() : super(const HomeState(itemList: [], selectedItemList: [])) {
     // on<AddingItemTestEvent>(_onDumpData);
     on<AddingItemEvent>(_addItem);
     on<UpdatingItemEvent>(_updateItem);
     on<DeletingItemEvent>(_deleteItem);
     on<ReorderItemEvent>(_reorderItem);
+
+    on<AddingSelectedItemEvent>(_addSelectedItem);
+    on<DeletingSelectedItemEvent>(_deleteSelectedItem);
   }
 
   // FutureOr<void> _onDumpData(
@@ -52,5 +55,19 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
     ItemModel item = items.removeAt(oldIndex);
     items.insert(newIndex, item);
     emit.call(state.copyWith(itemList: items));
+  }
+
+  FutureOr<void> _addSelectedItem(
+      AddingSelectedItemEvent event, Emitter<HomeState> emit) {
+    List<ItemModel> selectedItems = state.selectedItemList!.toList();
+    selectedItems.add(event.item!);
+    emit.call(state.copyWith(selectedItemList: selectedItems));
+  }
+
+  FutureOr<void> _deleteSelectedItem(
+      DeletingSelectedItemEvent event, Emitter<HomeState> emit) {
+    List<ItemModel> selectedItems = state.selectedItemList!.toList();
+    selectedItems.remove(event.item!);
+    emit.call(state.copyWith(selectedItemList: selectedItems));
   }
 }

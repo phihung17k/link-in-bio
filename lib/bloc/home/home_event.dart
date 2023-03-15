@@ -56,15 +56,15 @@ class NavigatorQRSharingPageEvent extends HomeEvent {}
 
 //sharing
 class AddingSelectedItemEvent extends HomeEvent {
-  final ItemModel? item;
+  final int? index;
 
-  AddingSelectedItemEvent(this.item);
+  AddingSelectedItemEvent(this.index);
 }
 
 class DeletingSelectedItemEvent extends HomeEvent {
-  final ItemModel? item;
+  final int? index;
 
-  DeletingSelectedItemEvent(this.item);
+  DeletingSelectedItemEvent(this.index);
 }
 
 class ResetSelectedItemsEvent extends HomeEvent {}

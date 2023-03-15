@@ -99,12 +99,12 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                     builder: (context, state) {
                       return CheckboxListTile(
                         controlAffinity: ListTileControlAffinity.leading,
-                        value: state.selectedItemList!.contains(item),
+                        value: state.selectedIndexList!.contains(index),
                         onChanged: (value) {
                           if (value!) {
-                            bloc!.add(AddingSelectedItemEvent(item));
+                            bloc!.add(AddingSelectedItemEvent(index));
                           } else {
-                            bloc!.add(DeletingSelectedItemEvent(item));
+                            bloc!.add(DeletingSelectedItemEvent(index));
                           }
                         },
                         title: Text(item.name!),

@@ -10,7 +10,7 @@ import 'home_state.dart';
 class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
   HomeBloc()
       : super(const HomeState(
-            itemList: [], selectedItemList: [], isSelectAll: false)) {
+            itemList: [], selectedIndexList: [], isSelectAll: false)) {
     // on<AddingItemTestEvent>(_onDumpData);
     on<AddingItemEvent>(_addItem);
     on<UpdatingItemEvent>(_updateItem);
@@ -63,31 +63,33 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
 
   FutureOr<void> _addSelectedItem(
       AddingSelectedItemEvent event, Emitter<HomeState> emit) {
-    List<ItemModel> selectedItems = state.selectedItemList!.toList();
-    selectedItems.add(event.item!);
+    List<int> selectedIndexList = state.selectedIndexList!.toList();
+    selectedIndexList.add(event.index!);
     emit.call(state.copyWith(
-        selectedItemList: selectedItems,
-        isSelectAll: selectedItems.length == state.itemList!.length));
+        selectedIndexList: selectedIndexList,
+        isSelectAll: selectedIndexList.length == state.itemList!.length));
   }
 
   FutureOr<void> _deleteSelectedItem(
       DeletingSelectedItemEvent event, Emitter<HomeState> emit) {
-    List<ItemModel> selectedItems = state.selectedItemList!.toList();
-    selectedItems.remove(event.item!);
+    List<int> selectedIndexList = state.selectedIndexList!.toList();
+    selectedIndexList.remove(event.index!);
     emit.call(state.copyWith(
-        selectedItemList: selectedItems,
-        isSelectAll: selectedItems.length == state.itemList!.length));
+        selectedIndexList: selectedIndexList,
+        isSelectAll: selectedIndexList.length == state.itemList!.length));
   }
 
   FutureOr<void> _resetSelectedItems(
       ResetSelectedItemsEvent event, Emitter<HomeState> emit) {
-    emit.call(state.copyWith(selectedItemList: [], isSelectAll: false));
+    emit.call(state.copyWith(selectedIndexList: [], isSelectAll: false));
   }
 
   FutureOr<void> _selectAllItem(
       SelectingAllItemEvent event, Emitter<HomeState> emit) {
-    List<ItemModel> selectedItems = state.itemList!.toList();
-    emit.call(
-        state.copyWith(selectedItemList: selectedItems, isSelectAll: true));
+    emit.call(state.copyWith(
+        selectedIndexList: List<int>.generate(
+            state.itemList!.length, (int index) => index,
+            growable: true),
+        isSelectAll: true));
   }
 }

@@ -50,13 +50,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           }
         });
       } else if (event is NavigatorQRSharingPageEvent) {
-        // Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: event.item)
-        //     .then((value) {
-        //   if (value is ItemModel) {
-        //     bloc.add(UpdatingItemEvent(event.index, value));
-        //   }
-        // });
+        List<ItemModel> items = bloc.state.selectedIndexList!
+            .map((index) => bloc.state.itemList![index])
+            .toList();
 
+        // Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items)
+        //     .then((value) {
+        //   // if (value is ItemModel) {
+        //   //   bloc.add(UpdatingItemEvent(event.index, value));
+        //   // }
+        // });
       }
     });
   }

@@ -16,14 +16,6 @@ class UpdatingItemEvent extends HomeEvent {
   List<Object?> get props => [index, item];
 }
 
-class UpdatingBottomStatusEvent extends HomeEvent {
-  final bool bottomStatus;
-
-  UpdatingBottomStatusEvent(this.bottomStatus);
-}
-
-class AddingItemTestEvent extends HomeEvent {}
-
 class AddingItemEvent extends HomeEvent {
   final ItemModel item;
 
@@ -52,8 +44,6 @@ class ReorderItemEvent extends HomeEvent {
   ReorderItemEvent({required this.oldIndex, required this.newIndex});
 }
 
-class NavigatorQRSharingPageEvent extends HomeEvent {}
-
 //sharing
 class AddingSelectedItemEvent extends HomeEvent {
   final int? index;
@@ -70,3 +60,5 @@ class DeletingSelectedItemEvent extends HomeEvent {
 class ResetSelectedItemsEvent extends HomeEvent {}
 
 class SelectingAllItemEvent extends HomeEvent {}
+
+class NavigatorQRSharingPageEvent extends HomeEvent {}

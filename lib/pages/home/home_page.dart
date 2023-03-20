@@ -7,6 +7,7 @@ import 'package:link_in_bio/bloc/home/home_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_state.dart';
 import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/models/item_model.dart';
+import 'package:link_in_bio/utils/network_connectivity.dart';
 
 import '../../bloc/home/home_event.dart';
 import '../../routes.dart';
@@ -26,9 +27,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   AnimationController? deleteController;
 
+  final NetworkConnectivity _networkConnectivity = NetworkConnectivity();
+
   @override
   void initState() {
     super.initState();
+
+    _networkConnectivity.initialize();
+
     deleteController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
 

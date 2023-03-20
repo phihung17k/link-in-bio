@@ -15,6 +15,9 @@ class ItemModel extends Equatable {
         url: url ?? this.url);
   }
 
+  Map<String, dynamic> toJson() =>
+      {'name': name, 'category': category?.toJson(), 'url': url};
+
   @override
   List<Object?> get props => [name, category, url];
 }

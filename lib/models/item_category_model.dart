@@ -21,12 +21,8 @@ class ItemCategoryModel extends Equatable {
           imageURL: json['imageURL'],
           baseURL: json['baseURL']);
 
-  Map<String, dynamic> toMap() => {
-        // 'id': index,
-        'name': name,
-        'imageURL': imageURL,
-        'baseURL': baseURL
-      };
+  Map<String, dynamic> toJson() =>
+      {'name': name, 'imageURL': imageURL, 'baseURL': baseURL};
 
   @override
   List<Object?> get props => [name, imageURL, baseURL];

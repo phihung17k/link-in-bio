@@ -1,19 +1,10 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
 import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
 import 'package:link_in_bio/models/item_category_model.dart';
-import 'package:link_in_bio/models/item_model.dart';
 import 'package:link_in_bio/pages/item_info/widgets/item_detail_card.dart';
-import 'package:link_in_bio/pages/qrcode_sharing_page.dart';
-import 'package:link_in_bio/routes.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-
-import '../../app_icons.dart';
-import '../../utils/pop_with_results.dart';
 
 class ItemContentSubPage extends StatefulWidget {
   final String? initialName;

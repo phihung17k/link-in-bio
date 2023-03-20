@@ -62,3 +62,5 @@ class ResetSelectedItemsEvent extends HomeEvent {}
 class SelectingAllItemEvent extends HomeEvent {}
 
 class NavigatorQRSharingPageEvent extends HomeEvent {}
+
+class HandlingSelectedItemEvent extends HomeEvent {}

@@ -60,12 +60,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             .map((index) => bloc.state.itemList![index])
             .toList();
 
-        // Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items)
-        //     .then((value) {
-        //   // if (value is ItemModel) {
-        //   //   bloc.add(UpdatingItemEvent(event.index, value));
-        //   // }
-        // });
+        Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items)
+            .then((value) {
+          // if (value is ItemModel) {
+          //   bloc.add(UpdatingItemEvent(event.index, value));
+          // }
+        });
       }
     });
   }

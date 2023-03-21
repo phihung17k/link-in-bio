@@ -9,11 +9,11 @@ class NetworkConnectivity {
   // static NetworkConnectivity get instance => _instance;
 
   final Connectivity _networkConnectivity = Connectivity();
-  final StreamController _controller = StreamController.broadcast();
+  final StreamController<Map<ConnectivityResult, bool>> _controller =
+      StreamController.broadcast();
 
-  Stream get connectionStream => _controller.stream;
-
-  dynamic x;
+  Stream<Map<ConnectivityResult, bool>> get connectionStream =>
+      _controller.stream;
 
   void initialize() async {
     ConnectivityResult result = await _networkConnectivity.checkConnectivity();
@@ -21,33 +21,22 @@ class NetworkConnectivity {
     _checkStatus(result);
 
     _networkConnectivity.onConnectivityChanged.listen((event) {
-      print(event);
-      x = event;
+      _checkStatus(result);
     });
   }
 
-  // void _checkStatus() async {
-  //   bool isOnline = false;
-  //   try {
-  //     List<InternetAddress> list = await InternetAddress.lookup('example.com');
-  //     if (list.isNotEmpty) {
-  //       isOnline = true;
-  //     }
-  //     print("abc");
-  //   } catch (_) {
-  //     isOnline = false;
-  //   }
-  //   _controller.add({result});
-  // }
   void _checkStatus(ConnectivityResult result) async {
     bool isOnline = false;
     try {
       final list = await InternetAddress.lookup('example.com');
       isOnline = list.isNotEmpty && list[0].rawAddress.isNotEmpty;
-    } on SocketException catch (e) {
+    } on SocketException catch (_) {
       isOnline = false;
-      print(e);
     }
     _controller.sink.add({result: isOnline});
+  }
+
+  void dispose() {
+    _controller.close();
   }
 }

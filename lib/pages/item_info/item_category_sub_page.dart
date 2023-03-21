@@ -79,7 +79,7 @@ class ItemCategorySubPage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
           onPressed: () {
-            DefaultTabController.of(context)!.animateTo(1);
+            DefaultTabController.of(context).animateTo(1);
           },
           child: const Icon(Icons.keyboard_double_arrow_right_rounded)),
     );

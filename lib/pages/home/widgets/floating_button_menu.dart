@@ -192,7 +192,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                 bloc!.add(ResetSelectedItemsEvent());
               } else {
                 if (bloc!.state.selectedIndexList!.isNotEmpty) {
-                  bloc!.add(HandlingSelectedItemEvent());
+                  bloc!.addNavigatedEvent(NavigatorQRSharingPageEvent());
                 }
               }
             });

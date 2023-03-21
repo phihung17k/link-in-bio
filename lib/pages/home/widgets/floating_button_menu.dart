@@ -63,6 +63,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                     automaticallyImplyLeading: false,
                     titleSpacing: 0,
                     pinned: true,
+                    backgroundColor: Colors.blueAccent.shade100,
                     title: Row(
                       children: [
                         Expanded(
@@ -77,6 +78,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                                 controlAffinity:
                                     ListTileControlAffinity.leading,
                                 value: state.isSelectAll,
+                                tileColor: Colors.transparent,
                                 onChanged: (value) {
                                   if (value!) {
                                     bloc!.add(SelectingAllItemEvent());
@@ -84,11 +86,30 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                                     bloc!.add(ResetSelectedItemsEvent());
                                   }
                                 },
-                                title: const Text("Select all"),
+                                title: Text("Select all"),
                               );
                             },
                           ),
                         ),
+                        InkWell(
+                          child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 15),
+                              child: Text("Share",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium!)),
+                          onTap: () {
+                            if (bloc!.state.selectedIndexList!.isEmpty) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text("No items selected"),
+                                duration: Duration(seconds: 1),
+                              ));
+                            }
+                            Navigator.pop(context, "share");
+                          },
+                        )
                       ],
                     )),
                 SliverList(
@@ -96,6 +117,10 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                   ItemModel item = items![index];
                   return BlocBuilder<HomeBloc, HomeState>(
                     bloc: bloc,
+                    buildWhen: (previous, current) {
+                      return previous.selectedIndexList!.contains(index) !=
+                          current.selectedIndexList!.contains(index);
+                    },
                     builder: (context, state) {
                       return CheckboxListTile(
                         controlAffinity: ListTileControlAffinity.leading,
@@ -165,12 +190,12 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
             showSharingBottomSheet(context).then((value) {
               if (value == null) {
                 bloc!.add(ResetSelectedItemsEvent());
-              } else {}
+              } else {
+                if (bloc!.state.selectedIndexList!.isNotEmpty) {
+                  bloc!.add(HandlingSelectedItemEvent());
+                }
+              }
             });
-            // whenComplete(() {
-            //   print("end");
-            // });
-            // bloc!.addNavigatedEvent(NavigatorQRSharingPageEvent());
           },
         ),
         FloatingButton(

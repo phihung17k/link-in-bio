@@ -7,6 +7,7 @@ import 'package:link_in_bio/bloc/home/home_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_state.dart';
 import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/models/item_model.dart';
+import 'package:link_in_bio/utils/network_connectivity.dart';
 
 import '../../bloc/home/home_event.dart';
 import '../../routes.dart';
@@ -26,9 +27,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   AnimationController? deleteController;
 
+  final NetworkConnectivity _networkConnectivity = NetworkConnectivity();
+
   @override
   void initState() {
     super.initState();
+
+    _networkConnectivity.initialize();
+
     deleteController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
 
@@ -50,13 +56,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           }
         });
       } else if (event is NavigatorQRSharingPageEvent) {
-        // Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: event.item)
-        //     .then((value) {
-        //   if (value is ItemModel) {
-        //     bloc.add(UpdatingItemEvent(event.index, value));
-        //   }
-        // });
+        List<ItemModel> items = bloc.state.selectedIndexList!
+            .map((index) => bloc.state.itemList![index])
+            .toList();
 
+        // Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items)
+        //     .then((value) {
+        //   // if (value is ItemModel) {
+        //   //   bloc.add(UpdatingItemEvent(event.index, value));
+        //   // }
+        // });
       }
     });
   }

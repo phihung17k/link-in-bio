@@ -13,7 +13,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Settings"),
+        title: const Text("Settings"),
       ),
     );
   }

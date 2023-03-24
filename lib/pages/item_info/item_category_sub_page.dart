@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
-import 'package:link_in_bio/models/item_category_model.dart';
+import '../../bloc/item_info/item_info_bloc.dart';
+import '../../bloc/item_info/item_info_event.dart';
+import '../../bloc/item_info/item_info_state.dart';
+import '../../models/item_category_model.dart';
 
 class ItemCategorySubPage extends StatelessWidget {
   const ItemCategorySubPage({super.key});

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/home/home_bloc.dart';
-
+import '../../../bloc/home/home_bloc.dart';
 import '../../../bloc/home/home_event.dart';
 import '../../../models/item_model.dart';
 

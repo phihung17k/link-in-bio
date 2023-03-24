@@ -1,14 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
-import 'package:link_in_bio/models/item_category_model.dart';
-import 'package:link_in_bio/models/item_model.dart';
-import 'package:link_in_bio/repository/item_category_repository.dart';
-
+import 'item_info_event.dart';
+import 'item_info_state.dart';
+import '../../models/item_category_model.dart';
+import '../../models/item_model.dart';
+import '../../repository/item_category_repository.dart';
 import '../base_bloc.dart';
 
 class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {

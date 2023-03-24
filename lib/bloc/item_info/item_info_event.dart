@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:link_in_bio/models/item_model.dart';
+import '../../models/item_model.dart';
 
 abstract class ItemInfoEvent extends Equatable {
   @override

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import '../../models/item_model.dart';
 
 class HomeState extends Equatable {

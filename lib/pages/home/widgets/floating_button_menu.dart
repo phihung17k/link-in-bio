@@ -1,11 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/home/home_bloc.dart';
-import 'package:link_in_bio/bloc/home/home_state.dart';
-import 'package:link_in_bio/models/item_model.dart';
-
+import '../../../bloc/home/home_bloc.dart';
+import '../../../bloc/home/home_state.dart';
+import '../../../models/item_model.dart';
 import '../../../bloc/home/home_event.dart';
 import 'floating_button.dart';
 
@@ -86,7 +84,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                                     bloc!.add(ResetSelectedItemsEvent());
                                   }
                                 },
-                                title: Text("Select all"),
+                                title: const Text("Select all"),
                               );
                             },
                           ),

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
-import 'package:link_in_bio/models/item_category_model.dart';
-import 'package:link_in_bio/models/item_model.dart';
+import '../../models/item_category_model.dart';
+import '../../models/item_model.dart';
 
 class ItemInfoState extends Equatable {
   final List<ItemCategoryModel>? itemCategories;

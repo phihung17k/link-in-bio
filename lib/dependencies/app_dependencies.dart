@@ -1,7 +1,7 @@
 import 'package:get_it/get_it.dart';
-import 'package:link_in_bio/dependencies/bloc_dependencies.dart';
-import 'package:link_in_bio/dependencies/page_dependencies.dart';
-import 'package:link_in_bio/utils/network_connectivity.dart';
+import '../dependencies/bloc_dependencies.dart';
+import '../dependencies/page_dependencies.dart';
+import '../utils/network_connectivity.dart';
 
 class AppDependencies {
   static GetIt get _injector => GetIt.instance;

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:link_in_bio/dependencies/app_dependencies.dart';
-
+import '../dependencies/app_dependencies.dart';
 import 'routes.dart';
 
 void main() async {

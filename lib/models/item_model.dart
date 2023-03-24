@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:link_in_bio/models/item_category_model.dart';
+import '../models/item_category_model.dart';
 
 class ItemModel extends Equatable {
   final String? name;

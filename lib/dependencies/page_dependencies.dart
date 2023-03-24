@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:link_in_bio/pages/pages.dart';
-import 'package:link_in_bio/routes.dart';
-
+import '../pages/pages.dart';
+import '../routes.dart';
 import '../pages/item_info/item_info_page.dart';
 
 class PageDependencies {
@@ -13,5 +12,7 @@ class PageDependencies {
         instanceName: Routes.itemInfo);
     injector.registerFactory<Widget>(() => QRCodeSharingPage(injector()),
         instanceName: Routes.qrCodeSharing);
+    injector.registerFactory<Widget>(() => BioPreviewPage(injector()),
+        instanceName: Routes.bioPreview);
   }
 }

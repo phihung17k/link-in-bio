@@ -5,6 +5,7 @@ class Routes {
   static String get home => "home";
   static String get itemInfo => "itemInfo";
   static String get qrCodeSharing => "qrCodeSharing";
+  static String get bioPreview => "bioPreview";
 
   static MaterialPageRoute getRoutes(RouteSettings settings) {
     Widget widget;

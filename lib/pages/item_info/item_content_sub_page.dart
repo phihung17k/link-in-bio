@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
-import 'package:link_in_bio/models/item_category_model.dart';
-import 'package:link_in_bio/pages/item_info/widgets/item_detail_card.dart';
+import '../../../bloc/item_info/item_info_bloc.dart';
+import '../../../bloc/item_info/item_info_event.dart';
+import '../../../bloc/item_info/item_info_state.dart';
+import '../../../models/item_category_model.dart';
+import '../../../pages/item_info/widgets/item_detail_card.dart';
 
 class ItemContentSubPage extends StatefulWidget {
   final String? initialName;

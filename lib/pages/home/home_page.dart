@@ -1,14 +1,10 @@
 import 'dart:ui';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/home/home_bloc.dart';
-import 'package:link_in_bio/bloc/home/home_state.dart';
-import 'package:link_in_bio/models/item_category_model.dart';
-import 'package:link_in_bio/models/item_model.dart';
-import 'package:link_in_bio/utils/network_connectivity.dart';
-
+import '../../bloc/home/home_bloc.dart';
+import '../../bloc/home/home_state.dart';
+import '../../models/item_model.dart';
+import '../../utils/network_connectivity.dart';
 import '../../bloc/home/home_event.dart';
 import '../../routes.dart';
 import 'widgets/floating_button_menu.dart';
@@ -38,9 +34,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     deleteController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
 
-    //for test
-    // bloc.add(AddingItemTestEvent());
-
     bloc.listenerStream.listen((event) {
       if (event is NavigatorItemInfoPageForCreatingEvent) {
         Navigator.pushNamed(context, Routes.itemInfo).then((item) {
@@ -59,13 +52,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         List<ItemModel> items = bloc.state.selectedIndexList!
             .map((index) => bloc.state.itemList![index])
             .toList();
-
-        Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items)
-            .then((value) {
-          // if (value is ItemModel) {
-          //   bloc.add(UpdatingItemEvent(event.index, value));
-          // }
-        });
+        Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items);
       }
     });
   }

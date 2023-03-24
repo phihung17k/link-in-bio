@@ -1,7 +1,5 @@
 import 'dart:async';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import '../../models/item_model.dart';
 import '../base_bloc.dart';
 import 'home_event.dart';
@@ -89,9 +87,9 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
   FutureOr<void> _handleSelectedItem(
       HandlingSelectedItemEvent event, Emitter<HomeState> emit) {
     // get selected items
-    List<ItemModel> items = state.selectedIndexList!
-        .map((index) => state.itemList![index])
-        .toList();
+    // List<ItemModel> items = state.selectedIndexList!
+    //     .map((index) => state.itemList![index])
+    //     .toList();
 
     // check the current status of device to determine create QR online or offline
     // online: upload data to cloud and create url into qr code

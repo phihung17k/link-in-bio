@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/qr_code/qr_code_bloc.dart';
-import 'package:link_in_bio/pages/qr_code/widgets/qr_code_web.dart';
-import 'package:link_in_bio/utils/network_connectivity.dart';
-import 'package:qr_flutter/qr_flutter.dart';
+import '../../bloc/qr_code/qr_code_bloc.dart';
+import '../../pages/qr_code/widgets/qr_code_app.dart';
+import '../../pages/qr_code/widgets/qr_code_web.dart';
+import '../../routes.dart';
+import '../../utils/network_connectivity.dart';
 
 import '../../bloc/qr_code/qr_code_event.dart';
 import '../../models/item_model.dart';
@@ -30,11 +31,27 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
     _connectivity.connectionStream.listen((event) {
       bloc.add(SetInternetInfoEvent(event));
     });
+
+    bloc.listenerStream.listen((event) {
+      if (event is NavigatorBioPreviewPageEvent) {
+        Navigator.pushNamed(context, Routes.bioPreview,
+            arguments: bloc.state.items);
+      }
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    RouteSettings setting = ModalRoute.of(context)!.settings;
+    if (setting.arguments != null && setting.arguments is List<ItemModel>) {
+      List<ItemModel> items = setting.arguments as List<ItemModel>;
+      bloc.add(SetQRData(items));
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
@@ -45,12 +62,14 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
                 style: TextButton.styleFrom(
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
                     textStyle: Theme.of(context).textTheme.titleMedium),
-                onPressed: () {},
-                child: Text("Preview"))
+                onPressed: () {
+                  bloc.addNavigatedEvent(NavigatorBioPreviewPageEvent());
+                },
+                child: const Text("Preview"))
           ],
         ),
         body: Container(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           width: double.infinity,
           child: DefaultTabController(
             length: 2,
@@ -78,15 +97,9 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
                         unselectedLabelColor: Colors.black,
                         tabs: const [Tab(text: "App"), Tab(text: "Web")]),
                   ),
-                  Expanded(
-                    child: TabBarView(children: [
-                      Container(
-                        color: Colors.amber,
-                        width: 100,
-                        height: 100,
-                      ),
-                      const QRCodeWebWidget()
-                    ]),
+                  const Expanded(
+                    child: TabBarView(
+                        children: [QRCodeAppWidget(), QRCodeWebWidget()]),
                   )
                 ]),
           ),
@@ -97,7 +110,6 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
 
   @override
   void dispose() {
-    _connectivity.dispose();
     bloc.close();
     super.dispose();
   }

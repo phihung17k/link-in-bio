@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/bloc/bio_preview/bio_preview_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
+import '../../../bloc/bio_preview/bio_preview_event.dart';
 import '../../../models/item_model.dart';
 
 class BioPreviewItemWidget extends StatelessWidget {
@@ -7,14 +10,18 @@ class BioPreviewItemWidget extends StatelessWidget {
   final ItemModel? item;
   const BioPreviewItemWidget({super.key, required this.item});
 
-  Future<void> _launchUrl() async {
+  Future<void> _launchUrl(BuildContext context) async {
     String url = "${item!.category!.baseURL}${item!.url}";
     Uri uri = Uri.parse(url);
 
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
-      throw Exception('Could not launch $uri');
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Could not launch $uri"),
+        duration: Duration(seconds: 1),
+      ));
     }
   }
 
@@ -22,7 +29,7 @@ class BioPreviewItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        await _launchUrl();
+        await _launchUrl(context);
       },
       child: Card(
         elevation: 5,

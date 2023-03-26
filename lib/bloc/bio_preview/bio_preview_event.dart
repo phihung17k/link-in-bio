@@ -7,3 +7,9 @@ class LoadingBioDataEvent extends BioPreviewEvent {
 
   LoadingBioDataEvent(this.items);
 }
+
+class FailLaunchUrlEvent extends BioPreviewEvent {
+  final Uri uri;
+
+  FailLaunchUrlEvent(this.uri);
+}

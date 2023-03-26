@@ -14,7 +14,7 @@ class QRCodeWebWidget extends StatelessWidget {
         if (state.internetInfo == null) {
           return const Text("Waiting for internet");
         }
-        return Text(state.internetInfo!);
+        return Center(child: Text(state.internetInfo!));
       },
     );
   }

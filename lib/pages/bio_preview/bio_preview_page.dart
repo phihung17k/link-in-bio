@@ -18,6 +18,11 @@ class _BioPreviewPageState extends State<BioPreviewPage> {
   BioPreviewBloc get bloc => widget.bloc;
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     RouteSettings setting = ModalRoute.of(context)!.settings;
@@ -61,11 +66,13 @@ class _BioPreviewPageState extends State<BioPreviewPage> {
                     bloc: bloc,
                     builder: (context, state) {
                       if (state.items!.isNotEmpty) {
-                        for (ItemModel item in state.items!) {
-                          return BioPreviewItemWidget(
-                            item: item,
-                          );
-                        }
+                        return Column(
+                          children: state.items!
+                              .map((item) => BioPreviewItemWidget(
+                                    item: item,
+                                  ))
+                              .toList(),
+                        );
                       }
                       return const CircularProgressIndicator();
                     },

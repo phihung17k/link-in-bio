@@ -3,7 +3,7 @@ import '../../models/item_model.dart';
 
 class QRCodeState extends Equatable {
   final String? internetInfo;
-  final List<ItemModel>? items;
+  final List<ItemModel>? items; // for review
   final String? qrData;
 
   const QRCodeState({this.internetInfo, this.items, this.qrData});

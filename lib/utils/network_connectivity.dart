@@ -3,10 +3,6 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class NetworkConnectivity {
-  // NetworkConnectivity._();
-  // static final _instance = NetworkConnectivity._();
-  // static NetworkConnectivity get instance => _instance;
-
   final Connectivity _networkConnectivity = Connectivity();
   final StreamController<Map<ConnectivityResult, bool>> _controller =
       StreamController.broadcast();

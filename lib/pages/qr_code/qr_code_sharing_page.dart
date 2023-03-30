@@ -29,7 +29,9 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
 
     _connectivity.initialize();
     _connectivity.connectionStream.listen((event) {
-      bloc.add(SetInternetInfoEvent(event));
+      if (!bloc.isClosed) {
+        bloc.add(SetInternetInfoEvent(event));
+      }
     });
 
     bloc.listenerStream.listen((event) {

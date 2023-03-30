@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/bio_preview/bio_preview_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../../bloc/bio_preview/bio_preview_event.dart';
 import '../../../models/item_model.dart';
 
 class BioPreviewItemWidget extends StatelessWidget {
@@ -20,7 +17,7 @@ class BioPreviewItemWidget extends StatelessWidget {
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Could not launch $uri"),
-        duration: Duration(seconds: 1),
+        duration: const Duration(seconds: 1),
       ));
     }
   }

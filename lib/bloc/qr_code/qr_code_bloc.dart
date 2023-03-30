@@ -1,5 +1,6 @@
-import 'dart:convert';
 import 'dart:async';
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/utils/encryption.dart';
 import 'package:link_in_bio/utils/native_communication.dart';
@@ -34,7 +35,14 @@ class QRCodeBloc extends BaseBloc<QRCodeEvent, QRCodeState> {
 
     // get android id
     String androidId = await NativeCommunication.getAndroidId();
-    print("android id $androidId");
+    // Firebase.initializeApp();
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    Map<String, String> data = {
+      'data': base64,
+      'time': DateTime.now().toString()
+    };
+    DocumentReference doc = await db.collection(androidId).add(data);
+    log("id ${doc.id}");
 
     emit.call(state.copyWith(items: event.items, qrData: base64));
   }

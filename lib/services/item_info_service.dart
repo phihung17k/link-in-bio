@@ -1,4 +1,4 @@
-import '../services/i_services/i_item_info_service.dart';
+import 'i_services/i_item_info_service.dart';
 
 class ItemInfoService implements IItemInfoService {
   // @override

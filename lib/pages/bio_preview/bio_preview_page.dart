@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/bio_preview/bio_preview_bloc.dart';
 import '../../bloc/bio_preview/bio_preview_event.dart';
 import '../../bloc/bio_preview/bio_preview_state.dart';
-import '../../pages/bio_preview/widgets/bio_preview_item_widget.dart';
+import 'widgets/bio_preview_item_widget.dart';
 import '../../models/item_model.dart';
 
 class BioPreviewPage extends StatefulWidget {

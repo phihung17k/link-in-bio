@@ -4,7 +4,7 @@ import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../bloc/item_info/item_info_event.dart';
 import '../../../bloc/item_info/item_info_state.dart';
 import '../../../models/item_category_model.dart';
-import '../../../pages/item_info/widgets/item_detail_card.dart';
+import 'widgets/item_detail_card.dart';
 
 class ItemContentSubPage extends StatefulWidget {
   final String? initialName;

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/qr_code/qr_code_bloc.dart';
-import '../../pages/qr_code/widgets/qr_code_app.dart';
-import '../../pages/qr_code/widgets/qr_code_web.dart';
+import 'widgets/qr_code_app.dart';
+import 'widgets/qr_code_web.dart';
 import '../../routes.dart';
 import '../../utils/network_connectivity.dart';
-
 import '../../bloc/qr_code/qr_code_event.dart';
 import '../../models/item_model.dart';
 

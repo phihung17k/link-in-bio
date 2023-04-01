@@ -4,46 +4,80 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/utils/encryption.dart';
 import 'package:link_in_bio/utils/native_communication.dart';
+import '../../utils/enums.dart';
 import '../base_bloc.dart';
 import '../../bloc/qr_code/qr_code_event.dart';
 import '../../bloc/qr_code/qr_code_state.dart';
 
 class QRCodeBloc extends BaseBloc<QRCodeEvent, QRCodeState> {
   QRCodeBloc()
-      : super(const QRCodeState(internetInfo: "", items: [], qrData: "")) {
+      : super(const QRCodeState(
+            internetInfo: InternetStatusEnum.unknown,
+            items: [],
+            appQR: "",
+            webQR: "")) {
     on<SetInternetInfoEvent>(_checkInternet);
-    on<SetQRData>(_setQRData);
+    on<SetAppQREvent>(_setAppQR);
+    on<SetWebQREvent>(_setWebQR);
   }
 
   FutureOr<void> _checkInternet(
       SetInternetInfoEvent event, Emitter<QRCodeState> emit) {
-    if (event.info.values.first) {
-      emit.call(state.copyWith(internetInfo: "Success"));
-    } else {
-      emit.call(state.copyWith(internetInfo: "Connect internet fail"));
-    }
+    emit.call(state.copyWith(
+        internetInfo: event.info.values.first
+            ? InternetStatusEnum.connected
+            : InternetStatusEnum.notConnect));
   }
 
-  FutureOr<void> _setQRData(SetQRData event, Emitter<QRCodeState> emit) async {
+  FutureOr<void> _setAppQR(SetAppQREvent event, Emitter<QRCodeState> emit) {
     Encryption encryption = Encryption();
-    String base64 = encryption.encode(event.items);
-    // String itemListString = jsonEncode(event.items);
-    // String base64 = base64Encode(utf8.encode(itemListString));
+    String appQR = encryption.encode(event.items);
+    emit.call(state.copyWith(items: event.items, appQR: appQR));
+  }
 
+  // FutureOr<void> _setQRData(SetQRData event, Emitter<QRCodeState> emit) async {
+  //   Encryption encryption = Encryption();
+  //   String appQR = encryption.encode(event.items);
+  //   // String itemListString = jsonEncode(event.items);
+  //   // String base64 = base64Encode(utf8.encode(itemListString));
+  //   String webQR = "";
+  //   // store data on firestore
+  //   if (state.internetInfo == InternetStatusEnum.connected) {
+  //     // get android id
+  //     String androidId = await NativeCommunication.getAndroidId();
+  //     FirebaseFirestore db = FirebaseFirestore.instance;
+  //     Map<String, String> data = {
+  //       'data': appQR,
+  //       'time': DateTime.now().toString()
+  //     };
+  //     try {
+  //       DocumentReference doc = await db.collection(androidId).add(data);
+  //       log("id ${doc.id}");
+  //       webQR = doc.id;
+  //     } catch (e) {
+  //       log("Upload data to firestore fail: $e");
+  //     }
+  //   }
+  //   emit.call(state.copyWith(items: event.items, appQR: appQR, webQR: webQR));
+  // }
+
+  FutureOr<void> _setWebQR(
+      SetWebQREvent event, Emitter<QRCodeState> emit) async {
     // store data on firestore
-    // FirebaseInstallations
-
-    // get android id
-    String androidId = await NativeCommunication.getAndroidId();
-    // Firebase.initializeApp();
-    FirebaseFirestore db = FirebaseFirestore.instance;
-    Map<String, String> data = {
-      'data': base64,
-      'time': DateTime.now().toString()
-    };
-    DocumentReference doc = await db.collection(androidId).add(data);
-    log("id ${doc.id}");
-
-    emit.call(state.copyWith(items: event.items, qrData: base64));
+    if (state.internetInfo == InternetStatusEnum.connected) {
+      // get android id
+      String androidId = await NativeCommunication.getAndroidId();
+      FirebaseFirestore db = FirebaseFirestore.instance;
+      Map<String, String> data = {
+        'data': state.appQR!,
+        'time': DateTime.now().toString()
+      };
+      try {
+        DocumentReference doc = await db.collection(androidId).add(data);
+        emit.call(state.copyWith(webQR: doc.id));
+      } catch (e) {
+        log("Upload data to firestore fail: $e");
+      }
+    }
   }
 }

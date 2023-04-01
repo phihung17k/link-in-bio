@@ -9,10 +9,12 @@ class SetInternetInfoEvent extends QRCodeEvent {
   SetInternetInfoEvent(this.info);
 }
 
-class SetQRData extends QRCodeEvent {
+class SetAppQREvent extends QRCodeEvent {
   final List<ItemModel> items;
 
-  SetQRData(this.items);
+  SetAppQREvent(this.items);
 }
+
+class SetWebQREvent extends QRCodeEvent {}
 
 class NavigatorBioPreviewPageEvent extends QRCodeEvent {}

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/qr_code/qr_code_bloc.dart';
@@ -17,10 +19,12 @@ class QRCodeSharingPage extends StatefulWidget {
   State<QRCodeSharingPage> createState() => _QRCodeSharingPageState();
 }
 
-class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
+class _QRCodeSharingPageState extends State<QRCodeSharingPage>
+    with SingleTickerProviderStateMixin {
   QRCodeBloc get bloc => widget.bloc;
 
   final NetworkConnectivity _connectivity = NetworkConnectivity();
+  late TabController tabController;
 
   @override
   void initState() {
@@ -30,6 +34,16 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
     _connectivity.connectionStream.listen((event) {
       if (!bloc.isClosed) {
         bloc.add(SetInternetInfoEvent(event));
+        if (bloc.state.appQR!.isNotEmpty && bloc.state.webQR!.isEmpty) {
+          bloc.add(SetWebQREvent());
+        }
+      }
+    });
+
+    tabController = TabController(length: 2, vsync: this);
+    tabController.addListener(() {
+      if (tabController.index == 1 && bloc.state.webQR!.isEmpty) {
+        bloc.add(SetWebQREvent());
       }
     });
 
@@ -47,7 +61,7 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
     RouteSettings setting = ModalRoute.of(context)!.settings;
     if (setting.arguments != null && setting.arguments is List<ItemModel>) {
       List<ItemModel> items = setting.arguments as List<ItemModel>;
-      bloc.add(SetQRData(items));
+      bloc.add(SetAppQREvent(items));
     }
   }
 
@@ -72,38 +86,34 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
         body: Container(
           padding: const EdgeInsets.all(8),
           width: double.infinity,
-          child: DefaultTabController(
-            length: 2,
-            initialIndex: 0,
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin:
-                        const EdgeInsets.only(right: 20, left: 20, bottom: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(
-                        25.0,
-                      ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+            Container(
+              margin: const EdgeInsets.only(right: 20, left: 20, bottom: 10),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(
+                  25.0,
+                ),
+              ),
+              child: TabBar(
+                  controller: tabController,
+                  indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                      25.0,
                     ),
-                    child: TabBar(
-                        indicator: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            25.0,
-                          ),
-                          color: Colors.green,
-                        ),
-                        labelColor: Colors.white,
-                        unselectedLabelColor: Colors.black,
-                        tabs: const [Tab(text: "App"), Tab(text: "Web")]),
+                    color: Colors.green,
                   ),
-                  const Expanded(
-                    child: TabBarView(
-                        children: [QRCodeAppWidget(), QRCodeWebWidget()]),
-                  )
-                ]),
-          ),
+                  labelColor: Colors.white,
+                  unselectedLabelColor: Colors.black,
+                  tabs: const [Tab(text: "App"), Tab(text: "Web")]),
+            ),
+            Expanded(
+              child: TabBarView(
+                  controller: tabController,
+                  children: const [QRCodeAppWidget(), QRCodeWebWidget()]),
+            )
+          ]),
         ),
       ),
     );
@@ -112,6 +122,7 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage> {
   @override
   void dispose() {
     bloc.close();
+    tabController.dispose();
     super.dispose();
   }
 }

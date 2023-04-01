@@ -14,12 +14,12 @@ class QRCodeAppWidget extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 50),
       child: Center(
         child: BlocBuilder<QRCodeBloc, QRCodeState>(
-          buildWhen: (previous, current) {
-            return previous.qrData != current.qrData;
-          },
           bloc: context.read<QRCodeBloc>(),
+          buildWhen: (previous, current) {
+            return previous.appQR != current.appQR;
+          },
           builder: (context, state) {
-            return QrImage(data: state.qrData!, version: QrVersions.auto);
+            return QrImage(data: state.appQR!, version: QrVersions.auto);
           },
         ),
       ),

@@ -1,21 +1,27 @@
 import 'package:equatable/equatable.dart';
+import 'package:link_in_bio/utils/enums.dart';
 import '../../models/item_model.dart';
 
 class QRCodeState extends Equatable {
-  final String? internetInfo;
+  final InternetStatusEnum? internetInfo;
   final List<ItemModel>? items; // for review
-  final String? qrData;
+  final String? appQR;
+  final String? webQR;
 
-  const QRCodeState({this.internetInfo, this.items, this.qrData});
+  const QRCodeState({this.internetInfo, this.items, this.appQR, this.webQR});
 
   QRCodeState copyWith(
-      {String? internetInfo, List<ItemModel>? items, String? qrData}) {
+      {InternetStatusEnum? internetInfo,
+      List<ItemModel>? items,
+      String? appQR,
+      String? webQR}) {
     return QRCodeState(
         internetInfo: internetInfo ?? this.internetInfo,
         items: items ?? this.items,
-        qrData: qrData ?? this.qrData);
+        appQR: appQR ?? this.appQR,
+        webQR: webQR ?? this.webQR);
   }
 
   @override
-  List<Object?> get props => [internetInfo, items, qrData];
+  List<Object?> get props => [internetInfo, items, appQR, webQR];
 }

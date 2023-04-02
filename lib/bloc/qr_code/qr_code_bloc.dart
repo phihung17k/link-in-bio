@@ -35,32 +35,6 @@ class QRCodeBloc extends BaseBloc<QRCodeEvent, QRCodeState> {
     emit.call(state.copyWith(items: event.items, appQR: appQR));
   }
 
-  // FutureOr<void> _setQRData(SetQRData event, Emitter<QRCodeState> emit) async {
-  //   Encryption encryption = Encryption();
-  //   String appQR = encryption.encode(event.items);
-  //   // String itemListString = jsonEncode(event.items);
-  //   // String base64 = base64Encode(utf8.encode(itemListString));
-  //   String webQR = "";
-  //   // store data on firestore
-  //   if (state.internetInfo == InternetStatusEnum.connected) {
-  //     // get android id
-  //     String androidId = await NativeCommunication.getAndroidId();
-  //     FirebaseFirestore db = FirebaseFirestore.instance;
-  //     Map<String, String> data = {
-  //       'data': appQR,
-  //       'time': DateTime.now().toString()
-  //     };
-  //     try {
-  //       DocumentReference doc = await db.collection(androidId).add(data);
-  //       log("id ${doc.id}");
-  //       webQR = doc.id;
-  //     } catch (e) {
-  //       log("Upload data to firestore fail: $e");
-  //     }
-  //   }
-  //   emit.call(state.copyWith(items: event.items, appQR: appQR, webQR: webQR));
-  // }
-
   FutureOr<void> _setWebQR(
       SetWebQREvent event, Emitter<QRCodeState> emit) async {
     // store data on firestore
@@ -74,7 +48,8 @@ class QRCodeBloc extends BaseBloc<QRCodeEvent, QRCodeState> {
       };
       try {
         DocumentReference doc = await db.collection(androidId).add(data);
-        emit.call(state.copyWith(webQR: doc.id));
+        emit.call(state.copyWith(
+            webQR: "https://wwww.link-in-bio.com/$androidId/${doc.id}"));
       } catch (e) {
         log("Upload data to firestore fail: $e");
       }

@@ -63,4 +63,4 @@ class SelectingAllItemEvent extends HomeEvent {}
 
 class NavigatorQRSharingPageEvent extends HomeEvent {}
 
-class HandlingSelectedItemEvent extends HomeEvent {}
+class NavigatorScannerPageEvent extends HomeEvent {}

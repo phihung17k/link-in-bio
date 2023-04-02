@@ -158,7 +158,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
           key: UniqueKey(),
           floatingButtonController: floatingButtonController,
           expandAnimation: expandAnimation,
-          lastAnimatedHeight: 242,
+          lastAnimatedHeight: 296,
           label: "Create",
           iconData: Icons.add_circle_outline_outlined,
           onTap: () {
@@ -169,7 +169,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
             key: UniqueKey(),
             floatingButtonController: floatingButtonController,
             expandAnimation: expandAnimation,
-            lastAnimatedHeight: 188,
+            lastAnimatedHeight: 242,
             label: "Remove",
             iconData: Icons.remove_circle_outline_outlined,
             onTap: () {
@@ -181,7 +181,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
           key: UniqueKey(),
           floatingButtonController: floatingButtonController,
           expandAnimation: expandAnimation,
-          lastAnimatedHeight: 134,
+          lastAnimatedHeight: 188,
           label: "Share",
           iconData: Icons.share_rounded,
           onTap: () {
@@ -194,6 +194,17 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                 }
               }
             });
+          },
+        ),
+        FloatingButton(
+          key: UniqueKey(),
+          floatingButtonController: floatingButtonController,
+          expandAnimation: expandAnimation,
+          lastAnimatedHeight: 134,
+          label: "Scan QR",
+          iconData: Icons.qr_code_scanner,
+          onTap: () {
+            bloc!.addNavigatedEvent(NavigatorScannerPageEvent());
           },
         ),
         FloatingButton(

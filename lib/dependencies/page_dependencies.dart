@@ -14,5 +14,7 @@ class PageDependencies {
         instanceName: Routes.qrCodeSharing);
     injector.registerFactory<Widget>(() => BioPreviewPage(injector()),
         instanceName: Routes.bioPreview);
+    injector.registerFactory<Widget>(() => ScannerPage(),
+        instanceName: Routes.scanner);
   }
 }

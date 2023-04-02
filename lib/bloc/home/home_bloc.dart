@@ -18,7 +18,6 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
     on<DeletingSelectedItemEvent>(_deleteSelectedItem);
     on<ResetSelectedItemsEvent>(_resetSelectedItems);
     on<SelectingAllItemEvent>(_selectAllItem);
-    on<HandlingSelectedItemEvent>(_handleSelectedItem);
   }
 
   FutureOr<void> _updateItem(UpdatingItemEvent event, Emitter<HomeState> emit) {
@@ -82,18 +81,5 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
             state.itemList!.length, (int index) => index,
             growable: true),
         isSelectAll: true));
-  }
-
-  FutureOr<void> _handleSelectedItem(
-      HandlingSelectedItemEvent event, Emitter<HomeState> emit) {
-    // get selected items
-    // List<ItemModel> items = state.selectedIndexList!
-    //     .map((index) => state.itemList![index])
-    //     .toList();
-
-    // check the current status of device to determine create QR online or offline
-    // online: upload data to cloud and create url into qr code
-    // offline: create qr code from selected items (after encode) and send it through
-    //    qr scanner of another app (other device)
   }
 }

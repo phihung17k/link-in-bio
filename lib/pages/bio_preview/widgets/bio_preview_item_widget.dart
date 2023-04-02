@@ -14,6 +14,7 @@ class BioPreviewItemWidget extends StatelessWidget {
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
     } else {
+      // ignore: use_build_context_synchronously
       if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text("Could not launch $uri"),

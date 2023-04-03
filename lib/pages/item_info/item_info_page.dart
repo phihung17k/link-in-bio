@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/item_info/item_info_bloc.dart';
-import '../pages.dart';
 import '../../bloc/item_info/item_info_event.dart';
 import '../../models/item_model.dart';
+import 'item_category_sub_page.dart';
+import 'item_content_sub_page.dart';
 
 class ItemInfoPage extends StatefulWidget {
   final ItemInfoBloc bloc;

@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:link_in_bio/bloc/scanner/scanner_bloc.dart';
 import '../bloc/bio_preview/bio_preview_bloc.dart';
 import '../bloc/home/home_bloc.dart';
 import '../bloc/item_info/item_info_bloc.dart';
@@ -10,5 +11,6 @@ class BlocDependencies {
     injector.registerFactory(() => ItemInfoBloc());
     injector.registerFactory(() => QRCodeBloc());
     injector.registerFactory(() => BioPreviewBloc());
+    injector.registerFactory(() => ScannerBloc());
   }
 }

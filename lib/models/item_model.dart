@@ -15,6 +15,11 @@ class ItemModel extends Equatable {
         url: url ?? this.url);
   }
 
+  factory ItemModel.fromMap(Map<String, dynamic> json) => ItemModel(
+      name: json['name'],
+      category: ItemCategoryModel.fromMap(json['category']),
+      url: json['url']);
+
   Map<String, dynamic> toJson() =>
       {'name': name, 'category': category?.toJson(), 'url': url};
 

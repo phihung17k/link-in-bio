@@ -11,4 +11,8 @@ abstract class BaseBloc<Event, State> extends Bloc<Event, State> {
   void addNavigatedEvent(dynamic event) {
     _controller.sink.add(event);
   }
+
+  void addMessageEvent(dynamic event) {
+    _controller.sink.add(event);
+  }
 }

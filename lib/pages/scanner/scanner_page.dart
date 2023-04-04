@@ -21,7 +21,6 @@ class ScannerPage extends StatefulWidget {
 class _ScannerPageState extends State<ScannerPage> {
   ScannerBloc get bloc => widget.bloc;
   late MobileScannerController controller;
-  Barcode? barcode;
   bool isCall = true;
 
   @override

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:link_in_bio/bloc/scanner/scanner_bloc.dart';
@@ -5,7 +6,9 @@ import 'package:link_in_bio/bloc/scanner/scanner_event.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 import '../../models/item_model.dart';
-import '../../utils/enums.dart';
+import '../../routes.dart';
+import '../../utils/gallery.dart';
+import 'scanner_overlay.dart';
 
 class ScannerPage extends StatefulWidget {
   final ScannerBloc bloc;
@@ -17,9 +20,9 @@ class ScannerPage extends StatefulWidget {
 
 class _ScannerPageState extends State<ScannerPage> {
   ScannerBloc get bloc => widget.bloc;
-
   late MobileScannerController controller;
   Barcode? barcode;
+  bool isCall = true;
 
   @override
   void initState() {
@@ -28,49 +31,51 @@ class _ScannerPageState extends State<ScannerPage> {
         torchEnabled: false,
         formats: [BarcodeFormat.qrCode],
         detectionSpeed: DetectionSpeed.noDuplicates);
-
-    bloc.listenerStream.listen((event) {
-      // if (event is ScanMessageEnum) {
-      //   if (!mounted) return;
-      //   if (event == ScanMessageEnum.success) {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(
-      //     content: Text('Success. QR code found!'),
-      //     backgroundColor: Colors.green,
-      //     duration: Duration(seconds: 1),
-      //   ),
-      // );
-      //   } else {
-      // ScaffoldMessenger.of(context).showSnackBar(
-      //   const SnackBar(
-      //     content: Text('Fail. No QR code found!'),
-      //     backgroundColor: Colors.red,
-      //     duration: Duration(seconds: 1),
-      //   ),
-      // );
-      //   }
-      //   //sleep 1s
-      // }
-      if (event != null) {
-        if (event is List<ItemModel>) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Success. QR code found!'),
-              backgroundColor: Colors.green,
-              duration: Duration(seconds: 1),
-            ),
-          );
+    bloc.listenerStream.listen((event) async {
+      if (isCall) {
+        if (event != null) {
+          if (event is List<ItemModel>) {
+            isCall = false;
+            ScaffoldMessengerState scaffoldMessenger =
+                ScaffoldMessenger.of(context);
+            scaffoldMessenger
+                .showSnackBar(
+                  const SnackBar(
+                    content: Text('Success. QR code found!'),
+                    backgroundColor: Colors.green,
+                    duration: Duration(seconds: 1),
+                  ),
+                )
+                .closed
+                .then((_) async {
+              // scaffoldMessenger.removeCurrentSnackBar();
+              if (mounted) {
+                await Navigator.pushNamed(
+                  context,
+                  Routes.bioPreview,
+                  // ModalRoute.withName(Routes.home),
+                  arguments: event,
+                );
+                isCall = true;
+              }
+            });
+            log("BEFORE");
+          }
+        } else {
+          isCall = false;
+          ScaffoldMessenger.of(context)
+              .showSnackBar(
+                const SnackBar(
+                  content: Text('Fail. Invalid QR code'),
+                  backgroundColor: Colors.red,
+                  duration: Duration(seconds: 1),
+                ),
+              )
+              .closed
+              .then((_) => isCall = true);
         }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Fail. No QR code found!'),
-            backgroundColor: Colors.red,
-            duration: Duration(seconds: 1),
-          ),
-        );
-        //sleep 1s
       }
+      // await Future.delayed(const Duration(seconds: 1));
     });
   }
 
@@ -109,7 +114,7 @@ class _ScannerPageState extends State<ScannerPage> {
                 ),
               ),
               Container(
-                decoration: ShapeDecoration(shape: QrScannerOverlayShape()),
+                decoration: ShapeDecoration(shape: ScannerOverlayShape()),
               ),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -190,26 +195,16 @@ class _ScannerPageState extends State<ScannerPage> {
                             icon: const Icon(Icons.image),
                             iconSize: 32.0,
                             onPressed: () async {
-                              final ImagePicker picker = ImagePicker();
-                              // Pick an image
-                              final XFile? image = await picker.pickImage(
-                                source: ImageSource.gallery,
-                              );
+                              XFile? image = await Gallery.pickImage();
                               if (image != null) {
                                 if (await controller.analyzeImage(image.path)) {
-                                  if (!mounted) return;
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('QR code found!'),
-                                      backgroundColor: Colors.green,
-                                    ),
-                                  );
                                 } else {
                                   if (!mounted) return;
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('No QR code found!'),
                                       backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 1),
                                     ),
                                   );
                                 }
@@ -231,133 +226,11 @@ class _ScannerPageState extends State<ScannerPage> {
           ),
         ));
   }
-}
-
-class QrScannerOverlayShape extends ShapeBorder {
-  final Color borderColor = Colors.white;
-  final double borderWidth = 10;
-  final Color overlayColor = Colors.black.withOpacity(0.5);
-  final double borderRadius = 0;
-  final double borderLength = 40;
-  final double cutOutWidth = 250;
-  final double cutOutHeight = 250;
-  final double cutOutBottomOffset = 0;
 
   @override
-  EdgeInsetsGeometry get dimensions => const EdgeInsets.all(10);
-
-  @override
-  Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-    return Path()
-      ..fillType = PathFillType.evenOdd
-      ..addPath(getOuterPath(rect), Offset.zero);
-  }
-
-  @override
-  Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    return Path()
-      ..moveTo(rect.left, rect.bottom)
-      ..lineTo(rect.left, rect.top)
-      ..lineTo(rect.right, rect.top)
-      ..lineTo(rect.right, rect.bottom);
-  }
-
-  @override
-  void paint(Canvas canvas, Rect rect, {TextDirection? textDirection}) {
-    final width = rect.width;
-    final height = rect.height;
-    final borderOffset = borderWidth / 2;
-
-    final backgroundPaint = Paint()
-      ..color = overlayColor
-      ..style = PaintingStyle.fill;
-
-    final borderPaint = Paint()
-      ..color = borderColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = borderWidth;
-
-    final boxPaint = Paint()
-      ..color = borderColor
-      ..style = PaintingStyle.fill
-      ..blendMode = BlendMode.dstOut;
-
-    final cutOutRect = Rect.fromLTWH(
-      rect.left + width / 2 - cutOutWidth / 2 + borderOffset,
-      -cutOutBottomOffset +
-          rect.top +
-          height / 2 -
-          cutOutHeight / 2 +
-          borderOffset,
-      cutOutWidth - borderOffset * 2,
-      cutOutHeight - borderOffset * 2,
-    );
-
-    canvas
-      ..saveLayer(
-        rect,
-        backgroundPaint,
-      )
-      ..drawRect(
-        rect,
-        backgroundPaint,
-      )
-      // Draw top right corner
-      ..drawRRect(
-        RRect.fromLTRBAndCorners(
-          cutOutRect.right - borderLength,
-          cutOutRect.top,
-          cutOutRect.right,
-          cutOutRect.top + borderLength,
-          topRight: Radius.circular(borderRadius),
-        ),
-        borderPaint,
-      )
-      // Draw top left corner
-      ..drawRRect(
-        RRect.fromLTRBAndCorners(
-          cutOutRect.left,
-          cutOutRect.top,
-          cutOutRect.left + borderLength,
-          cutOutRect.top + borderLength,
-          topLeft: Radius.circular(borderRadius),
-        ),
-        borderPaint,
-      )
-      // Draw bottom right corner
-      ..drawRRect(
-        RRect.fromLTRBAndCorners(
-          cutOutRect.right - borderLength,
-          cutOutRect.bottom - borderLength,
-          cutOutRect.right,
-          cutOutRect.bottom,
-          bottomRight: Radius.circular(borderRadius),
-        ),
-        borderPaint,
-      )
-      // Draw bottom left corner
-      ..drawRRect(
-        RRect.fromLTRBAndCorners(
-          cutOutRect.left,
-          cutOutRect.bottom - borderLength,
-          cutOutRect.left + borderLength,
-          cutOutRect.bottom,
-          bottomLeft: Radius.circular(borderRadius),
-        ),
-        borderPaint,
-      )
-      ..drawRRect(
-        RRect.fromRectAndRadius(
-          cutOutRect,
-          Radius.circular(borderRadius),
-        ),
-        boxPaint,
-      )
-      ..restore();
-  }
-
-  @override
-  ShapeBorder scale(double t) {
-    return QrScannerOverlayShape();
+  void dispose() {
+    controller.dispose();
+    bloc.close();
+    super.dispose();
   }
 }

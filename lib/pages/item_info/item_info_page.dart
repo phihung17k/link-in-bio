@@ -57,11 +57,11 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
               centerTitle: true,
             ),
             body: Padding(
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.only(top: 10.0, left: 10, right: 10),
               child: Column(children: [
                 Container(
-                  margin:
-                      const EdgeInsets.only(right: 10, left: 10, bottom: 10),
+                  margin: const EdgeInsets.only(
+                      right: 10, left: 10, bottom: 15, top: 5),
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(25),
                       color: Colors.grey[300]),

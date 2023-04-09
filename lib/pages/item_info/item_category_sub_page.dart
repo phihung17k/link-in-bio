@@ -1,77 +1,92 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/item_info/item_info_bloc.dart';
-import '../../bloc/item_info/item_info_event.dart';
 import '../../bloc/item_info/item_info_state.dart';
 import '../../models/item_category_model.dart';
+import 'widgets/item_category_widget.dart';
 
-class ItemCategorySubPage extends StatelessWidget {
+class ItemCategorySubPage extends StatefulWidget {
   const ItemCategorySubPage({super.key});
+
+  @override
+  State<ItemCategorySubPage> createState() => _ItemCategorySubPageState();
+}
+
+class _ItemCategorySubPageState extends State<ItemCategorySubPage> {
+  late ItemInfoBloc bloc;
+
+  @override
+  void initState() {
+    super.initState();
+    bloc = context.read<ItemInfoBloc>();
+  }
+
+  List<List<ItemCategoryModel>> getCategoryTopics(
+      List<ItemCategoryModel> itemCategories) {
+    List<List<ItemCategoryModel>> results = [];
+    String topic = itemCategories[0].topic!;
+    List<ItemCategoryModel> tempList = [];
+    for (var category in itemCategories) {
+      if (category.topic == topic) {
+        tempList.add(category);
+      } else {
+        results.add(tempList.toList());
+        tempList.clear();
+        topic = category.topic!;
+        tempList.add(category);
+      }
+    }
+    results.add(tempList);
+    return results;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.cyan[50],
       body: BlocBuilder<ItemInfoBloc, ItemInfoState>(
-        bloc: context.read<ItemInfoBloc>(),
+        bloc: bloc,
         buildWhen: (previous, current) {
           return previous.itemCategories != current.itemCategories;
         },
         builder: (context, state) {
-          if (state.itemCategories == null || state.itemCategories!.isEmpty) {
+          List<ItemCategoryModel>? itemCategories = state.itemCategories;
+          if (itemCategories == null || itemCategories.isEmpty) {
             return const Center(child: CircularProgressIndicator());
           }
-          return GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                childAspectRatio: 8 / 7,
-                crossAxisSpacing: 10,
-                mainAxisSpacing: 10),
-            itemCount: state.itemCategories!.length,
+          var topics = getCategoryTopics(itemCategories);
+          return ListView.builder(
+            itemCount: topics.length,
             itemBuilder: (context, index) {
-              ItemCategoryModel selectedCategory = state.itemCategories![index];
-              return InkWell(
-                onTap: () {
-                  context
-                      .read<ItemInfoBloc>()
-                      .add(SetCategoryIndexEvent(selectedCategoryIndex: index));
-                },
-                highlightColor: Colors.blue,
-                child: GestureDetector(
-                  onTap: () {
-                    context.read<ItemInfoBloc>().add(
-                        SetCategoryIndexEvent(selectedCategoryIndex: index));
-                  },
-                  child: Card(
-                    elevation: 2,
-                    shape: context
-                                .watch<ItemInfoBloc>()
-                                .state
-                                .selectedCategoryIndex ==
-                            index
-                        ? const RoundedRectangleBorder(
-                            side: BorderSide(color: Colors.blue, width: 3))
-                        : null,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Flexible(
-                              child: Image.asset(
-                                selectedCategory.imageURL!,
-                                // width: MediaQuery.of(context).size.width / 5,
-                                // height: MediaQuery.of(context).size.width / 5,
-                                // fit: BoxFit.fitWidth,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(selectedCategory.name!)
-                          ]),
-                    ),
+              List<ItemCategoryModel> categories = topics[index];
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(categories.first.topic!,
+                      style: Theme.of(context).textTheme.titleLarge),
+                  const Divider(thickness: 2),
+                  GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            childAspectRatio: 8 / 7,
+                            crossAxisSpacing: 10,
+                            mainAxisSpacing: 10),
+                    itemCount: categories.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, i) {
+                      ItemCategoryModel selectedCategory = categories[i];
+                      if (index > 0) {
+                        i = index * topics[index - 1].length + i;
+                      }
+                      return ItemCategoryWidget(
+                          index: i, selectedCategory: selectedCategory);
+                    },
                   ),
-                ),
+                  const SizedBox(height: 20)
+                ],
               );
             },
           );

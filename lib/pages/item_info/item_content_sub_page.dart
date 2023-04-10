@@ -132,7 +132,45 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                               style: const TextStyle(color: Colors.grey)),
                         )
                       ]),
-                )
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  children: [
+                    const Expanded(
+                        child: Divider(
+                      indent: 10,
+                      endIndent: 10,
+                      thickness: 2,
+                    )),
+                    Text("Or", style: Theme.of(context).textTheme.titleLarge),
+                    const Expanded(
+                        child: Divider(
+                      indent: 10,
+                      endIndent: 10,
+                      thickness: 2,
+                    )),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Center(
+                    child: ElevatedButton(
+                        onPressed: () {
+                          //add scanner page
+                        },
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.blue,
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                                side: BorderSide(color: Colors.grey.shade300),
+                                borderRadius: BorderRadius.circular(5))),
+                        child: const Text("Scan QR",
+                            style: TextStyle(
+                                inherit: false, color: Colors.black))))
               ]);
         },
       ),

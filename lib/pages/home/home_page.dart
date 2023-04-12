@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             .toList();
         Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items);
       } else if (event is NavigatorScannerPageEvent) {
-        Navigator.pushNamed(context, Routes.scanner);
+        Navigator.pushNamed(context, Routes.scanner, arguments: Routes.home);
       }
     });
   }

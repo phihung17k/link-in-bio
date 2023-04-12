@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:link_in_bio/bloc/scanner/scanner_bloc.dart';
@@ -33,33 +32,35 @@ class _ScannerPageState extends State<ScannerPage> {
     bloc.listenerStream.listen((event) async {
       if (isCall) {
         if (event != null) {
-          if (event is List<ItemModel>) {
-            isCall = false;
-            ScaffoldMessengerState scaffoldMessenger =
-                ScaffoldMessenger.of(context);
-            scaffoldMessenger
-                .showSnackBar(
-                  const SnackBar(
-                    content: Text('Success. QR code found!'),
-                    backgroundColor: Colors.green,
-                    duration: Duration(seconds: 1),
-                  ),
-                )
-                .closed
-                .then((_) async {
-              // scaffoldMessenger.removeCurrentSnackBar();
-              if (mounted) {
+          // if (event is List<ItemModel>) {
+          isCall = false;
+          ScaffoldMessengerState scaffoldMessenger =
+              ScaffoldMessenger.of(context);
+          scaffoldMessenger
+              .showSnackBar(
+                const SnackBar(
+                  content: Text('Success. QR code found!'),
+                  backgroundColor: Colors.green,
+                  duration: Duration(seconds: 1),
+                ),
+              )
+              .closed
+              .then((_) async {
+            if (mounted) {
+              if (event is List<ItemModel>) {
                 await Navigator.pushNamed(
                   context,
                   Routes.bioPreview,
                   // ModalRoute.withName(Routes.home),
                   arguments: event,
                 );
-                isCall = true;
+              } else if (event is Barcode) {
+                Navigator.pop(context, event);
               }
-            });
-            log("BEFORE");
-          }
+              isCall = true;
+            }
+          });
+          // }
         } else {
           isCall = false;
           ScaffoldMessenger.of(context)
@@ -74,8 +75,16 @@ class _ScannerPageState extends State<ScannerPage> {
               .then((_) => isCall = true);
         }
       }
-      // await Future.delayed(const Duration(seconds: 1));
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    RouteSettings setting = ModalRoute.of(context)!.settings;
+    if (setting.arguments != null && setting.arguments is String) {
+      bloc.add(SavePreviousPageEvent(setting.arguments as String));
+    }
   }
 
   @override

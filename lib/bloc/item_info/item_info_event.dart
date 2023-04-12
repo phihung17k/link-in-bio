@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../models/item_model.dart';
 
 abstract class ItemInfoEvent extends Equatable {
@@ -32,4 +33,12 @@ class UpdatingCurrentItemEvent extends ItemInfoEvent {
   final ItemModel item;
 
   UpdatingCurrentItemEvent(this.item);
+}
+
+class NavigatorScannerPageEvent extends ItemInfoEvent {}
+
+class SetItemFromQrCode extends ItemInfoEvent {
+  final Barcode barcode;
+
+  SetItemFromQrCode(this.barcode);
 }

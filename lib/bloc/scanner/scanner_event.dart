@@ -7,3 +7,9 @@ class SaveDetectedQRCodeEvent extends ScannerEvent {
 
   SaveDetectedQRCodeEvent(this.barcode);
 }
+
+class SavePreviousPageEvent extends ScannerEvent {
+  final String previousPage;
+
+  SavePreviousPageEvent(this.previousPage);
+}

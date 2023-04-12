@@ -17,6 +17,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     on<SetCategoryIndexEvent>(setCategoryIndex);
     on<SetItemURLEvent>(setItemURL);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
+    on<SetItemFromQrCode>(setItemFromQRCode);
   }
 
   FutureOr<void> initData(
@@ -67,5 +68,22 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
         ?.indexWhere((category) => category.name == item.category?.name);
     emit.call(
         state.copyWith(item: event.item, selectedCategoryIndex: categoryIndex));
+  }
+
+  FutureOr<void> setItemFromQRCode(
+      SetItemFromQrCode event, Emitter<ItemInfoState> emit) {
+    int selectedIndex = state.itemCategories
+            ?.indexWhere((category) => category.name == "Link") ??
+        0;
+    emit.call(state.copyWith(
+        item: ItemModel(
+            name: "Link",
+            category: const ItemCategoryModel(
+                topic: "Others",
+                name: "Link",
+                imageURL: "assets/images/network.png",
+                baseURL: ""),
+            url: event.barcode.rawValue),
+        selectedCategoryIndex: selectedIndex));
   }
 }

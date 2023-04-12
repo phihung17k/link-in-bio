@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../bloc/item_info/item_info_event.dart';
 import '../../models/item_model.dart';
+import '../../routes.dart';
 import 'item_category_sub_page.dart';
 import 'item_content_sub_page.dart';
 
@@ -22,13 +24,19 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
     super.initState();
     bloc.add(InitialDataEvent());
 
-    bloc.listenerStream.listen((event) {
+    bloc.listenerStream.listen((event) async {
       if (event is BackingHomePageEvent) {
         ItemModel item = bloc.state.item!;
         if (item.name == null || item.name!.trim().isEmpty) {
           item = item.copyWith(name: item.category!.name);
         }
         Navigator.pop(context, item);
+      } else if (event is NavigatorScannerPageEvent) {
+        var result = await Navigator.pushNamed(context, Routes.scanner,
+            arguments: Routes.itemInfo);
+        if (result != null && result is Barcode) {
+          bloc.add(SetItemFromQrCode(result));
+        }
       }
     });
   }
@@ -51,6 +59,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
       child: BlocProvider.value(
         value: bloc,
         child: Scaffold(
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.cyan[50],
             appBar: AppBar(
               title: const Text('Settings'),

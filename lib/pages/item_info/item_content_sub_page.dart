@@ -59,6 +59,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.cyan[50],
       body: BlocBuilder<ItemInfoBloc, ItemInfoState>(
         bloc: bloc,
@@ -159,7 +160,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                 Center(
                     child: ElevatedButton(
                         onPressed: () {
-                          //add scanner page
+                          bloc!.addNavigatedEvent(NavigatorScannerPageEvent());
                         },
                         style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,

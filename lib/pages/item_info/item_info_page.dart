@@ -59,7 +59,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
       child: BlocProvider.value(
         value: bloc,
         child: Scaffold(
-            resizeToAvoidBottomInset: false,
+            // resizeToAvoidBottomInset: false,
             backgroundColor: Colors.cyan[50],
             appBar: AppBar(
               title: const Text('Settings'),

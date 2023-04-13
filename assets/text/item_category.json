@@ -13,7 +13,7 @@
     "Social Network.Tiktok.baseURL": "https://www.tiktok.com/",
     "Social Network.Twitch.imageURL": "twitch_logo.png",
     "Social Network.Twitch.baseURL": "https://www.twitch.tv/",
-    "Contact.SMS.imageURL": "sms.png",
+    "Contact.SMS.imageURL": "sms_logo.png",
     "Contact.SMS.baseURL": "",
     "Others.Link.imageURL": "network.png",
     "Others.Link.baseURL": ""

@@ -52,7 +52,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         List<ItemModel> items = bloc.state.selectedIndexList!
             .map((index) => bloc.state.itemList![index])
             .toList();
-        Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items);
+        Navigator.pushNamed(context, Routes.qrCodeSharing, arguments: items)
+            .then((value) => bloc.add(ResetSelectedItemsEvent()));
       } else if (event is NavigatorScannerPageEvent) {
         Navigator.pushNamed(context, Routes.scanner, arguments: Routes.home);
       }
@@ -128,9 +129,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               )
                           ],
                         )),
-                        SizedBox(
-                          height: size.height / 4,
-                        ),
                       ],
                     )),
                 FloatingButtonMenu(

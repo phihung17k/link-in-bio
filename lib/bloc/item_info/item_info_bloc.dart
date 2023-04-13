@@ -1,7 +1,6 @@
 import 'dart:async';
-import 'dart:convert';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../utils/file_util.dart';
 import 'item_info_event.dart';
 import 'item_info_state.dart';
 import '../../models/item_category_model.dart';
@@ -18,32 +17,14 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     on<SetCategoryIndexEvent>(setCategoryIndex);
     on<SetItemURLEvent>(setItemURL);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
-  }
-
-  Future<List<ItemCategoryModel>> loadAsset() async {
-    return await rootBundle.loadStructuredData(
-      'assets/text/item_category.txt',
-      (value) {
-        LineSplitter ls = const LineSplitter();
-        List<ItemCategoryModel> categories =
-            ls.convert(value).map<ItemCategoryModel>((line) {
-          List<String> sectors = line.split("[space]");
-          String baseURL = sectors[2].trim();
-          return ItemCategoryModel(
-              name: sectors[0].trim(),
-              imageURL: sectors[1].trim(),
-              baseURL: baseURL == "empty" ? "" : baseURL);
-        }).toList();
-        return Future.value(categories);
-      },
-    );
+    on<SetItemFromQrCode>(setItemFromQRCode);
   }
 
   FutureOr<void> initData(
       InitialDataEvent event, Emitter<ItemInfoState> emit) async {
     ItemCategoryRepository categoryRepo = ItemCategoryRepository.instance;
     if (categoryRepo.itemCategories.isEmpty) {
-      categoryRepo.itemCategories = await loadAsset();
+      categoryRepo.itemCategories = await FileUtil.loadAssetJson();
     }
     ItemCategoryModel category = categoryRepo.itemCategories.first;
     emit.call(state.copyWith(
@@ -87,5 +68,22 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
         ?.indexWhere((category) => category.name == item.category?.name);
     emit.call(
         state.copyWith(item: event.item, selectedCategoryIndex: categoryIndex));
+  }
+
+  FutureOr<void> setItemFromQRCode(
+      SetItemFromQrCode event, Emitter<ItemInfoState> emit) {
+    int selectedIndex = state.itemCategories
+            ?.indexWhere((category) => category.name == "Link") ??
+        0;
+    emit.call(state.copyWith(
+        item: ItemModel(
+            name: "Link",
+            category: const ItemCategoryModel(
+                topic: "Others",
+                name: "Link",
+                imageURL: "assets/images/network.png",
+                baseURL: ""),
+            url: event.barcode.rawValue),
+        selectedCategoryIndex: selectedIndex));
   }
 }

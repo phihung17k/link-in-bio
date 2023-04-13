@@ -1,0 +1,20 @@
+{
+    "Social Network.Facebook.imageURL": "Facebook_Logo.png",
+    "Social Network.Facebook.baseURL": "https://www.facebook.com/",
+    "Social Network.Instagram.imageURL": "ig_logo.png",
+    "Social Network.Instagram.baseURL": "https://www.instagram.com/",
+    "Social Network.Twitter.imageURL": "tw_logo.png",
+    "Social Network.Twitter.baseURL": "https://twitter.com/",
+    "Social Network.Youtube.imageURL": "yt_logo.png",
+    "Social Network.Youtube.baseURL": "https://youtube.com/",
+    "Social Network.Zalo.imageURL": "zalo_logo.png",
+    "Social Network.Zalo.baseURL": "http://zaloapp.com/qr/p/166p40bkw7mlf",
+    "Social Network.Tiktok.imageURL": "tiktok_logo.png",
+    "Social Network.Tiktok.baseURL": "https://www.tiktok.com/",
+    "Social Network.Twitch.imageURL": "twitch_logo.png",
+    "Social Network.Twitch.baseURL": "https://www.twitch.tv/",
+    "Contact.SMS.imageURL": "sms_logo.png",
+    "Contact.SMS.baseURL": "",
+    "Others.Link.imageURL": "network.png",
+    "Others.Link.baseURL": ""
+}

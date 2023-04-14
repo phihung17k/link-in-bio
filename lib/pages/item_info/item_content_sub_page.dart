@@ -131,7 +131,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8),
                             child: Text(
-                                "${category.baseURL}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
+                                "${category.webUrl}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
                                 style: const TextStyle(color: Colors.grey)),
                           )
                         ]),

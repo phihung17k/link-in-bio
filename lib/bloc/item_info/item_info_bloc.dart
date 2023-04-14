@@ -24,7 +24,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       InitialDataEvent event, Emitter<ItemInfoState> emit) async {
     ItemCategoryRepository categoryRepo = ItemCategoryRepository.instance;
     if (categoryRepo.itemCategories.isEmpty) {
-      categoryRepo.itemCategories = await FileUtil.loadAssetJson();
+      categoryRepo.itemCategories = await FileUtil.loadCategoriesJson();
     }
     ItemCategoryModel category = categoryRepo.itemCategories.first;
     emit.call(state.copyWith(
@@ -81,8 +81,8 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
             category: const ItemCategoryModel(
                 topic: "Others",
                 name: "Link",
-                imageURL: "assets/images/network.png",
-                baseURL: ""),
+                image: "assets/images/network.png",
+                webUrl: ""),
             url: event.barcode.rawValue),
         selectedCategoryIndex: selectedIndex));
   }

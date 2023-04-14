@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../bloc/qr_code/qr_code_bloc.dart';
 import 'widgets/qr_code_app.dart';
+import 'widgets/qr_code_items.dart';
 import 'widgets/qr_code_web.dart';
 import '../../routes.dart';
 import '../../utils/network_connectivity.dart';
@@ -38,7 +39,7 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage>
       }
     });
 
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 3, vsync: this);
     tabController.addListener(() {
       if (tabController.index == 1 && bloc.state.webQR!.isEmpty) {
         bloc.add(SetWebQREvent());
@@ -97,19 +98,23 @@ class _QRCodeSharingPageState extends State<QRCodeSharingPage>
               child: TabBar(
                   controller: tabController,
                   indicator: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      25.0,
-                    ),
+                    borderRadius: BorderRadius.circular(25.0),
                     color: Colors.green,
                   ),
                   labelColor: Colors.white,
                   unselectedLabelColor: Colors.black,
-                  tabs: const [Tab(text: "App"), Tab(text: "Web")]),
+                  tabs: const [
+                    Tab(text: "App"),
+                    Tab(text: "Web"),
+                    Tab(text: "Items")
+                  ]),
             ),
             Expanded(
-              child: TabBarView(
-                  controller: tabController,
-                  children: const [QRCodeAppWidget(), QRCodeWebWidget()]),
+              child: TabBarView(controller: tabController, children: const [
+                QRCodeAppWidget(),
+                QRCodeWebWidget(),
+                QRCodeItemsWidget()
+              ]),
             )
           ]),
         ),

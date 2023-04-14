@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../../models/item_model.dart';
 
@@ -24,44 +23,40 @@ class BioPreviewItemWidget extends StatelessWidget {
   //   }
   // }
 
-  Future<void> _launchUrlV2(BuildContext context) async {
-    /// Example:
-    /// ```dart
-    /// final httpsUri = Uri(
-    ///     scheme: 'https',
-    ///     host: 'dart.dev',
-    ///     path: 'guides/libraries/library-tour',
-    ///     fragment: 'numbers');
-    /// print(httpsUri); // https://dart.dev/guides/libraries/library-tour#numbers
-    ///
-    /// final mailtoUri = Uri(
-    ///     scheme: 'mailto',
-    ///     path: 'John.Doe@example.com',
-    ///     queryParameters: {'subject': 'Example'});
-    /// print(mailtoUri); // mailto:John.Doe@example.com?subject=Example
-    /// ```
-  }
+  /// Example:
+  /// ```dart
+  /// final httpsUri = Uri(
+  ///     scheme: 'https',
+  ///     host: 'dart.dev',
+  ///     path: 'guides/libraries/library-tour',
+  ///     fragment: 'numbers');
+  /// print(httpsUri); // https://dart.dev/guides/libraries/library-tour#numbers
+  ///
+  /// final mailtoUri = Uri(
+  ///     scheme: 'mailto',
+  ///     path: 'John.Doe@example.com',
+  ///     queryParameters: {'subject': 'Example'});
+  /// print(mailtoUri); // mailto:John.Doe@example.com?subject=Example
+  /// ```
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () async {
-        // await _launchUrl(context);
-        //2384251218489340
-        //109861992081824
         // String appUrl = "fb://page/109861992081824";
         // String appUrl = "fb://profile/100007134556052";
-        String appUrl = "fb://page/109861992081824";
-        String webUrl = 'https://www.facebook.com/phihung17k';
+        // String webUrl = 'https://www.facebook.com/phihung17k';
+        String webUrl = "${item!.category!.webUrl}${item!.url}";
 
-        if (await canLaunchUrlString(appUrl)) {
-          await launchUrlString(appUrl);
-        } else if (await canLaunchUrlString(webUrl)) {
-          await launchUrlString(webUrl);
+        // if (await canLaunchUrlString(appUrl)) {
+        //   await launchUrlString(appUrl);
+        // } else
+        if (await canLaunchUrlString(webUrl)) {
+          await launchUrlString(webUrl, mode: LaunchMode.externalApplication);
         } else {
           if (!context.mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Could not launch $appUrl or $webUrl"),
+            content: Text("Could not launch $webUrl"),
             duration: const Duration(seconds: 1),
           ));
         }
@@ -78,7 +73,7 @@ class BioPreviewItemWidget extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: itemRadius,
-                backgroundImage: AssetImage(item!.category!.imageURL!),
+                backgroundImage: AssetImage(item!.category!.image!),
               ),
               Expanded(
                 child: Align(

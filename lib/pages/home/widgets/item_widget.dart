@@ -34,7 +34,7 @@ class ItemWidget extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: itemRadius,
-                backgroundImage: AssetImage(item!.category!.imageURL!),
+                backgroundImage: AssetImage(item!.category!.image!),
               ),
               Flexible(
                 child: Container(

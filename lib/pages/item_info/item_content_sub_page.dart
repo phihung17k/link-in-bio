@@ -180,6 +180,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+          heroTag: this.toString(),
           onPressed: () {
             bloc!.addNavigatedEvent(BackingHomePageEvent());
           },

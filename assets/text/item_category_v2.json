@@ -46,8 +46,9 @@
             {
                 "name": "SMS",
                 "image": "sms_logo.png",
-                "appUrl": "",
-                "webUrl": ""
+                "appUrl": "sms",
+                "webUrl": "",
+                "example": "sms:191?body=hello there"
             }
         ]
     },

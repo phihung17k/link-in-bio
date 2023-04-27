@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../../models/item_model.dart';
 
@@ -39,6 +40,22 @@ class BioPreviewItemWidget extends StatelessWidget {
   /// print(mailtoUri); // mailto:John.Doe@example.com?subject=Example
   /// ```
 
+  String getAppURLString() {
+    switch (item?.category?.name) {
+      case "SMS":
+        return "${item!.category!.appUrl}:${item!.url}";
+      default:
+        return "";
+    }
+  }
+
+  String getWebURLString() {
+    switch (item?.category?.name) {
+      default:
+        return "${item!.category!.webUrl}${item!.url}";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -46,12 +63,15 @@ class BioPreviewItemWidget extends StatelessWidget {
         // String appUrl = "fb://page/109861992081824";
         // String appUrl = "fb://profile/100007134556052";
         // String webUrl = 'https://www.facebook.com/phihung17k';
-        String webUrl = "${item!.category!.webUrl}${item!.url}";
+        // String appUrl = getAppURL();
+        String appUrl = "sms:191?body=hello    there";
+        String webUrl = getWebURLString();
 
-        // if (await canLaunchUrlString(appUrl)) {
-        //   await launchUrlString(appUrl);
-        // } else
-        if (await canLaunchUrlString(webUrl)) {
+        Uri uri = Uri.parse("sms:191?body=hello there");
+
+        if (await canLaunchUrlString(appUrl)) {
+          await launchUrlString(appUrl);
+        } else if (await canLaunchUrlString(webUrl)) {
           await launchUrlString(webUrl, mode: LaunchMode.externalApplication);
         } else {
           if (!context.mounted) return;

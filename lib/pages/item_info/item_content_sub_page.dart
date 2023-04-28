@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/pages/item_info/widgets/sms_card.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../bloc/item_info/item_info_event.dart';
 import '../../../bloc/item_info/item_info_state.dart';
 import '../../../models/item_category_model.dart';
 import 'widgets/item_detail_card.dart';
+import 'widgets/item_label_card.dart';
 
 class ItemContentSubPage extends StatefulWidget {
   final String? initialName;
@@ -31,31 +34,6 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
     urlTextController = TextEditingController(text: initialURL);
   }
 
-  String getLabel(String name) {
-    switch (name.toLowerCase()) {
-      case "facebook":
-        return "Facebook ID";
-      case "tiktok":
-        return "Tiktok ID";
-      case "zalo":
-        return "Zalo ID";
-      case "twitter":
-        return "Twitter ID";
-      case "instagram":
-        return "Instagram ID";
-      case "youtube":
-        return "Youtube Channel";
-      case "amazon":
-        return "Amazon ID";
-      case "shopee":
-        return "Shopee ID";
-      case "lazada":
-        return "Lazada ID";
-      default:
-        return "Link";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,67 +53,22 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ItemDetailCard(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Label",
-                            style: Theme.of(context).textTheme.titleMedium),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        TextField(
-                          controller: nameTextController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              labelText: category.name),
-                          onChanged: (value) {
-                            bloc!.add(SetItemNameEvent(
-                                name: nameTextController!.text));
-                          },
-                        ),
-                      ],
-                    ),
+                  ItemLabelCard(
+                    nameTextController: nameTextController,
+                    label: category.name,
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  ItemDetailCard(
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("URL",
-                              style: Theme.of(context).textTheme.titleMedium),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          TextField(
-                            controller: urlTextController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                labelText: getLabel(category.name!)),
-                            onChanged: (value) {
-                              bloc!.add(SetItemURLEvent(
-                                  url: urlTextController!.text));
-                            },
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                                "${category.webUrl}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
-                                style: const TextStyle(color: Colors.grey)),
-                          )
-                        ]),
-                  ),
+                  category.name == "SMS"
+                      ? SmsCard(
+                          urlTextController: urlTextController,
+                          category: category,
+                        )
+                      : ItemDetailCard(
+                          urlTextController: urlTextController,
+                          category: category,
+                        ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -180,9 +113,14 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          heroTag: this.toString(),
+          heroTag: toString(),
           onPressed: () {
-            bloc!.addNavigatedEvent(BackingHomePageEvent());
+            // bloc!.addNavigatedEvent(BackingHomePageEvent());
+            if (bloc!.state.item!.category!.name == "SMS") {
+              bloc!.add(SetSms(phoneNumber: urlTextController!.text));
+            } else {
+              bloc!.addNavigatedEvent(BackingHomePageEvent());
+            }
           },
           child: const Icon(Icons.keyboard_double_arrow_right_rounded)),
     );

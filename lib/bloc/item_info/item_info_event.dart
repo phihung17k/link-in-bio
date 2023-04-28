@@ -42,3 +42,10 @@ class SetItemFromQrCode extends ItemInfoEvent {
 
   SetItemFromQrCode(this.barcode);
 }
+
+class SetSms extends ItemInfoEvent {
+  final String? phoneNumber;
+  final String? message;
+
+  SetSms({this.phoneNumber, this.message});
+}

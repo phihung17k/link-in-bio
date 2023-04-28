@@ -5,11 +5,11 @@ import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../bloc/item_info/item_info_event.dart';
 import '../../../models/item_category_model.dart';
 
-class ItemDetailCard extends StatelessWidget {
+class SmsCard extends StatelessWidget {
   final TextEditingController? urlTextController;
   final ItemCategoryModel? category;
 
-  const ItemDetailCard({super.key, this.urlTextController, this.category});
+  const SmsCard({super.key, this.urlTextController, this.category});
 
   String getLabel(String name) {
     switch (name.toLowerCase()) {
@@ -46,7 +46,7 @@ class ItemDetailCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("URL", style: Theme.of(context).textTheme.titleMedium),
+                Text("SMS", style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(
                   height: 15,
                 ),
@@ -56,22 +56,32 @@ class ItemDetailCard extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      labelText: getLabel(category!.name!)),
+                      labelText: "Phone Number"),
                   onChanged: (value) {
                     context
                         .read<ItemInfoBloc>()
                         .add(SetItemURLEvent(url: urlTextController!.text));
                   },
+                  onSubmitted: (value) {
+                    print("Submit $value");
+                  },
                 ),
                 const SizedBox(
-                  height: 10,
+                  height: 15,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                      "${category?.webUrl}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
-                      style: const TextStyle(color: Colors.grey)),
-                )
+                // TextField(
+                //   controller: urlTextController,
+                //   decoration: InputDecoration(
+                //       border: OutlineInputBorder(
+                //         borderRadius: BorderRadius.circular(10),
+                //       ),
+                //       labelText: "Phone Number"),
+                //   onChanged: (value) {
+                //     context
+                //         .read<ItemInfoBloc>()
+                //         .add(SetItemURLEvent(url: urlTextController!.text));
+                //   },
+                // )
               ])),
     );
   }

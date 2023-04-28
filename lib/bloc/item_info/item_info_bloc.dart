@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../utils/file_util.dart';
 import 'item_info_event.dart';
@@ -18,6 +19,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     on<SetItemURLEvent>(setItemURL);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
     on<SetItemFromQrCode>(setItemFromQRCode);
+    on<SetSms>(setSms);
   }
 
   FutureOr<void> initData(
@@ -85,5 +87,23 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
                 webUrl: ""),
             url: event.barcode.rawValue),
         selectedCategoryIndex: selectedIndex));
+  }
+
+  FutureOr<void> setSms(SetSms event, Emitter<ItemInfoState> emit) {
+    ItemModel item = state.item!;
+    String? name = item.name;
+    if (name == null || name.trim().isEmpty) {
+      name = item.category!.name;
+    }
+
+    try {
+      Uri uri =
+          Uri.parse("sms:${event.phoneNumber ?? ""}?${event.message ?? ""}");
+      emit.call(state.copyWith(item: item.copyWith(name: name, uri: uri)));
+    } on FormatException catch (e) {
+      log("FormatException: ${e.message}");
+    } finally {
+      addNavigatedEvent(BackingHomePageEvent());
+    }
   }
 }

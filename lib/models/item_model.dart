@@ -5,14 +5,17 @@ class ItemModel extends Equatable {
   final String? name;
   final ItemCategoryModel? category;
   final String? url;
+  final Uri? uri;
 
-  const ItemModel({this.name, this.category, this.url});
+  const ItemModel({this.name, this.category, this.url, this.uri});
 
-  ItemModel copyWith({String? name, ItemCategoryModel? category, String? url}) {
+  ItemModel copyWith(
+      {String? name, ItemCategoryModel? category, String? url, Uri? uri}) {
     return ItemModel(
         name: name ?? this.name,
         category: category ?? this.category,
-        url: url ?? this.url);
+        url: url ?? this.url,
+        uri: uri ?? this.uri);
   }
 
   factory ItemModel.fromMap(Map<String, dynamic> json) => ItemModel(
@@ -24,5 +27,5 @@ class ItemModel extends Equatable {
       {'name': name, 'category': category?.toJson(), 'url': url};
 
   @override
-  List<Object?> get props => [name, category, url];
+  List<Object?> get props => [name, category, url, uri];
 }

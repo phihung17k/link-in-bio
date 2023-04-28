@@ -3,30 +3,43 @@ import 'package:equatable/equatable.dart';
 class ItemCategoryModel extends Equatable {
   final String? topic;
   final String? name;
-  final String? imageURL;
-  final String? baseURL;
+  final String? image;
+  final String? appUrl;
+  final String? webUrl;
 
-  const ItemCategoryModel({this.topic, this.name, this.imageURL, this.baseURL});
+  const ItemCategoryModel(
+      {this.topic, this.name, this.image, this.appUrl, this.webUrl});
 
   ItemCategoryModel copyWith(
-      {String? topic, String? name, String? imageURL, String? baseURL}) {
+      {String? topic,
+      String? name,
+      String? image,
+      String? appUrl,
+      String? webUrl}) {
     return ItemCategoryModel(
         topic: topic ?? this.topic,
         name: name ?? this.name,
-        imageURL: imageURL ?? this.imageURL,
-        baseURL: baseURL ?? this.baseURL);
+        image: image ?? this.image,
+        appUrl: appUrl ?? this.appUrl,
+        webUrl: webUrl ?? this.webUrl);
   }
 
   factory ItemCategoryModel.fromMap(Map<String, dynamic> json) =>
       ItemCategoryModel(
           topic: json['topic'] ?? "",
           name: json['name'] ?? "",
-          imageURL: json['imageURL'] ?? "",
-          baseURL: json['baseURL'] ?? "");
+          image: json['image'] ?? "",
+          appUrl: json['appUrl'] ?? "",
+          webUrl: json['webUrl'] ?? "");
 
-  Map<String, dynamic> toJson() =>
-      {'topic': topic, 'name': name, 'imageURL': imageURL, 'baseURL': baseURL};
+  Map<String, dynamic> toJson() => {
+        'topic': topic,
+        'name': name,
+        'image': image,
+        'appUrl': appUrl,
+        'webUrl': webUrl
+      };
 
   @override
-  List<Object?> get props => [topic, name, imageURL, baseURL];
+  List<Object?> get props => [topic, name, image, appUrl, webUrl];
 }

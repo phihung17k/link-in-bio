@@ -57,8 +57,8 @@ class _ItemCategorySubPageState extends State<ItemCategorySubPage> {
           var topics = getCategoryTopics(itemCategories);
           return ListView.builder(
             itemCount: topics.length,
-            itemBuilder: (context, index) {
-              List<ItemCategoryModel> categories = topics[index];
+            itemBuilder: (context, indexCategory) {
+              List<ItemCategoryModel> categories = topics[indexCategory];
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,13 +76,16 @@ class _ItemCategorySubPageState extends State<ItemCategorySubPage> {
                     itemCount: categories.length,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, i) {
-                      ItemCategoryModel selectedCategory = categories[i];
-                      if (index > 0) {
-                        i = index * topics[index - 1].length + i;
+                    itemBuilder: (context, indexItem) {
+                      ItemCategoryModel selectedCategory =
+                          categories[indexItem];
+                      if (indexCategory > 0) {
+                        for (var i = 1; i <= indexCategory; i++) {
+                          indexItem += topics[indexCategory - i].length;
+                        }
                       }
                       return ItemCategoryWidget(
-                          index: i, selectedCategory: selectedCategory);
+                          index: indexItem, selectedCategory: selectedCategory);
                     },
                   ),
                   const SizedBox(height: 20)
@@ -93,6 +96,7 @@ class _ItemCategorySubPageState extends State<ItemCategorySubPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+          heroTag: this.toString(),
           onPressed: () {
             DefaultTabController.of(context).animateTo(1);
           },

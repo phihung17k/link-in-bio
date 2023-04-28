@@ -37,7 +37,7 @@ class ItemCategoryWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Flexible(
-                  child: Image.asset(selectedCategory.imageURL!),
+                  child: Image.asset(selectedCategory.image!),
                 ),
                 const SizedBox(height: 5),
                 Text(selectedCategory.name!)

@@ -19,8 +19,8 @@ void main() {
       defaultItem = const ItemModel(
           name: "name_test",
           category: ItemCategoryModel(
-              baseURL: "baseURL_test",
-              imageURL: "image_test",
+              webUrl: "baseURL_test",
+              image: "image_test",
               name: "category_name_test"),
           url: "url_test");
       updatedItem = defaultItem.copyWith(name: 'update');

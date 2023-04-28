@@ -1,4 +1,10 @@
 void main(List<String> arguments) {
+  ///link
+  https: //developer.android.com/guide/components/intents-common.html#java
+  https: //developer.android.com/reference/android/content/Intent#ACTION_SEND
+  https://developer.android.com/reference/android/Manifest.permission#SEND_SMS
+  ///
+
   // console.printUri("https://www.facebook.com/phihung17k");
   printUri("sms:12321sad 43241?21321");
   Uri uri = Uri(scheme: "sms", path: "12321sad 43241", query: "213123");

@@ -22,6 +22,9 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
   TextEditingController? nameTextController;
   TextEditingController? urlTextController;
 
+  TextEditingController? phoneNumerController;
+  TextEditingController? messageController;
+
   ItemInfoBloc? bloc;
 
   @override
@@ -62,7 +65,8 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                   ),
                   category.name == "SMS"
                       ? SmsCard(
-                          urlTextController: urlTextController,
+                          phoneNumerController: phoneNumerController,
+                          messageController: messageController,
                           category: category,
                         )
                       : ItemDetailCard(
@@ -107,7 +111,10 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                                   borderRadius: BorderRadius.circular(5))),
                           child: const Text("Scan QR",
                               style: TextStyle(
-                                  inherit: false, color: Colors.black))))
+                                  inherit: false, color: Colors.black)))),
+                  const SizedBox(
+                    height: 20,
+                  ),
                 ]);
           },
         ),
@@ -117,7 +124,9 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
           onPressed: () {
             // bloc!.addNavigatedEvent(BackingHomePageEvent());
             if (bloc!.state.item!.category!.name == "SMS") {
-              bloc!.add(SetSms(phoneNumber: urlTextController!.text));
+              bloc!.add(SetSms(
+                  phoneNumber: phoneNumerController!.text,
+                  message: messageController!.text));
             } else {
               bloc!.addNavigatedEvent(BackingHomePageEvent());
             }

@@ -6,35 +6,15 @@ import '../../../bloc/item_info/item_info_event.dart';
 import '../../../models/item_category_model.dart';
 
 class SmsCard extends StatelessWidget {
-  final TextEditingController? urlTextController;
+  final TextEditingController? phoneNumerController;
+  final TextEditingController? messageController;
   final ItemCategoryModel? category;
 
-  const SmsCard({super.key, this.urlTextController, this.category});
-
-  String getLabel(String name) {
-    switch (name.toLowerCase()) {
-      case "facebook":
-        return "Facebook ID";
-      case "tiktok":
-        return "Tiktok ID";
-      case "zalo":
-        return "Zalo ID";
-      case "twitter":
-        return "Twitter ID";
-      case "instagram":
-        return "Instagram ID";
-      case "youtube":
-        return "Youtube Channel";
-      case "amazon":
-        return "Amazon ID";
-      case "shopee":
-        return "Shopee ID";
-      case "lazada":
-        return "Lazada ID";
-      default:
-        return "Link";
-    }
-  }
+  const SmsCard(
+      {super.key,
+      this.phoneNumerController,
+      this.messageController,
+      this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -51,37 +31,38 @@ class SmsCard extends StatelessWidget {
                   height: 15,
                 ),
                 TextField(
-                  controller: urlTextController,
+                  controller: phoneNumerController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       labelText: "Phone Number"),
                   onChanged: (value) {
-                    context
-                        .read<ItemInfoBloc>()
-                        .add(SetItemURLEvent(url: urlTextController!.text));
+                    // context
+                    //     .read<ItemInfoBloc>()
+                    //     .add(SetItemURLEvent(url: phoneNumerController!.text));
                   },
                   onSubmitted: (value) {
-                    print("Submit $value");
+                    // print("Submit $value");
                   },
                 ),
                 const SizedBox(
                   height: 15,
                 ),
-                // TextField(
-                //   controller: urlTextController,
-                //   decoration: InputDecoration(
-                //       border: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(10),
-                //       ),
-                //       labelText: "Phone Number"),
-                //   onChanged: (value) {
-                //     context
-                //         .read<ItemInfoBloc>()
-                //         .add(SetItemURLEvent(url: urlTextController!.text));
-                //   },
-                // )
+                TextField(
+                  controller: messageController,
+                  maxLines: null,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelText: "Message"),
+                  onChanged: (value) {
+                    // context
+                    //     .read<ItemInfoBloc>()
+                    //     .add(SetItemURLEvent(url: urlTextController!.text));
+                  },
+                )
               ])),
     );
   }

@@ -19,7 +19,7 @@ class ItemLabelCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Label", style: Theme.of(context).textTheme.titleMedium),
+              Text("Title", style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(
                 height: 15,
               ),

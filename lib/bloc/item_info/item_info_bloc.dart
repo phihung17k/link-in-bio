@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/models/data_model.dart';
 import '../../utils/file_util.dart';
 import 'item_info_event.dart';
 import 'item_info_state.dart';
@@ -31,7 +31,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     ItemCategoryModel category = categoryRepo.itemCategories.first;
     emit.call(state.copyWith(
         itemCategories: categoryRepo.itemCategories,
-        item: ItemModel(name: category.name, category: category, url: "")));
+        item: ItemModel(name: category.name, category: category)));
   }
 
   //for create
@@ -53,14 +53,14 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
           selectedCategoryIndex: event.selectedCategoryIndex,
           item: state.item!.copyWith(
               name: category.name,
-              category: state.itemCategories![event.selectedCategoryIndex!],
-              url: "")));
+              category: state.itemCategories![event.selectedCategoryIndex!])));
     }
   }
 
   FutureOr<void> setItemURL(
       SetItemURLEvent event, Emitter<ItemInfoState> emit) {
-    emit.call(state.copyWith(item: state.item?.copyWith(url: event.url)));
+    emit.call(state.copyWith(
+        item: state.item?.copyWith(url: UrlModel(url: event.url))));
   }
 
   FutureOr<void> updateCurrentItem(
@@ -85,7 +85,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
                 name: "Link",
                 image: "assets/images/network.png",
                 webUrl: ""),
-            url: event.barcode.rawValue),
+            url: UrlModel(url: event.barcode.rawValue)),
         selectedCategoryIndex: selectedIndex));
   }
 
@@ -95,15 +95,11 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     if (name == null || name.trim().isEmpty) {
       name = item.category!.name;
     }
-
-    try {
-      Uri uri =
-          Uri.parse("sms:${event.phoneNumber ?? ""}?${event.message ?? ""}");
-      emit.call(state.copyWith(item: item.copyWith(name: name, uri: uri)));
-    } on FormatException catch (e) {
-      log("FormatException: ${e.message}");
-    } finally {
-      addNavigatedEvent(BackingHomePageEvent());
-    }
+    emit.call(state.copyWith(
+        item: item.copyWith(
+            name: name,
+            sms: SmsModel(
+                phoneNumber: event.phoneNumber, message: event.message))));
+    addNavigatedEvent(BackingHomePageEvent());
   }
 }

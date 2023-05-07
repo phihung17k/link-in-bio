@@ -68,9 +68,7 @@ class _BioPreviewPageState extends State<BioPreviewPage> {
                       if (state.items!.isNotEmpty) {
                         return Column(
                           children: state.items!
-                              .map((item) => BioPreviewItemWidget(
-                                    item: item,
-                                  ))
+                              .map((item) => BioPreviewItemWidget(item))
                               .toList(),
                         );
                       }

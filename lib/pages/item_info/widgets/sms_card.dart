@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../bloc/item_info/item_info_bloc.dart';
-import '../../../bloc/item_info/item_info_event.dart';
 import '../../../models/item_category_model.dart';
 
 class SmsCard extends StatelessWidget {
@@ -31,38 +27,23 @@ class SmsCard extends StatelessWidget {
                   height: 15,
                 ),
                 TextField(
-                  controller: phoneNumerController,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      labelText: "Phone Number"),
-                  onChanged: (value) {
-                    // context
-                    //     .read<ItemInfoBloc>()
-                    //     .add(SetItemURLEvent(url: phoneNumerController!.text));
-                  },
-                  onSubmitted: (value) {
-                    // print("Submit $value");
-                  },
-                ),
+                    controller: phoneNumerController,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelText: "Phone Number")),
                 const SizedBox(
                   height: 15,
                 ),
                 TextField(
-                  controller: messageController,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      labelText: "Message"),
-                  onChanged: (value) {
-                    // context
-                    //     .read<ItemInfoBloc>()
-                    //     .add(SetItemURLEvent(url: urlTextController!.text));
-                  },
-                )
+                    controller: messageController,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        labelText: "Message"))
               ])),
     );
   }

@@ -1,8 +1,10 @@
+// ignore_for_file: avoid_print
+
 void main(List<String> arguments) {
-  ///link
-  https: //developer.android.com/guide/components/intents-common.html#java
-  https: //developer.android.com/reference/android/content/Intent#ACTION_SEND
-  https://developer.android.com/reference/android/Manifest.permission#SEND_SMS
+  //link
+  //https: //developer.android.com/guide/components/intents-common.html#java
+  //https: //developer.android.com/reference/android/content/Intent#ACTION_SEND
+  //https://developer.android.com/reference/android/Manifest.permission#SEND_SMS
   ///
 
   // console.printUri("https://www.facebook.com/phihung17k");

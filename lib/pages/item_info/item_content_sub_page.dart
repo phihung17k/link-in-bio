@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/models/data_model.dart';
 import 'package:link_in_bio/pages/item_info/widgets/sms_card.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../bloc/item_info/item_info_event.dart';
 import '../../../bloc/item_info/item_info_state.dart';
 import '../../../models/item_category_model.dart';
+import '../../models/item_model.dart';
 import 'widgets/item_detail_card.dart';
 import 'widgets/item_label_card.dart';
 
@@ -19,22 +20,40 @@ class ItemContentSubPage extends StatefulWidget {
 }
 
 class _ItemContentSubPageState extends State<ItemContentSubPage> {
-  TextEditingController? nameTextController;
-  TextEditingController? urlTextController;
+  TextEditingController nameTextController = TextEditingController();
 
-  TextEditingController? phoneNumerController;
-  TextEditingController? messageController;
+  TextEditingController urlTextController = TextEditingController();
+
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
 
   ItemInfoBloc? bloc;
+
+  void initValue(ItemModel item) {
+    switch (item.category!.name!.toLowerCase()) {
+      case "url":
+        break;
+      case "sms":
+        SmsModel sms = item.sms!;
+        phoneNumberController.text = sms.phoneNumber ?? "";
+        messageController.text = sms.message ?? "";
+        break;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     bloc = context.read<ItemInfoBloc>();
-    String? initialName = bloc?.state.item?.name;
-    String? initialURL = bloc?.state.item?.url;
-    nameTextController = TextEditingController(text: initialName);
-    urlTextController = TextEditingController(text: initialURL);
+
+    ItemModel? item = bloc!.state.item;
+    if (item != null) {
+      String? initialName = item.name;
+      if (initialName != null) nameTextController.text = initialName;
+      if (item.sms != null) {
+        initValue(item);
+      }
+    }
   }
 
   @override
@@ -65,7 +84,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                   ),
                   category.name == "SMS"
                       ? SmsCard(
-                          phoneNumerController: phoneNumerController,
+                          phoneNumerController: phoneNumberController,
                           messageController: messageController,
                           category: category,
                         )
@@ -125,8 +144,8 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
             // bloc!.addNavigatedEvent(BackingHomePageEvent());
             if (bloc!.state.item!.category!.name == "SMS") {
               bloc!.add(SetSms(
-                  phoneNumber: phoneNumerController!.text,
-                  message: messageController!.text));
+                  phoneNumber: phoneNumberController.text,
+                  message: messageController.text));
             } else {
               bloc!.addNavigatedEvent(BackingHomePageEvent());
             }
@@ -137,8 +156,10 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
 
   @override
   void dispose() {
-    urlTextController?.dispose();
-    nameTextController?.dispose();
+    phoneNumberController.dispose();
+    messageController.dispose();
+    urlTextController.dispose();
+    nameTextController.dispose();
     super.dispose();
   }
 }

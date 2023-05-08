@@ -141,14 +141,10 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
       floatingActionButton: FloatingActionButton(
           heroTag: toString(),
           onPressed: () {
-            // bloc!.addNavigatedEvent(BackingHomePageEvent());
-            if (bloc!.state.item!.category!.name == "SMS") {
-              bloc!.add(SetSms(
-                  phoneNumber: phoneNumberController.text,
-                  message: messageController.text));
-            } else {
-              bloc!.addNavigatedEvent(BackingHomePageEvent());
-            }
+            bloc!.add(SetItemInfo(
+              phoneNumber: phoneNumberController.text,
+              message: messageController.text,
+            ));
           },
           child: const Icon(Icons.keyboard_double_arrow_right_rounded)),
     );

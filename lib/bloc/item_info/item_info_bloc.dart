@@ -19,7 +19,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     on<SetItemURLEvent>(setItemURL);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
     on<SetItemFromQrCode>(setItemFromQRCode);
-    on<SetSms>(setSms);
+    on<SetItemInfo>(setItemInfo);
   }
 
   FutureOr<void> initData(
@@ -89,17 +89,30 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
         selectedCategoryIndex: selectedIndex));
   }
 
-  FutureOr<void> setSms(SetSms event, Emitter<ItemInfoState> emit) {
+  FutureOr<void> setItemInfo(SetItemInfo event, Emitter<ItemInfoState> emit) {
     ItemModel item = state.item!;
     String? name = item.name;
     if (name == null || name.trim().isEmpty) {
       name = item.category!.name;
     }
-    emit.call(state.copyWith(
-        item: item.copyWith(
-            name: name,
-            sms: SmsModel(
-                phoneNumber: event.phoneNumber, message: event.message))));
-    addNavigatedEvent(BackingHomePageEvent());
+
+    switch (item.category!.name!.toLowerCase()) {
+      case "sms":
+        emit.call(state.copyWith(
+            item: item.copyWith(
+                name: name,
+                sms: SmsModel(
+                    phoneNumber: event.phoneNumber, message: event.message))));
+        break;
+      case "facebook":
+      case "twitter":
+      case "youtube":
+      case "tiktok":
+      case "twitch":
+        emit.call(state.copyWith(
+            item: item.copyWith(name: name, url: UrlModel(url: event.url))));
+        break;
+    }
+    addNavigatedEvent(BackingHomePageEvent(state.item));
   }
 }

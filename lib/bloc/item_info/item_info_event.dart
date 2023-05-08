@@ -27,7 +27,11 @@ class SetItemURLEvent extends ItemInfoEvent {
 
 class InitialDataEvent extends ItemInfoEvent {}
 
-class BackingHomePageEvent extends ItemInfoEvent {}
+class BackingHomePageEvent extends ItemInfoEvent {
+  final ItemModel? item;
+
+  BackingHomePageEvent(this.item);
+}
 
 class UpdatingCurrentItemEvent extends ItemInfoEvent {
   final ItemModel item;
@@ -43,9 +47,10 @@ class SetItemFromQrCode extends ItemInfoEvent {
   SetItemFromQrCode(this.barcode);
 }
 
-class SetSms extends ItemInfoEvent {
+class SetItemInfo extends ItemInfoEvent {
   final String? phoneNumber;
   final String? message;
+  final String? url;
 
-  SetSms({this.phoneNumber, this.message});
+  SetItemInfo({this.phoneNumber, this.message, this.url});
 }

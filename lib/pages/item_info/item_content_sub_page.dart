@@ -42,6 +42,10 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         UrlModel? url = item.url;
         urlController.text = url?.url ?? "";
         break;
+      case "phone":
+        PhoneModel? phone = item.phone;
+        phoneNumberController.text = phone?.phoneNumber ?? "";
+        break;
     }
   }
 
@@ -56,6 +60,41 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
       if (initialName != null) nameController.text = initialName;
       initValue(item);
     }
+  }
+
+  Widget getItemDetailCard(ItemCategoryModel category) {
+    Widget result;
+    switch (category.name!.toLowerCase()) {
+      case "sms":
+        result = SmsCard(
+          phoneNumerController: phoneNumberController,
+          messageController: messageController,
+          category: category,
+        );
+        break;
+      case "facebook":
+      case "twitter":
+      case "youtube":
+      case "tiktok":
+      case "twitch":
+        result = ItemDetailCard(
+          textController: urlController,
+          category: category,
+          label: "URL",
+          showDetailLink: true,
+        );
+        break;
+      case "phone":
+        result = ItemDetailCard(
+            textController: phoneNumberController,
+            category: category,
+            label: "Phone");
+        break;
+      default:
+        result = const SizedBox();
+        break;
+    }
+    return result;
   }
 
   @override
@@ -84,16 +123,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                   const SizedBox(
                     height: 15,
                   ),
-                  category.name == "SMS"
-                      ? SmsCard(
-                          phoneNumerController: phoneNumberController,
-                          messageController: messageController,
-                          category: category,
-                        )
-                      : ItemDetailCard(
-                          urlController: urlController,
-                          category: category,
-                        ),
+                  getItemDetailCard(category),
                   const SizedBox(
                     height: 20,
                   ),

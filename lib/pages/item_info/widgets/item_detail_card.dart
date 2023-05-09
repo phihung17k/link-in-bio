@@ -5,31 +5,36 @@ import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../models/item_category_model.dart';
 
 class ItemDetailCard extends StatelessWidget {
-  final TextEditingController? urlController;
+  final TextEditingController? textController;
   final ItemCategoryModel? category;
+  final String label;
+  final bool showDetailLink;
 
-  const ItemDetailCard({super.key, this.urlController, this.category});
+  const ItemDetailCard(
+      {super.key,
+      this.textController,
+      this.label = "",
+      this.category,
+      this.showDetailLink = false});
 
-  String getLabel(String name) {
+  String getPlaceholder(String name) {
     switch (name.toLowerCase()) {
       case "facebook":
         return "Facebook ID";
       case "tiktok":
         return "Tiktok ID";
-      case "zalo":
-        return "Zalo ID";
       case "twitter":
         return "Twitter ID";
       case "instagram":
         return "Instagram ID";
       case "youtube":
         return "Youtube Channel";
-      case "amazon":
-        return "Amazon ID";
       case "shopee":
         return "Shopee ID";
-      case "lazada":
-        return "Lazada ID";
+      case "twitch":
+        return "Twitch ID";
+      case "phone":
+        return "Phone Number";
       default:
         return "Link";
     }
@@ -45,17 +50,17 @@ class ItemDetailCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("URL", style: Theme.of(context).textTheme.titleMedium),
+                Text(label, style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(
                   height: 15,
                 ),
                 TextField(
-                  controller: urlController,
+                  controller: textController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      labelText: getLabel(category!.name!)),
+                      labelText: getPlaceholder(category!.name!)),
                   onChanged: (value) {
                     // context
                     //     .read<ItemInfoBloc>()
@@ -65,12 +70,13 @@ class ItemDetailCard extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: Text(
-                      "${category?.webUrl}${context.watch<ItemInfoBloc>().state.item?.url?.url ?? ""}",
-                      style: const TextStyle(color: Colors.grey)),
-                )
+                if (showDetailLink)
+                  Padding(
+                    padding: const EdgeInsets.only(left: 8),
+                    child: Text(
+                        "${category?.webUrl}${context.watch<ItemInfoBloc>().state.item?.url?.url ?? ""}",
+                        style: const TextStyle(color: Colors.grey)),
+                  )
               ])),
     );
   }

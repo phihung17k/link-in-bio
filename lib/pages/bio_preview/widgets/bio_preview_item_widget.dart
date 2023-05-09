@@ -32,6 +32,7 @@ class BioPreviewItemWidget extends StatelessWidget {
         // String appUrl = "fb://profile/100007134556052";
         // String webUrl = 'https://www.facebook.com/phihung17k';
         // String appUrl = getAppURL();
+        //"tel:0365162027"
 
         Uri? uri = LinkUtil.getUri(item);
         bool isLaunchUrl = true;

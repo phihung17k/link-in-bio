@@ -16,6 +16,10 @@ class LinkUtil {
         UrlModel url = item!.url!;
         result = Uri.tryParse("${item.category!.webUrl}${url.url}");
         break;
+      case "phone":
+        PhoneModel phone = item!.phone!;
+        result = Uri.tryParse("tel:${phone.phoneNumber}");
+        break;
     }
     return result;
   }
@@ -34,6 +38,10 @@ class LinkUtil {
       case "twitch":
         UrlModel url = item!.url!;
         result = "${item.category!.webUrl}${url.url}";
+        break;
+      case "phone":
+        PhoneModel phone = item!.phone!;
+        result = "tel:${phone.phoneNumber}";
         break;
     }
     return result;

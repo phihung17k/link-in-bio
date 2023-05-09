@@ -43,6 +43,13 @@
                 "appUrl": "sms",
                 "webUrl": "",
                 "example": "sms:191?body=hello there"
+            },
+            {
+                "name": "Phone",
+                "image": "phone.png",
+                "appUrl": "",
+                "webUrl": "",
+                "example": "tel:2125551212"
             }
         ]
     },

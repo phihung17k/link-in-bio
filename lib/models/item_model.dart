@@ -1,25 +1,27 @@
 import 'package:equatable/equatable.dart';
-import 'package:link_in_bio/models/data_model.dart';
-import 'item_category_model.dart';
+import 'models.dart';
 
 class ItemModel extends Equatable {
   final String? name;
   final ItemCategoryModel? category;
   final UrlModel? url;
   final SmsModel? sms;
+  final PhoneModel? phone;
 
-  const ItemModel({this.name, this.category, this.url, this.sms});
+  const ItemModel({this.name, this.category, this.url, this.sms, this.phone});
 
   ItemModel copyWith(
       {String? name,
       ItemCategoryModel? category,
       UrlModel? url,
-      SmsModel? sms}) {
+      SmsModel? sms,
+      PhoneModel? phone}) {
     return ItemModel(
         name: name ?? this.name,
         category: category ?? this.category,
         url: url ?? this.url,
-        sms: sms ?? this.sms);
+        sms: sms ?? this.sms,
+        phone: phone ?? this.phone);
   }
 
   factory ItemModel.fromMap(Map<String, dynamic> json) => ItemModel(
@@ -31,5 +33,5 @@ class ItemModel extends Equatable {
       {'name': name, 'category': category?.toJson(), 'url': url};
 
   @override
-  List<Object?> get props => [name, category, url, sms];
+  List<Object?> get props => [name, category, url, sms, phone];
 }

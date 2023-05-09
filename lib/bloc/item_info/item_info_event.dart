@@ -7,22 +7,10 @@ abstract class ItemInfoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SetItemNameEvent extends ItemInfoEvent {
-  final String? name;
-
-  SetItemNameEvent({this.name});
-}
-
 class SetCategoryIndexEvent extends ItemInfoEvent {
   final int? selectedCategoryIndex;
 
   SetCategoryIndexEvent({this.selectedCategoryIndex});
-}
-
-class SetItemURLEvent extends ItemInfoEvent {
-  final String? url;
-
-  SetItemURLEvent({this.url});
 }
 
 class InitialDataEvent extends ItemInfoEvent {}
@@ -48,9 +36,10 @@ class SetItemFromQrCode extends ItemInfoEvent {
 }
 
 class SetItemInfo extends ItemInfoEvent {
+  final String? name;
   final String? phoneNumber;
   final String? message;
   final String? url;
 
-  SetItemInfo({this.phoneNumber, this.message, this.url});
+  SetItemInfo({this.name, this.phoneNumber, this.message, this.url});
 }

@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../bloc/item_info/item_info_bloc.dart';
-import '../../../bloc/item_info/item_info_event.dart';
 
 class ItemLabelCard extends StatelessWidget {
   final TextEditingController? nameTextController;
@@ -30,11 +27,6 @@ class ItemLabelCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10),
                     ),
                     labelText: label),
-                onChanged: (value) {
-                  context
-                      .read<ItemInfoBloc>()
-                      .add(SetItemNameEvent(name: nameTextController!.text));
-                },
               ),
             ],
           )),

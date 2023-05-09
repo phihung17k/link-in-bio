@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/models/data_model.dart';
 import 'package:link_in_bio/pages/item_info/widgets/sms_card.dart';
 import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../bloc/item_info/item_info_event.dart';
 import '../../../bloc/item_info/item_info_state.dart';
-import '../../../models/item_category_model.dart';
-import '../../models/item_model.dart';
+import '../../models/models.dart';
 import 'widgets/item_detail_card.dart';
 import 'widgets/item_label_card.dart';
 
@@ -20,9 +18,9 @@ class ItemContentSubPage extends StatefulWidget {
 }
 
 class _ItemContentSubPageState extends State<ItemContentSubPage> {
-  TextEditingController nameTextController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
 
-  TextEditingController urlTextController = TextEditingController();
+  TextEditingController urlController = TextEditingController();
 
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController messageController = TextEditingController();
@@ -31,12 +29,18 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
 
   void initValue(ItemModel item) {
     switch (item.category!.name!.toLowerCase()) {
-      case "url":
-        break;
       case "sms":
-        SmsModel sms = item.sms!;
-        phoneNumberController.text = sms.phoneNumber ?? "";
-        messageController.text = sms.message ?? "";
+        SmsModel? sms = item.sms;
+        phoneNumberController.text = sms?.phoneNumber ?? "";
+        messageController.text = sms?.message ?? "";
+        break;
+      case "facebook":
+      case "twitter":
+      case "youtube":
+      case "tiktok":
+      case "twitch":
+        UrlModel? url = item.url;
+        urlController.text = url?.url ?? "";
         break;
     }
   }
@@ -49,10 +53,8 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
     ItemModel? item = bloc!.state.item;
     if (item != null) {
       String? initialName = item.name;
-      if (initialName != null) nameTextController.text = initialName;
-      if (item.sms != null) {
-        initValue(item);
-      }
+      if (initialName != null) nameController.text = initialName;
+      initValue(item);
     }
   }
 
@@ -76,7 +78,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ItemLabelCard(
-                    nameTextController: nameTextController,
+                    nameTextController: nameController,
                     label: category.name,
                   ),
                   const SizedBox(
@@ -89,7 +91,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                           category: category,
                         )
                       : ItemDetailCard(
-                          urlTextController: urlTextController,
+                          urlController: urlController,
                           category: category,
                         ),
                   const SizedBox(
@@ -142,9 +144,10 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
           heroTag: toString(),
           onPressed: () {
             bloc!.add(SetItemInfo(
-              phoneNumber: phoneNumberController.text,
-              message: messageController.text,
-            ));
+                name: nameController.text,
+                phoneNumber: phoneNumberController.text,
+                message: messageController.text,
+                url: urlController.text));
           },
           child: const Icon(Icons.keyboard_double_arrow_right_rounded)),
     );
@@ -154,8 +157,8 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
   void dispose() {
     phoneNumberController.dispose();
     messageController.dispose();
-    urlTextController.dispose();
-    nameTextController.dispose();
+    urlController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:link_in_bio/utils/link_util.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../models/item_model.dart';
@@ -50,7 +51,7 @@ class QrCodeItemPage extends StatelessWidget {
                         child: Hero(
                             tag: item.name!,
                             child: QrImage(
-                                data: "${item.category!.webUrl}${item.url}",
+                                data: LinkUtil.getLink(item),
                                 version: QrVersions.auto)),
                       ),
                     ),

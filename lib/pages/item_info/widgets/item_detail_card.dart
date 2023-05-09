@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../bloc/item_info/item_info_bloc.dart';
-import '../../../bloc/item_info/item_info_event.dart';
 import '../../../models/item_category_model.dart';
 
 class ItemDetailCard extends StatelessWidget {
-  final TextEditingController? urlTextController;
+  final TextEditingController? urlController;
   final ItemCategoryModel? category;
 
-  const ItemDetailCard({super.key, this.urlTextController, this.category});
+  const ItemDetailCard({super.key, this.urlController, this.category});
 
   String getLabel(String name) {
     switch (name.toLowerCase()) {
@@ -51,16 +50,16 @@ class ItemDetailCard extends StatelessWidget {
                   height: 15,
                 ),
                 TextField(
-                  controller: urlTextController,
+                  controller: urlController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
                       labelText: getLabel(category!.name!)),
                   onChanged: (value) {
-                    context
-                        .read<ItemInfoBloc>()
-                        .add(SetItemURLEvent(url: urlTextController!.text));
+                    // context
+                    //     .read<ItemInfoBloc>()
+                    //     .add(SetItemURLEvent(url: urlTextController!.text));
                   },
                 ),
                 const SizedBox(
@@ -69,7 +68,7 @@ class ItemDetailCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8),
                   child: Text(
-                      "${category?.webUrl}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
+                      "${category?.webUrl}${context.watch<ItemInfoBloc>().state.item?.url?.url ?? ""}",
                       style: const TextStyle(color: Colors.grey)),
                 )
               ])),

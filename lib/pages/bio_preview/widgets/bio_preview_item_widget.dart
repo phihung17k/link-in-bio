@@ -1,28 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../models/item_model.dart';
-import '../../../models/data_model.dart';
+import '../../../utils/link_util.dart';
 
 class BioPreviewItemWidget extends StatelessWidget {
   final double itemRadius = 20;
   final ItemModel item;
   const BioPreviewItemWidget(this.item, {super.key});
-
-  // Future<void> _launchUrl(BuildContext context) async {
-  //   String url = "${item!.category!.baseURL}${item!.url}";
-  //   Uri uri = Uri.parse(url);
-
-  //   if (await canLaunchUrl(uri)) {
-  //     await launchUrl(uri, mode: LaunchMode.externalApplication);
-  //   } else {
-  //     // ignore: use_build_context_synchronously
-  //     if (!context.mounted) return;
-  //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text("Could not launch $uri"),
-  //       duration: const Duration(seconds: 1),
-  //     ));
-  //   }
-  // }
 
   /// Example:
   /// ```dart
@@ -40,16 +24,6 @@ class BioPreviewItemWidget extends StatelessWidget {
   /// print(mailtoUri); // mailto:John.Doe@example.com?subject=Example
   /// ```
 
-  Uri? getUri() {
-    Uri? result;
-    switch (item.category?.name?.toLowerCase()) {
-      case "sms":
-        SmsModel sms = item.sms as SmsModel;
-        result = Uri.tryParse("sms:${sms.phoneNumber}?body=${sms.message}");
-    }
-    return result;
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -59,20 +33,14 @@ class BioPreviewItemWidget extends StatelessWidget {
         // String webUrl = 'https://www.facebook.com/phihung17k';
         // String appUrl = getAppURL();
 
-        Uri? uri = getUri();
+        Uri? uri = LinkUtil.getUri(item);
         bool isLaunchUrl = true;
         if (uri == null) {
           isLaunchUrl = false;
         } else {
           if (await canLaunchUrl(uri)) {
             await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
-          // else if (await canLaunchUrlString(appUrl)) {
-          //   await launchUrlString(appUrl);
-          // } else if (await canLaunchUrlString(webUrl)) {
-          //   await launchUrlString(webUrl, mode: LaunchMode.externalApplication);
-          // }
-          else {
+          } else {
             isLaunchUrl = false;
           }
         }

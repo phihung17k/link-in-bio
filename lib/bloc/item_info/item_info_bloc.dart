@@ -14,9 +14,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       : super(
             const ItemInfoState(itemCategories: [], selectedCategoryIndex: 0)) {
     on<InitialDataEvent>(initData);
-    on<SetItemNameEvent>(setItemName);
     on<SetCategoryIndexEvent>(setCategoryIndex);
-    on<SetItemURLEvent>(setItemURL);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
     on<SetItemFromQrCode>(setItemFromQRCode);
     on<SetItemInfo>(setItemInfo);
@@ -34,16 +32,6 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
         item: ItemModel(name: category.name, category: category)));
   }
 
-  //for create
-  FutureOr<void> setItemName(
-      SetItemNameEvent event, Emitter<ItemInfoState> emit) {
-    ItemModel item = state.item ?? const ItemModel();
-    emit.call(state.copyWith(
-        item: item.copyWith(
-            name:
-                event.name ?? state.item?.name ?? state.item?.category!.name)));
-  }
-
   FutureOr<void> setCategoryIndex(
       SetCategoryIndexEvent event, Emitter<ItemInfoState> emit) {
     if (event.selectedCategoryIndex != state.selectedCategoryIndex) {
@@ -55,12 +43,6 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
               name: category.name,
               category: state.itemCategories![event.selectedCategoryIndex!])));
     }
-  }
-
-  FutureOr<void> setItemURL(
-      SetItemURLEvent event, Emitter<ItemInfoState> emit) {
-    emit.call(state.copyWith(
-        item: state.item?.copyWith(url: UrlModel(url: event.url))));
   }
 
   FutureOr<void> updateCurrentItem(
@@ -91,7 +73,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
 
   FutureOr<void> setItemInfo(SetItemInfo event, Emitter<ItemInfoState> emit) {
     ItemModel item = state.item!;
-    String? name = item.name;
+    String? name = event.name;
     if (name == null || name.trim().isEmpty) {
       name = item.category!.name;
     }

@@ -26,11 +26,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
 
     bloc.listenerStream.listen((event) async {
       if (event is BackingHomePageEvent) {
-        ItemModel item = bloc.state.item!;
-        if (item.name == null || item.name!.trim().isEmpty) {
-          item = item.copyWith(name: item.category!.name);
-        }
-        Navigator.pop(context, item);
+        Navigator.pop(context, event.item);
       } else if (event is NavigatorScannerPageEvent) {
         var result = await Navigator.pushNamed(context, Routes.scanner,
             arguments: Routes.itemInfo);

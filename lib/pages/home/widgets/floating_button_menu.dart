@@ -131,8 +131,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                           }
                         },
                         title: Text(item.name!),
-                        subtitle:
-                            Text(item.url!.isEmpty ? "Not set" : item.url!),
+                        subtitle: Text("Not set"),
                       );
                     },
                   );

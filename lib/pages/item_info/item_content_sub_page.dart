@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/pages/item_info/widgets/email_card.dart';
+import 'package:link_in_bio/pages/item_info/widgets/sms_card.dart';
 import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../bloc/item_info/item_info_event.dart';
 import '../../../bloc/item_info/item_info_state.dart';
-import '../../../models/item_category_model.dart';
+import '../../models/models.dart';
 import 'widgets/item_detail_card.dart';
+import 'widgets/item_label_card.dart';
 
 class ItemContentSubPage extends StatefulWidget {
   final String? initialName;
@@ -16,44 +19,107 @@ class ItemContentSubPage extends StatefulWidget {
 }
 
 class _ItemContentSubPageState extends State<ItemContentSubPage> {
-  TextEditingController? nameTextController;
-  TextEditingController? urlTextController;
+  TextEditingController nameController = TextEditingController();
+
+  TextEditingController urlController = TextEditingController();
+
+  TextEditingController phoneNumberController = TextEditingController();
+  TextEditingController messageController = TextEditingController();
+
+  TextEditingController addressController = TextEditingController();
+  TextEditingController ccController = TextEditingController();
+  TextEditingController bccController = TextEditingController();
+  TextEditingController subjectController = TextEditingController();
+  TextEditingController bodyController = TextEditingController();
 
   ItemInfoBloc? bloc;
+
+  void initValue(ItemModel item) {
+    switch (item.category!.name!.toLowerCase()) {
+      case "sms":
+        SmsModel? sms = item.sms;
+        phoneNumberController.text = sms?.phoneNumber ?? "";
+        messageController.text = sms?.message ?? "";
+        break;
+      case "facebook":
+      case "twitter":
+      case "youtube":
+      case "tiktok":
+      case "twitch":
+        UrlModel? url = item.url;
+        urlController.text = url?.url ?? "";
+        break;
+      case "phone":
+        PhoneModel? phone = item.phone;
+        phoneNumberController.text = phone?.phoneNumber ?? "";
+        break;
+      case "email":
+        EmailModel? email = item.email;
+        addressController.text = email?.address ?? "";
+        ccController.text = email?.cc ?? "";
+        bccController.text = email?.bcc ?? "";
+        subjectController.text = email?.subject ?? "";
+        bodyController.text = email?.body ?? "";
+        break;
+    }
+  }
 
   @override
   void initState() {
     super.initState();
     bloc = context.read<ItemInfoBloc>();
-    String? initialName = bloc?.state.item?.name;
-    String? initialURL = bloc?.state.item?.url;
-    nameTextController = TextEditingController(text: initialName);
-    urlTextController = TextEditingController(text: initialURL);
+
+    ItemModel? item = bloc!.state.item;
+    if (item != null) {
+      String? initialName = item.name;
+      if (initialName != null) nameController.text = initialName;
+      initValue(item);
+    }
   }
 
-  String getLabel(String name) {
-    switch (name.toLowerCase()) {
+  Widget getItemDetailCard(ItemCategoryModel category) {
+    Widget result;
+    switch (category.name!.toLowerCase()) {
+      case "sms":
+        result = SmsCard(
+          phoneNumerController: phoneNumberController,
+          messageController: messageController,
+          category: category,
+        );
+        break;
       case "facebook":
-        return "Facebook ID";
-      case "tiktok":
-        return "Tiktok ID";
-      case "zalo":
-        return "Zalo ID";
       case "twitter":
-        return "Twitter ID";
-      case "instagram":
-        return "Instagram ID";
       case "youtube":
-        return "Youtube Channel";
-      case "amazon":
-        return "Amazon ID";
-      case "shopee":
-        return "Shopee ID";
-      case "lazada":
-        return "Lazada ID";
+      case "tiktok":
+      case "twitch":
+        result = ItemDetailCard(
+          textController: urlController,
+          category: category,
+          label: "URL",
+          showDetailLink: true,
+        );
+        break;
+      case "phone":
+        result = ItemDetailCard(
+            textController: phoneNumberController,
+            category: category,
+            label: "Phone");
+        break;
+      case "email":
+        result = EmailCard(
+          addressController: addressController,
+          ccController: ccController,
+          bccController: bccController,
+          subjectController: subjectController,
+          bodyController: bodyController,
+          category: category,
+        );
+        break;
       default:
-        return "Link";
+        result = const SizedBox();
+        break;
     }
+    return result;
   }
 
   @override
@@ -75,67 +141,14 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ItemDetailCard(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Label",
-                            style: Theme.of(context).textTheme.titleMedium),
-                        const SizedBox(
-                          height: 15,
-                        ),
-                        TextField(
-                          controller: nameTextController,
-                          decoration: InputDecoration(
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              labelText: category.name),
-                          onChanged: (value) {
-                            bloc!.add(SetItemNameEvent(
-                                name: nameTextController!.text));
-                          },
-                        ),
-                      ],
-                    ),
+                  ItemLabelCard(
+                    nameTextController: nameController,
+                    label: category.name,
                   ),
                   const SizedBox(
                     height: 15,
                   ),
-                  ItemDetailCard(
-                    child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("URL",
-                              style: Theme.of(context).textTheme.titleMedium),
-                          const SizedBox(
-                            height: 15,
-                          ),
-                          TextField(
-                            controller: urlTextController,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                labelText: getLabel(category.name!)),
-                            onChanged: (value) {
-                              bloc!.add(SetItemURLEvent(
-                                  url: urlTextController!.text));
-                            },
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8),
-                            child: Text(
-                                "${category.webUrl}${context.watch<ItemInfoBloc>().state.item?.url ?? ""}",
-                                style: const TextStyle(color: Colors.grey)),
-                          )
-                        ]),
-                  ),
+                  getItemDetailCard(category),
                   const SizedBox(
                     height: 20,
                   ),
@@ -174,15 +187,27 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                                   borderRadius: BorderRadius.circular(5))),
                           child: const Text("Scan QR",
                               style: TextStyle(
-                                  inherit: false, color: Colors.black))))
+                                  inherit: false, color: Colors.black)))),
+                  const SizedBox(
+                    height: 20,
+                  ),
                 ]);
           },
         ),
       ),
       floatingActionButton: FloatingActionButton(
-          heroTag: this.toString(),
+          heroTag: toString(),
           onPressed: () {
-            bloc!.addNavigatedEvent(BackingHomePageEvent());
+            bloc!.add(SetItemInfo(
+                name: nameController.text,
+                phoneNumber: phoneNumberController.text,
+                message: messageController.text,
+                url: urlController.text,
+                address: addressController.text,
+                bcc: bccController.text,
+                cc: ccController.text,
+                subject: subjectController.text,
+                body: bodyController.text));
           },
           child: const Icon(Icons.keyboard_double_arrow_right_rounded)),
     );
@@ -190,8 +215,10 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
 
   @override
   void dispose() {
-    urlTextController?.dispose();
-    nameTextController?.dispose();
+    phoneNumberController.dispose();
+    messageController.dispose();
+    urlController.dispose();
+    nameController.dispose();
     super.dispose();
   }
 }

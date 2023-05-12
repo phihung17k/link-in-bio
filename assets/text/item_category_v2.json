@@ -21,12 +21,6 @@
                 "webUrl": "https://youtube.com/"
             },
             {
-                "name": "Zalo",
-                "image": "zalo_logo.png",
-                "appUrl": "",
-                "webUrl": "https://twitter.com/"
-            },
-            {
                 "name": "Tiktok",
                 "image": "tiktok_logo.png",
                 "appUrl": "",
@@ -45,10 +39,24 @@
         "elements": [
             {
                 "name": "SMS",
-                "image": "sms_logo.png",
+                "image": "sms.png",
                 "appUrl": "sms",
                 "webUrl": "",
                 "example": "sms:191?body=hello there"
+            },
+            {
+                "name": "Phone",
+                "image": "phone.png",
+                "appUrl": "",
+                "webUrl": "",
+                "example": "tel:2125551212"
+            },
+            {
+                "name": "Email",
+                "image": "email.png",
+                "appUrl": "",
+                "webUrl": "",
+                "example": "mailto::2125551212"
             }
         ]
     },

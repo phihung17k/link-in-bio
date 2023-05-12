@@ -96,7 +96,7 @@ class _ItemCategorySubPageState extends State<ItemCategorySubPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-          heroTag: this.toString(),
+          heroTag: toString(),
           onPressed: () {
             DefaultTabController.of(context).animateTo(1);
           },

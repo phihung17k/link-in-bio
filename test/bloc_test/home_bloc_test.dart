@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:link_in_bio/bloc/home/home_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_event.dart';
 import 'package:link_in_bio/bloc/home/home_state.dart';
+import 'package:link_in_bio/models/data_model.dart';
 import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/models/item_model.dart';
 
@@ -16,13 +17,13 @@ void main() {
 
     setUp(() {
       homeBloc = HomeBloc();
-      defaultItem = const ItemModel(
+      defaultItem = ItemModel(
           name: "name_test",
-          category: ItemCategoryModel(
+          category: const ItemCategoryModel(
               webUrl: "baseURL_test",
               image: "image_test",
               name: "category_name_test"),
-          url: "url_test");
+          url: UrlModel(url: "url_test"));
       updatedItem = defaultItem.copyWith(name: 'update');
     });
 

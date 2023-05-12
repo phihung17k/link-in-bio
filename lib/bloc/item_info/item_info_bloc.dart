@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/models/data_model.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../utils/file_util.dart';
 import 'item_info_event.dart';
 import 'item_info_state.dart';
@@ -13,11 +15,10 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       : super(
             const ItemInfoState(itemCategories: [], selectedCategoryIndex: 0)) {
     on<InitialDataEvent>(initData);
-    on<SetItemNameEvent>(setItemName);
     on<SetCategoryIndexEvent>(setCategoryIndex);
-    on<SetItemURLEvent>(setItemURL);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
     on<SetItemFromQrCode>(setItemFromQRCode);
+    on<SetItemInfo>(setItemInfo);
   }
 
   FutureOr<void> initData(
@@ -29,17 +30,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     ItemCategoryModel category = categoryRepo.itemCategories.first;
     emit.call(state.copyWith(
         itemCategories: categoryRepo.itemCategories,
-        item: ItemModel(name: category.name, category: category, url: "")));
-  }
-
-  //for create
-  FutureOr<void> setItemName(
-      SetItemNameEvent event, Emitter<ItemInfoState> emit) {
-    ItemModel item = state.item ?? const ItemModel();
-    emit.call(state.copyWith(
-        item: item.copyWith(
-            name:
-                event.name ?? state.item?.name ?? state.item?.category!.name)));
+        item: ItemModel(name: category.name, category: category)));
   }
 
   FutureOr<void> setCategoryIndex(
@@ -51,14 +42,8 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
           selectedCategoryIndex: event.selectedCategoryIndex,
           item: state.item!.copyWith(
               name: category.name,
-              category: state.itemCategories![event.selectedCategoryIndex!],
-              url: "")));
+              category: state.itemCategories![event.selectedCategoryIndex!])));
     }
-  }
-
-  FutureOr<void> setItemURL(
-      SetItemURLEvent event, Emitter<ItemInfoState> emit) {
-    emit.call(state.copyWith(item: state.item?.copyWith(url: event.url)));
   }
 
   FutureOr<void> updateCurrentItem(
@@ -83,7 +68,73 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
                 name: "Link",
                 image: "assets/images/network.png",
                 webUrl: ""),
-            url: event.barcode.rawValue),
+            url: UrlModel(url: event.barcode.rawValue)),
         selectedCategoryIndex: selectedIndex));
+  }
+
+  FutureOr<void> setItemInfo(SetItemInfo event, Emitter<ItemInfoState> emit) {
+    ItemModel item = state.item!;
+    String? name = event.name;
+    if (name == null || name.trim().isEmpty) {
+      name = item.category!.name;
+    }
+
+    switch (item.category!.name!.toLowerCase()) {
+      case "sms":
+        emit.call(state.copyWith(
+            item: _getUpdatedItem(item, name,
+                sms: SmsModel(
+                    phoneNumber: event.phoneNumber, message: event.message))));
+        // emit.call(state.copyWith(
+        //     item: item.copyWith(
+        //         name: name,
+        //         sms: SmsModel(
+        //             phoneNumber: event.phoneNumber, message: event.message),
+        //         url: null,
+        //         phone: null)));
+        break;
+      case "facebook":
+      case "twitter":
+      case "youtube":
+      case "tiktok":
+      case "twitch":
+        emit.call(state.copyWith(
+            item: _getUpdatedItem(item, name, url: UrlModel(url: event.url))));
+        // emit.call(state.copyWith(
+        //     item: item.copyWith(
+        //         name: name,
+        //         url: UrlModel(url: event.url),
+        //         phone: null,
+        //         sms: null)));
+        break;
+      case "phone":
+        emit.call(state.copyWith(
+            item: _getUpdatedItem(item, name,
+                phone: PhoneModel(phoneNumber: event.phoneNumber))));
+        // emit.call(state.copyWith(
+        //     item: item.copyWith(
+        //         name: name,
+        //         phone: PhoneModel(phoneNumber: event.phoneNumber),
+        //         url: null,
+        //         sms: null)));
+        break;
+      case "email":
+        emit.call(state.copyWith(
+            item: _getUpdatedItem(item, name,
+                email: EmailModel(
+                    address: event.address,
+                    cc: event.cc,
+                    bcc: event.bcc,
+                    subject: event.subject,
+                    body: event.body))));
+        break;
+    }
+    addNavigatedEvent(BackingHomePageEvent(state.item));
+  }
+
+  ItemModel _getUpdatedItem(ItemModel item, String? name,
+      {UrlModel? url, SmsModel? sms, PhoneModel? phone, EmailModel? email}) {
+    return item.copyWith(
+        name: name, url: url, sms: sms, phone: phone, email: email);
   }
 }

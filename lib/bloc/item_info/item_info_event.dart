@@ -7,27 +7,19 @@ abstract class ItemInfoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SetItemNameEvent extends ItemInfoEvent {
-  final String? name;
-
-  SetItemNameEvent({this.name});
-}
-
 class SetCategoryIndexEvent extends ItemInfoEvent {
   final int? selectedCategoryIndex;
 
   SetCategoryIndexEvent({this.selectedCategoryIndex});
 }
 
-class SetItemURLEvent extends ItemInfoEvent {
-  final String? url;
-
-  SetItemURLEvent({this.url});
-}
-
 class InitialDataEvent extends ItemInfoEvent {}
 
-class BackingHomePageEvent extends ItemInfoEvent {}
+class BackingHomePageEvent extends ItemInfoEvent {
+  final ItemModel? item;
+
+  BackingHomePageEvent(this.item);
+}
 
 class UpdatingCurrentItemEvent extends ItemInfoEvent {
   final ItemModel item;
@@ -41,4 +33,28 @@ class SetItemFromQrCode extends ItemInfoEvent {
   final Barcode barcode;
 
   SetItemFromQrCode(this.barcode);
+}
+
+class SetItemInfo extends ItemInfoEvent {
+  final String? name;
+  final String? phoneNumber;
+  final String? message;
+  final String? url;
+
+  final String? address;
+  final String? cc;
+  final String? bcc;
+  final String? subject;
+  final String? body;
+
+  SetItemInfo(
+      {this.name,
+      this.phoneNumber,
+      this.message,
+      this.url,
+      this.address,
+      this.cc,
+      this.bcc,
+      this.subject,
+      this.body});
 }

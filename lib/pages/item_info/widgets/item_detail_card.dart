@@ -61,6 +61,9 @@ class ItemDetailCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       labelText: getPlaceholder(category!.name!)),
+                  keyboardType: category!.name!.toLowerCase() == "phone"
+                      ? TextInputType.phone
+                      : null,
                   onChanged: (value) {
                     // context
                     //     .read<ItemInfoBloc>()

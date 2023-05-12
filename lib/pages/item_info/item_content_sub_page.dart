@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/pages/item_info/widgets/email_card.dart';
 import 'package:link_in_bio/pages/item_info/widgets/sms_card.dart';
 import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../bloc/item_info/item_info_event.dart';
@@ -25,6 +26,12 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
   TextEditingController phoneNumberController = TextEditingController();
   TextEditingController messageController = TextEditingController();
 
+  TextEditingController addressController = TextEditingController();
+  TextEditingController ccController = TextEditingController();
+  TextEditingController bccController = TextEditingController();
+  TextEditingController subjectController = TextEditingController();
+  TextEditingController bodyController = TextEditingController();
+
   ItemInfoBloc? bloc;
 
   void initValue(ItemModel item) {
@@ -45,6 +52,14 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
       case "phone":
         PhoneModel? phone = item.phone;
         phoneNumberController.text = phone?.phoneNumber ?? "";
+        break;
+      case "email":
+        EmailModel? email = item.email;
+        addressController.text = email?.address ?? "";
+        ccController.text = email?.cc ?? "";
+        bccController.text = email?.bcc ?? "";
+        subjectController.text = email?.subject ?? "";
+        bodyController.text = email?.body ?? "";
         break;
     }
   }
@@ -89,6 +104,16 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
             textController: phoneNumberController,
             category: category,
             label: "Phone");
+        break;
+      case "email":
+        result = EmailCard(
+          addressController: addressController,
+          ccController: ccController,
+          bccController: bccController,
+          subjectController: subjectController,
+          bodyController: bodyController,
+          category: category,
+        );
         break;
       default:
         result = const SizedBox();
@@ -177,7 +202,12 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                 name: nameController.text,
                 phoneNumber: phoneNumberController.text,
                 message: messageController.text,
-                url: urlController.text));
+                url: urlController.text,
+                address: addressController.text,
+                bcc: bccController.text,
+                cc: ccController.text,
+                subject: subjectController.text,
+                body: bodyController.text));
           },
           child: const Icon(Icons.keyboard_double_arrow_right_rounded)),
     );

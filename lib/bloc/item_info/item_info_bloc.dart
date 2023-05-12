@@ -82,12 +82,16 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     switch (item.category!.name!.toLowerCase()) {
       case "sms":
         emit.call(state.copyWith(
-            item: item.copyWith(
-                name: name,
+            item: _getUpdatedItem(item, name,
                 sms: SmsModel(
-                    phoneNumber: event.phoneNumber, message: event.message),
-                url: null,
-                phone: null)));
+                    phoneNumber: event.phoneNumber, message: event.message))));
+        // emit.call(state.copyWith(
+        //     item: item.copyWith(
+        //         name: name,
+        //         sms: SmsModel(
+        //             phoneNumber: event.phoneNumber, message: event.message),
+        //         url: null,
+        //         phone: null)));
         break;
       case "facebook":
       case "twitter":
@@ -95,21 +99,42 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       case "tiktok":
       case "twitch":
         emit.call(state.copyWith(
-            item: item.copyWith(
-                name: name,
-                url: UrlModel(url: event.url),
-                phone: null,
-                sms: null)));
+            item: _getUpdatedItem(item, name, url: UrlModel(url: event.url))));
+        // emit.call(state.copyWith(
+        //     item: item.copyWith(
+        //         name: name,
+        //         url: UrlModel(url: event.url),
+        //         phone: null,
+        //         sms: null)));
         break;
       case "phone":
         emit.call(state.copyWith(
-            item: item.copyWith(
-                name: name,
-                phone: PhoneModel(phoneNumber: event.phoneNumber),
-                url: null,
-                sms: null)));
+            item: _getUpdatedItem(item, name,
+                phone: PhoneModel(phoneNumber: event.phoneNumber))));
+        // emit.call(state.copyWith(
+        //     item: item.copyWith(
+        //         name: name,
+        //         phone: PhoneModel(phoneNumber: event.phoneNumber),
+        //         url: null,
+        //         sms: null)));
+        break;
+      case "email":
+        emit.call(state.copyWith(
+            item: _getUpdatedItem(item, name,
+                email: EmailModel(
+                    address: event.address,
+                    cc: event.cc,
+                    bcc: event.bcc,
+                    subject: event.subject,
+                    body: event.body))));
         break;
     }
     addNavigatedEvent(BackingHomePageEvent(state.item));
+  }
+
+  ItemModel _getUpdatedItem(ItemModel item, String? name,
+      {UrlModel? url, SmsModel? sms, PhoneModel? phone, EmailModel? email}) {
+    return item.copyWith(
+        name: name, url: url, sms: sms, phone: phone, email: email);
   }
 }

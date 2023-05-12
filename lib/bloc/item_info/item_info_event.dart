@@ -41,5 +41,20 @@ class SetItemInfo extends ItemInfoEvent {
   final String? message;
   final String? url;
 
-  SetItemInfo({this.name, this.phoneNumber, this.message, this.url});
+  final String? address;
+  final String? cc;
+  final String? bcc;
+  final String? subject;
+  final String? body;
+
+  SetItemInfo(
+      {this.name,
+      this.phoneNumber,
+      this.message,
+      this.url,
+      this.address,
+      this.cc,
+      this.bcc,
+      this.subject,
+      this.body});
 }

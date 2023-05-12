@@ -39,7 +39,7 @@
         "elements": [
             {
                 "name": "SMS",
-                "image": "sms_logo.png",
+                "image": "sms.png",
                 "appUrl": "sms",
                 "webUrl": "",
                 "example": "sms:191?body=hello there"
@@ -50,6 +50,13 @@
                 "appUrl": "",
                 "webUrl": "",
                 "example": "tel:2125551212"
+            },
+            {
+                "name": "Email",
+                "image": "email.png",
+                "appUrl": "",
+                "webUrl": "",
+                "example": "mailto::2125551212"
             }
         ]
     },

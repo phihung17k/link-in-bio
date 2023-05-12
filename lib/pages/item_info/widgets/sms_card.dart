@@ -27,12 +27,14 @@ class SmsCard extends StatelessWidget {
                   height: 15,
                 ),
                 TextField(
-                    controller: phoneNumerController,
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        labelText: "Phone Number")),
+                  controller: phoneNumerController,
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      labelText: "Phone Number"),
+                  keyboardType: TextInputType.phone,
+                ),
                 const SizedBox(
                   height: 15,
                 ),

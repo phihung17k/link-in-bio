@@ -7,21 +7,25 @@ class ItemModel extends Equatable {
   final UrlModel? url;
   final SmsModel? sms;
   final PhoneModel? phone;
+  final EmailModel? email;
 
-  const ItemModel({this.name, this.category, this.url, this.sms, this.phone});
+  const ItemModel(
+      {this.name, this.category, this.url, this.sms, this.phone, this.email});
 
   ItemModel copyWith(
       {String? name,
       ItemCategoryModel? category,
       UrlModel? url,
       SmsModel? sms,
-      PhoneModel? phone}) {
+      PhoneModel? phone,
+      EmailModel? email}) {
     return ItemModel(
         name: name ?? this.name,
         category: category ?? this.category,
         url: url ?? this.url,
         sms: sms ?? this.sms,
-        phone: phone ?? this.phone);
+        phone: phone ?? this.phone,
+        email: email ?? this.email);
   }
 
   factory ItemModel.fromMap(Map<String, dynamic> json) => ItemModel(
@@ -33,5 +37,5 @@ class ItemModel extends Equatable {
       {'name': name, 'category': category?.toJson(), 'url': url};
 
   @override
-  List<Object?> get props => [name, category, url, sms, phone];
+  List<Object?> get props => [name, category, url, sms, phone, email];
 }

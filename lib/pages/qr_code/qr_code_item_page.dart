@@ -51,7 +51,7 @@ class QrCodeItemPage extends StatelessWidget {
                         child: Hero(
                             tag: item.name!,
                             child: QrImage(
-                                data: LinkUtil.getLink(item),
+                                data: LinkUtil.getUriString(item),
                                 version: QrVersions.auto)),
                       ),
                     ),

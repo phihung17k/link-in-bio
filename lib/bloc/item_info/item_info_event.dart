@@ -47,6 +47,9 @@ class SetItemInfo extends ItemInfoEvent {
   final String? subject;
   final String? body;
 
+  final String? networkName;
+  final String? password;
+
   SetItemInfo(
       {this.name,
       this.phoneNumber,
@@ -56,5 +59,7 @@ class SetItemInfo extends ItemInfoEvent {
       this.cc,
       this.bcc,
       this.subject,
-      this.body});
+      this.body,
+      this.networkName,
+      this.password});
 }

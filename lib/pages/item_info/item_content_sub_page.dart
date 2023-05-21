@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/pages/item_info/widgets/email_card.dart';
 import 'package:link_in_bio/pages/item_info/widgets/sms_card.dart';
+import 'package:link_in_bio/pages/item_info/widgets/wifi_card.dart';
 import '../../../bloc/item_info/item_info_bloc.dart';
 import '../../../bloc/item_info/item_info_event.dart';
 import '../../../bloc/item_info/item_info_state.dart';
@@ -32,6 +33,9 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
   TextEditingController subjectController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
 
+  TextEditingController networkNameController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+
   ItemInfoBloc? bloc;
 
   void initValue(ItemModel item) {
@@ -60,6 +64,11 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         bccController.text = email?.bcc ?? "";
         subjectController.text = email?.subject ?? "";
         bodyController.text = email?.body ?? "";
+        break;
+      case "wifi":
+        WifiModel? wifi = item.wifi;
+        networkNameController.text = wifi?.networkName ?? "";
+        passwordController.text = wifi?.password ?? "";
         break;
     }
   }
@@ -107,13 +116,17 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         break;
       case "email":
         result = EmailCard(
-          addressController: addressController,
-          ccController: ccController,
-          bccController: bccController,
-          subjectController: subjectController,
-          bodyController: bodyController,
-          category: category,
-        );
+            addressController: addressController,
+            ccController: ccController,
+            bccController: bccController,
+            subjectController: subjectController,
+            bodyController: bodyController,
+            category: category);
+        break;
+      case 'wifi':
+        result = WifiCard(
+            networkNameController: networkNameController,
+            passwordController: passwordController);
         break;
       default:
         result = const SizedBox();
@@ -207,7 +220,9 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
                 bcc: bccController.text,
                 cc: ccController.text,
                 subject: subjectController.text,
-                body: bodyController.text));
+                body: bodyController.text,
+                networkName: networkNameController.text,
+                password: passwordController.text));
           },
           child: const Icon(Icons.keyboard_double_arrow_right_rounded)),
     );
@@ -215,10 +230,19 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
 
   @override
   void dispose() {
+    nameController.dispose();
     phoneNumberController.dispose();
     messageController.dispose();
     urlController.dispose();
-    nameController.dispose();
+
+    addressController.dispose();
+    bccController.dispose();
+    ccController.dispose();
+    subjectController.dispose();
+    bodyController.dispose();
+
+    networkNameController.dispose();
+    passwordController.dispose();
     super.dispose();
   }
 }

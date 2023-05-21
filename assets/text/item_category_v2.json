@@ -57,6 +57,13 @@
                 "appUrl": "",
                 "webUrl": "",
                 "example": "mailto::2125551212"
+            },
+            {
+                "name": "WiFi",
+                "image": "wifi.png",
+                "appUrl": "",
+                "webUrl": "",
+                "example": ""
             }
         ]
     },

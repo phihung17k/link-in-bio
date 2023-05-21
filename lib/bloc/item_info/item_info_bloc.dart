@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/models/data_model.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../utils/file_util.dart';
 import 'item_info_event.dart';
 import 'item_info_state.dart';
@@ -85,13 +84,6 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
             item: _getUpdatedItem(item, name,
                 sms: SmsModel(
                     phoneNumber: event.phoneNumber, message: event.message))));
-        // emit.call(state.copyWith(
-        //     item: item.copyWith(
-        //         name: name,
-        //         sms: SmsModel(
-        //             phoneNumber: event.phoneNumber, message: event.message),
-        //         url: null,
-        //         phone: null)));
         break;
       case "facebook":
       case "twitter":
@@ -100,23 +92,11 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       case "twitch":
         emit.call(state.copyWith(
             item: _getUpdatedItem(item, name, url: UrlModel(url: event.url))));
-        // emit.call(state.copyWith(
-        //     item: item.copyWith(
-        //         name: name,
-        //         url: UrlModel(url: event.url),
-        //         phone: null,
-        //         sms: null)));
         break;
       case "phone":
         emit.call(state.copyWith(
             item: _getUpdatedItem(item, name,
                 phone: PhoneModel(phoneNumber: event.phoneNumber))));
-        // emit.call(state.copyWith(
-        //     item: item.copyWith(
-        //         name: name,
-        //         phone: PhoneModel(phoneNumber: event.phoneNumber),
-        //         url: null,
-        //         sms: null)));
         break;
       case "email":
         emit.call(state.copyWith(

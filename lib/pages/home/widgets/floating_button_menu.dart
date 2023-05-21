@@ -131,7 +131,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                           }
                         },
                         title: Text(item.name!),
-                        subtitle: Text("Not set"),
+                        subtitle: const Text("Not set"),
                       );
                     },
                   );

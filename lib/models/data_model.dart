@@ -27,3 +27,13 @@ class EmailModel {
 
   EmailModel({this.address, this.cc, this.bcc, this.subject, this.body});
 }
+
+//WIFI:T:WPA;S:ssid;P:sa;H:true
+class WifiModel {
+  final String? networkName;
+  final String? password;
+  final String? encryption;
+  final bool? isHidden;
+
+  WifiModel({this.networkName, this.password, this.encryption, this.isHidden});
+}

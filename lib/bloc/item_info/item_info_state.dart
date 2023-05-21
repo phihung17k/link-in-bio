@@ -6,21 +6,28 @@ class ItemInfoState extends Equatable {
   final List<ItemCategoryModel>? itemCategories;
   final ItemModel? item;
   final int? selectedCategoryIndex;
+  final String? networkEncryption;
 
   const ItemInfoState(
-      {this.itemCategories, this.item, this.selectedCategoryIndex});
+      {this.itemCategories,
+      this.item,
+      this.selectedCategoryIndex,
+      this.networkEncryption});
 
   ItemInfoState copyWith(
       {List<ItemCategoryModel>? itemCategories,
       ItemModel? item,
-      int? selectedCategoryIndex}) {
+      int? selectedCategoryIndex,
+      String? networkEncryption}) {
     return ItemInfoState(
         itemCategories: itemCategories ?? this.itemCategories,
         item: item ?? this.item,
         selectedCategoryIndex:
-            selectedCategoryIndex ?? this.selectedCategoryIndex);
+            selectedCategoryIndex ?? this.selectedCategoryIndex,
+        networkEncryption: networkEncryption ?? this.networkEncryption);
   }
 
   @override
-  List<Object?> get props => [itemCategories, item, selectedCategoryIndex];
+  List<Object?> get props =>
+      [itemCategories, item, selectedCategoryIndex, networkEncryption];
 }

@@ -29,13 +29,13 @@ class UpdatingCurrentItemEvent extends ItemInfoEvent {
 
 class NavigatorScannerPageEvent extends ItemInfoEvent {}
 
-class SetItemFromQrCode extends ItemInfoEvent {
+class SetItemFromQrCodeEvent extends ItemInfoEvent {
   final Barcode barcode;
 
-  SetItemFromQrCode(this.barcode);
+  SetItemFromQrCodeEvent(this.barcode);
 }
 
-class SetItemInfo extends ItemInfoEvent {
+class SetItemInfoEvent extends ItemInfoEvent {
   final String? name;
   final String? phoneNumber;
   final String? message;
@@ -50,7 +50,7 @@ class SetItemInfo extends ItemInfoEvent {
   final String? networkName;
   final String? password;
 
-  SetItemInfo(
+  SetItemInfoEvent(
       {this.name,
       this.phoneNumber,
       this.message,
@@ -62,4 +62,10 @@ class SetItemInfo extends ItemInfoEvent {
       this.body,
       this.networkName,
       this.password});
+}
+
+class SetNetworkEncryptionEvent extends ItemInfoEvent {
+  final String? encryption;
+
+  SetNetworkEncryptionEvent(this.encryption);
 }

@@ -16,8 +16,9 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     on<InitialDataEvent>(initData);
     on<SetCategoryIndexEvent>(setCategoryIndex);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
-    on<SetItemFromQrCode>(setItemFromQRCode);
-    on<SetItemInfo>(setItemInfo);
+    on<SetItemFromQrCodeEvent>(setItemFromQRCode);
+    on<SetItemInfoEvent>(setItemInfo);
+    on<SetNetworkEncryptionEvent>(setNetworkEncryptionEvent);
   }
 
   FutureOr<void> initData(
@@ -55,7 +56,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
   }
 
   FutureOr<void> setItemFromQRCode(
-      SetItemFromQrCode event, Emitter<ItemInfoState> emit) {
+      SetItemFromQrCodeEvent event, Emitter<ItemInfoState> emit) {
     int selectedIndex = state.itemCategories
             ?.indexWhere((category) => category.name == "Link") ??
         0;
@@ -71,7 +72,8 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
         selectedCategoryIndex: selectedIndex));
   }
 
-  FutureOr<void> setItemInfo(SetItemInfo event, Emitter<ItemInfoState> emit) {
+  FutureOr<void> setItemInfo(
+      SetItemInfoEvent event, Emitter<ItemInfoState> emit) {
     ItemModel item = state.item!;
     String? name = event.name;
     if (name == null || name.trim().isEmpty) {
@@ -116,5 +118,12 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       {UrlModel? url, SmsModel? sms, PhoneModel? phone, EmailModel? email}) {
     return item.copyWith(
         name: name, url: url, sms: sms, phone: phone, email: email);
+  }
+
+  FutureOr<void> setNetworkEncryptionEvent(
+      SetNetworkEncryptionEvent event, Emitter<ItemInfoState> emit) {
+    if (event.encryption != state.networkEncryption) {
+      emit(state.copyWith(networkEncryption: event.encryption));
+    }
   }
 }

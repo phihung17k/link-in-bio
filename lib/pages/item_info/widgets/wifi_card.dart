@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
+import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
+import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
 
 class WifiCard extends StatelessWidget {
   final TextEditingController? networkNameController;
@@ -56,19 +60,28 @@ class WifiCard extends StatelessWidget {
                           color: Colors.grey,
                         ),
                       ),
-                      child: DropdownButton(
-                        value: encryptions.first,
-                        underline: const SizedBox(),
-                        alignment: Alignment.center,
-                        onChanged: (value) {
-                          if (value != null) {}
-                        },
-                        items: encryptions.map((e) {
-                          return DropdownMenuItem(
-                            value: e,
-                            child: Text(e),
+                      child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
+                        bloc: context.read<ItemInfoBloc>(),
+                        builder: (context, state) {
+                          return DropdownButton(
+                            value: state.networkEncryption ?? encryptions.first,
+                            underline: const SizedBox(),
+                            alignment: Alignment.center,
+                            onChanged: (value) {
+                              if (value != null) {
+                                context
+                                    .read<ItemInfoBloc>()
+                                    .add(SetNetworkEncryptionEvent(value));
+                              }
+                            },
+                            items: encryptions.map((e) {
+                              return DropdownMenuItem(
+                                value: e,
+                                child: Text(e),
+                              );
+                            }).toList(),
                           );
-                        }).toList(),
+                        },
                       ),
                     )
                   ],

@@ -211,7 +211,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
       floatingActionButton: FloatingActionButton(
           heroTag: toString(),
           onPressed: () {
-            bloc!.add(SetItemInfo(
+            bloc!.add(SetItemInfoEvent(
                 name: nameController.text,
                 phoneNumber: phoneNumberController.text,
                 message: messageController.text,

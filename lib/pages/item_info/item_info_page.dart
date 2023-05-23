@@ -31,7 +31,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
         var result = await Navigator.pushNamed(context, Routes.scanner,
             arguments: Routes.itemInfo);
         if (result != null && result is Barcode) {
-          bloc.add(SetItemFromQrCode(result));
+          bloc.add(SetItemFromQrCodeEvent(result));
         }
       }
     });

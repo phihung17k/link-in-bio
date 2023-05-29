@@ -47,6 +47,18 @@ class LinkUtil {
         EmailModel email = item!.email!;
         result =
             "mailto:${email.address}?cc=${email.cc}&bcc=${email.bcc}&subject=${email.subject}&body=${email.body}";
+        break;
+      case "wifi":
+        WifiModel wifi = item!.wifi!;
+        String encryption = "nopass";
+        if (wifi.encryption == "WPA/WPA2") {
+          encryption = "WPA2";
+        } else if (wifi.encryption == "WEP") {
+          encryption = wifi.encryption!;
+        }
+        result =
+            "WIFI:T:$encryption;S:${wifi.networkName};P:${wifi.password};H:true;;";
+        break;
     }
     return result;
   }

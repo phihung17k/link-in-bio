@@ -110,14 +110,27 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
                     subject: event.subject,
                     body: event.body))));
         break;
+      case "wifi":
+        emit.call(state.copyWith(
+            item: _getUpdatedItem(item, name,
+                wifi: WifiModel(
+                    networkName: event.networkName,
+                    password: event.password,
+                    encryption: state.networkEncryption,
+                    isHidden: false))));
+        break;
     }
     addNavigatedEvent(BackingHomePageEvent(state.item));
   }
 
   ItemModel _getUpdatedItem(ItemModel item, String? name,
-      {UrlModel? url, SmsModel? sms, PhoneModel? phone, EmailModel? email}) {
+      {UrlModel? url,
+      SmsModel? sms,
+      PhoneModel? phone,
+      EmailModel? email,
+      WifiModel? wifi}) {
     return item.copyWith(
-        name: name, url: url, sms: sms, phone: phone, email: email);
+        name: name, url: url, sms: sms, phone: phone, email: email, wifi: wifi);
   }
 
   FutureOr<void> setNetworkEncryptionEvent(

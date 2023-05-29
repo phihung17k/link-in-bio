@@ -29,6 +29,10 @@ class EmailModel {
 }
 
 //WIFI:T:WPA;S:ssid;P:sa;H:true
+//WIFI:T:<authentication-type>;S:<network-ssid>;P:<network-password>;H:<hidden-network>;;
+//- <authentication-type>: WPA or WPA2, WEP, nopass
+//- <network-ssid>: name
+//- <network-password>: pass
 class WifiModel {
   final String? networkName;
   final String? password;

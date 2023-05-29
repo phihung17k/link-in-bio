@@ -69,6 +69,7 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         WifiModel? wifi = item.wifi;
         networkNameController.text = wifi?.networkName ?? "";
         passwordController.text = wifi?.password ?? "";
+        bloc?.add(SetNetworkEncryptionEvent(wifi?.encryption));
         break;
     }
   }

@@ -60,6 +60,7 @@ class WifiCard extends StatelessWidget {
                           color: Colors.grey,
                         ),
                       ),
+                      padding: const EdgeInsets.only(left: 5),
                       child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
                         bloc: context.read<ItemInfoBloc>(),
                         builder: (context, state) {

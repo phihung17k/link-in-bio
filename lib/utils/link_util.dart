@@ -1,26 +1,11 @@
+import 'dart:html';
+
 import '../models/models.dart';
+import '../repository/item_category_repository.dart';
 
 class LinkUtil {
   static Uri? getUri(ItemModel? item) {
     Uri? result = Uri.tryParse(getUriString(item));
-    // switch (item?.category?.name?.toLowerCase()) {
-    //   case "sms":
-    //     SmsModel sms = item!.sms!;
-    //     result = Uri.tryParse("sms:${sms.phoneNumber}?body=${sms.message}");
-    //     break;
-    //   case "facebook":
-    //   case "twitter":
-    //   case "youtube":
-    //   case "tiktok":
-    //   case "twitch":
-    //     UrlModel url = item!.url!;
-    //     result = Uri.tryParse("${item.category!.webUrl}${url.url}");
-    //     break;
-    //   case "phone":
-    //     PhoneModel phone = item!.phone!;
-    //     result = Uri.tryParse("tel:${phone.phoneNumber}");
-    //     break;
-    // }
     return result;
   }
 
@@ -61,5 +46,57 @@ class LinkUtil {
         break;
     }
     return result;
+  }
+
+  static ItemModel? convertQrCode(String rawValue) {
+    ItemModel? result;
+    RegExp regex = RegExp("^[^:]*");
+    if (regex.hasMatch(rawValue)) {
+      rawValue = rawValue.toLowerCase();
+      String schema = regex.stringMatch(rawValue)!.toLowerCase();
+
+      switch (schema) {
+        case "http":
+        case "https":
+          // regex: \/\/[\w\d. -]+\/?
+          Uri? uri = Uri.tryParse(rawValue);
+          if (uri != null) {
+            String host = uri.host;
+            if (host.isNotEmpty) {
+              //standardized data
+              List supportedHosts = [
+                "facebook",
+                "twitter",
+                "youtube",
+                "tiktok",
+                "twitch"
+              ];
+              host = host.replaceAll(RegExp(r"(www\.)|(\.com)"), "");
+              if (supportedHosts.contains(host)) {
+                ItemCategoryRepository categoryRepo =
+                    ItemCategoryRepository.instance;
+                ItemCategoryModel category = categoryRepo.itemCategories
+                    .firstWhere((c) => c.name == host);
+                //remove origin, ex: https://facebook.com
+                rawValue = rawValue.replaceFirst(uri.origin, "");
+                result = ItemModel(
+                    url: UrlModel(url: "${category.webUrl}$rawValue"));
+              }
+            }
+          }
+          break;
+        case "sms":
+          break;
+        case "tel":
+          break;
+        case "mailto":
+          break;
+        case "wifi":
+          break;
+        default:
+          //try http https again
+          break;
+      }
+    }
   }
 }

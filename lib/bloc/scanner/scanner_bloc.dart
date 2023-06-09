@@ -26,14 +26,17 @@ class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
       try {
         if (state.previousPage == Routes.home) {
           //convert to list of item model
+          //detect 1
+          barcode.rawValue!;
+
           Encryption encryption = Encryption();
           Object? decodeObject = encryption.decode(barcode.rawValue!);
           if (decodeObject != null) {
             List<dynamic> tempItems = decodeObject as List<dynamic>;
-            List<ItemModel> items = List<ItemModel>.from(
-                tempItems.map((element) => ItemModel.fromMap(element)));
+            // List<ItemModel> items = List<ItemModel>.from(
+            //     tempItems.map((element) => ItemModel.fromMap(element)));
             decodeSuccess = true;
-            addMessageEvent(items);
+            // addMessageEvent(items);
           }
         } else if (state.previousPage == Routes.itemInfo) {
           decodeSuccess = true;

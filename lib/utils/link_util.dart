@@ -86,10 +86,31 @@ class LinkUtil {
           }
           break;
         case "sms":
+          //sms:12345?body=abc
+          Uri? uri = Uri.tryParse(rawValue);
+          // String? message = uri.queryParameters['body'] ?? "";
+          String? message;
+          if (uri != null) {
+            if (uri.queryParameters.containsKey('body')) {
+              message = uri.queryParameters['body'];
+            }
+            result = ItemModel(
+                sms: SmsModel(phoneNumber: uri.path, message: message));
+          }
           break;
         case "tel":
+          // tel:1234,123
+          Uri? uri = Uri.tryParse(rawValue);
+          if (uri != null) {
+            result = ItemModel(phone: PhoneModel(phoneNumber: uri.path));
+          }
           break;
         case "mailto":
+          // mailto:address?cc=cc&bcc=bcc&subject=subject&body=body
+          Uri? uri = Uri.tryParse(rawValue);
+          if (uri != null) {
+            result = ItemModel(phone: PhoneModel(phoneNumber: uri.path));
+          }
           break;
         case "wifi":
           break;
@@ -98,5 +119,6 @@ class LinkUtil {
           break;
       }
     }
+    return result;
   }
 }

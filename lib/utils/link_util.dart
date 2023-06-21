@@ -55,12 +55,12 @@ class LinkUtil {
       rawValue = rawValue.toLowerCase();
       String schema = regex.stringMatch(rawValue)!.toLowerCase();
 
-      switch (schema) {
-        case "http":
-        case "https":
-          // regex: \/\/[\w\d. -]+\/?
-          Uri? uri = Uri.tryParse(rawValue);
-          if (uri != null) {
+      Uri? uri = Uri.tryParse(rawValue);
+      if (uri != null) {
+        switch (schema) {
+          case "http":
+          case "https":
+            // regex: \/\/[\w\d. -]+\/?
             String host = uri.host;
             if (host.isNotEmpty) {
               //standardized data
@@ -83,40 +83,45 @@ class LinkUtil {
                     url: UrlModel(url: "${category.webUrl}$rawValue"));
               }
             }
-          }
-          break;
-        case "sms":
-          //sms:12345?body=abc
-          Uri? uri = Uri.tryParse(rawValue);
-          // String? message = uri.queryParameters['body'] ?? "";
-          String? message;
-          if (uri != null) {
+            break;
+          case "sms":
+            //sms:12345?body=abc
+
+            // String? message = uri.queryParameters['body'] ?? "";
+            String? message;
             if (uri.queryParameters.containsKey('body')) {
               message = uri.queryParameters['body'];
             }
             result = ItemModel(
                 sms: SmsModel(phoneNumber: uri.path, message: message));
-          }
-          break;
-        case "tel":
-          // tel:1234,123
-          Uri? uri = Uri.tryParse(rawValue);
-          if (uri != null) {
+            break;
+          case "tel":
+            // tel:1234,123
             result = ItemModel(phone: PhoneModel(phoneNumber: uri.path));
-          }
-          break;
-        case "mailto":
-          // mailto:address?cc=cc&bcc=bcc&subject=subject&body=body
-          Uri? uri = Uri.tryParse(rawValue);
-          if (uri != null) {
+            break;
+          case "mailto":
+            // mailto:address?cc=cc&bcc=bcc&subject=subject&body=body
             result = ItemModel(phone: PhoneModel(phoneNumber: uri.path));
-          }
-          break;
-        case "wifi":
-          break;
-        default:
-          //try http https again
-          break;
+            break;
+          case "wifi":
+            // WIFI:T:<authentication-type>;S:<network-ssid>;P:<network-password>;H:<hidden-network>;;
+            Map<String, String> map = {};
+            List<String> paths = uri.path.split(';');
+            for (String element in paths) {
+              List<String> parts = element.split(":");
+              map[parts.first] = parts.last;
+            }
+            result = ItemModel(
+                wifi: WifiModel(
+                    networkName: map['S'],
+                    encryption: map['T'],
+                    password: map['P'],
+                    isHidden: map['H'] == 'true'));
+            break;
+          default:
+            //try http https again
+            break;
+        }
       }
     }
     return result;

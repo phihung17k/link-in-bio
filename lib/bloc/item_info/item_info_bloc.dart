@@ -119,6 +119,10 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
                     encryption: state.networkEncryption,
                     isHidden: false))));
         break;
+      case "link":
+        emit.call(state.copyWith(
+            item: _getUpdatedItem(item, name, url: UrlModel(url: event.url))));
+        break;
     }
     addNavigatedEvent(BackingHomePageEvent(state.item));
   }

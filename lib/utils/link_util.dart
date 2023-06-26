@@ -44,17 +44,14 @@ class LinkUtil {
         break;
       case "link":
         UrlModel url = item!.url!;
-        // https://www.regex101.com/
+        // www.regex101.com/
+        // regex101.com/
         String urlPattern =
-            r"^([a-zA-Z]*(\:\/\/))*([a-zA-Z]*\.)?([a-zA-Z]*[a-zA-Z0-9]*\.)+([a-zA-Z]+\/?)*";
+            r"^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)$";
         if (url.url!.startsWith(RegExp(urlPattern))) {
-          String subUrlPattern =
-              r"^([a-zA-Z]*\.)?([a-zA-Z]*[a-zA-Z0-9]*\.)+([a-zA-Z]+\/?)*";
-          if (url.url!.startsWith(subUrlPattern)) {
-            result = "http://${url.url}";
-          } else {
-            result = url.url!;
-          }
+          result = "http://${url.url}";
+        } else {
+          result = url.url!;
         }
         break;
     }

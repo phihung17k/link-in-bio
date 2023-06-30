@@ -81,7 +81,8 @@ class LinkUtil {
     ItemModel? result;
     Uri? uri = Uri.tryParse(rawValue);
     if (uri != null) {
-      switch (uri.scheme as ConstantEnum) {
+      switch (ConstantEnum.values
+          .firstWhere((element) => element.name == uri.scheme)) {
         case ConstantEnum.http:
         case ConstantEnum.https:
           // regex: \/\/[\w\d. -]+\/?

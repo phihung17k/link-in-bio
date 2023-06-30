@@ -7,6 +7,7 @@ import 'package:link_in_bio/bloc/scanner/scanner_state.dart';
 import 'package:link_in_bio/models/item_model.dart';
 import 'package:link_in_bio/routes.dart';
 import 'package:link_in_bio/utils/encryption.dart';
+import 'package:link_in_bio/utils/link_util.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
@@ -27,7 +28,7 @@ class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
         if (state.previousPage == Routes.home) {
           //convert to list of item model
           //detect 1
-          barcode.rawValue!;
+          ItemModel? item = LinkUtil.convertQrCode(barcode.rawValue);
 
           Encryption encryption = Encryption();
           Object? decodeObject = encryption.decode(barcode.rawValue!);

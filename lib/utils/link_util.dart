@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:link_in_bio/utils/enums.dart';
 
 import '../models/models.dart';
@@ -16,10 +18,14 @@ class LinkUtil {
       return "";
     }
     String result = "";
-    switch (name.toLowerCase() as ConstantEnum) {
+    ConstantEnum categoryName = ConstantEnum.values.firstWhere(
+        (element) => element.name == name.toLowerCase(),
+        orElse: () => ConstantEnum.unknow);
+    switch (categoryName) {
       case ConstantEnum.sms:
         SmsModel sms = item!.sms!;
-        result = "${ConstantEnum.sms}:${sms.phoneNumber}?body=${sms.message}";
+        result =
+            "${ConstantEnum.sms.name}:${sms.phoneNumber}?body=${sms.message}";
         break;
       case ConstantEnum.facebook:
       case ConstantEnum.twitter:
@@ -31,12 +37,12 @@ class LinkUtil {
         break;
       case ConstantEnum.phone:
         PhoneModel phone = item!.phone!;
-        result = "${ConstantEnum.tel}:${phone.phoneNumber}";
+        result = "${ConstantEnum.tel.name}:${phone.phoneNumber}";
         break;
       case ConstantEnum.email:
         EmailModel email = item!.email!;
         result =
-            "${ConstantEnum.mailto}:${email.address}?cc=${email.cc}&bcc=${email.bcc}&subject=${email.subject}&body=${email.body}";
+            "${ConstantEnum.mailto.name}:${email.address}?cc=${email.cc}&bcc=${email.bcc}&subject=${email.subject}&body=${email.body}";
         break;
       case ConstantEnum.wifi:
         WifiModel wifi = item!.wifi!;
@@ -56,7 +62,7 @@ class LinkUtil {
         String urlPattern =
             r"^[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*)$";
         if (url.url!.startsWith(RegExp(urlPattern))) {
-          result = "${ConstantEnum.http}://${url.url}";
+          result = "${ConstantEnum.http.name}://${url.url}";
         } else {
           result = url.url!;
         }
@@ -68,42 +74,48 @@ class LinkUtil {
   }
 
   // convert QR code into the item info
-  static ItemModel? convertQrCode(String? rawValue) {
+  static Future<ItemModel?> convertQrCode(String? rawValue) async {
     ItemModel? result;
     if (rawValue!.trim().isEmpty) {
       return null;
     }
-    result = _parseFromUri(rawValue.toLowerCase());
+    result = await _parseFromUri(rawValue.toLowerCase());
     return result;
   }
 
-  static ItemModel? _parseFromUri(String rawValue) {
+  static Future<ItemModel?> _parseFromUri(String rawValue) async {
     ItemModel? result;
     Uri? uri = Uri.tryParse(rawValue);
     if (uri != null) {
-      switch (ConstantEnum.values
-          .firstWhere((element) => element.name == uri.scheme)) {
+      ConstantEnum schema = ConstantEnum.values.firstWhere(
+          (element) => element.name == uri.scheme,
+          orElse: () => ConstantEnum.unknow);
+      switch (schema) {
         case ConstantEnum.http:
         case ConstantEnum.https:
           // regex: \/\/[\w\d. -]+\/?
           String host = uri.host;
           if (host.isNotEmpty) {
             //standardized data
-            List supportedHosts = [
-              ConstantEnum.facebook,
-              ConstantEnum.twitter,
-              ConstantEnum.youtube,
-              ConstantEnum.tiktok,
-              ConstantEnum.twitch
+            List<String> supportedHosts = [
+              ConstantEnum.facebook.name,
+              ConstantEnum.twitter.name,
+              ConstantEnum.youtube.name,
+              ConstantEnum.tiktok.name,
+              ConstantEnum.twitch.name
             ];
             host = host.replaceAll(RegExp(r"(www\.)|(\.com)"), "");
             if (supportedHosts.contains(host)) {
-              ItemCategoryRepository categoryRepo =
-                  ItemCategoryRepository.instance;
-              ItemCategoryModel category =
-                  categoryRepo.itemCategories.firstWhere((c) => c.name == host);
+              var itemCategories =
+                  await ItemCategoryRepository.instance.getItemCategories();
+
+              ItemCategoryModel? category = itemCategories
+                  .firstWhere((c) => c.name?.toLowerCase() == host);
               //remove origin, ex: https://facebook.com
               rawValue = rawValue.replaceFirst(uri.origin, "");
+              if (rawValue.startsWith("/")) {
+                rawValue = rawValue.substring(1);
+              }
               result =
                   ItemModel(url: UrlModel(url: "${category.webUrl}$rawValue"));
             }

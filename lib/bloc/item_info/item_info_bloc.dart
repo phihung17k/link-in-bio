@@ -23,13 +23,11 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
 
   FutureOr<void> initData(
       InitialDataEvent event, Emitter<ItemInfoState> emit) async {
-    ItemCategoryRepository categoryRepo = ItemCategoryRepository.instance;
-    if (categoryRepo.itemCategories.isEmpty) {
-      categoryRepo.itemCategories = await FileUtil.loadCategoriesJson();
-    }
-    ItemCategoryModel category = categoryRepo.itemCategories.first;
+    List<ItemCategoryModel> itemCategories =
+        await ItemCategoryRepository.instance.getItemCategories();
+    ItemCategoryModel category = itemCategories.first;
     emit.call(state.copyWith(
-        itemCategories: categoryRepo.itemCategories,
+        itemCategories: itemCategories,
         item: ItemModel(name: category.name, category: category)));
   }
 

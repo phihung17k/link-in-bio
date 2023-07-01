@@ -17,7 +17,7 @@ class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
   }
 
   FutureOr<void> saveDetectedQRCode(
-      SaveDetectedQRCodeEvent event, Emitter<ScannerState> emit) {
+      SaveDetectedQRCodeEvent event, Emitter<ScannerState> emit) async {
     Barcode barcode = event.barcode.barcodes.first;
 
     bool decodeSuccess = false;
@@ -28,17 +28,22 @@ class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
         if (state.previousPage == Routes.home) {
           //convert to list of item model
           //detect 1
-          ItemModel? item = LinkUtil.convertQrCode(barcode.rawValue);
+          ItemModel? item = await LinkUtil.convertQrCode(barcode.rawValue);
 
-          Encryption encryption = Encryption();
-          Object? decodeObject = encryption.decode(barcode.rawValue!);
-          if (decodeObject != null) {
-            List<dynamic> tempItems = decodeObject as List<dynamic>;
-            // List<ItemModel> items = List<ItemModel>.from(
-            //     tempItems.map((element) => ItemModel.fromMap(element)));
+          if (item != null) {
             decodeSuccess = true;
-            // addMessageEvent(items);
+            addMessageEvent(barcode);
           }
+
+          // Encryption encryption = Encryption();
+          // Object? decodeObject = encryption.decode(barcode.rawValue!);
+          // if (decodeObject != null) {
+          //   List<dynamic> tempItems = decodeObject as List<dynamic>;
+          //   // List<ItemModel> items = List<ItemModel>.from(
+          //   //     tempItems.map((element) => ItemModel.fromMap(element)));
+          //   decodeSuccess = true;
+          //   // addMessageEvent(items);
+          // }
         } else if (state.previousPage == Routes.itemInfo) {
           decodeSuccess = true;
           addMessageEvent(barcode);

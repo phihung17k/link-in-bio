@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/models/data_model.dart';
+import '../../utils/enums.dart';
 import '../../utils/file_util.dart';
 import 'item_info_event.dart';
 import 'item_info_state.dart';
@@ -78,27 +79,30 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       name = item.category!.name;
     }
 
-    switch (item.category!.name!.toLowerCase()) {
-      case "sms":
+    ConstantEnum categoryName = ConstantEnum.values.firstWhere(
+        (element) => element.name == item.category!.name!.toLowerCase(),
+        orElse: () => ConstantEnum.unknow);
+    switch (categoryName) {
+      case ConstantEnum.sms:
         emit.call(state.copyWith(
             item: _getUpdatedItem(item, name,
                 sms: SmsModel(
                     phoneNumber: event.phoneNumber, message: event.message))));
         break;
-      case "facebook":
-      case "twitter":
-      case "youtube":
-      case "tiktok":
-      case "twitch":
+      case ConstantEnum.facebook:
+      case ConstantEnum.twitter:
+      case ConstantEnum.youtube:
+      case ConstantEnum.tiktok:
+      case ConstantEnum.twitch:
         emit.call(state.copyWith(
             item: _getUpdatedItem(item, name, url: UrlModel(url: event.url))));
         break;
-      case "phone":
+      case ConstantEnum.phone:
         emit.call(state.copyWith(
             item: _getUpdatedItem(item, name,
                 phone: PhoneModel(phoneNumber: event.phoneNumber))));
         break;
-      case "email":
+      case ConstantEnum.email:
         emit.call(state.copyWith(
             item: _getUpdatedItem(item, name,
                 email: EmailModel(
@@ -108,7 +112,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
                     subject: event.subject,
                     body: event.body))));
         break;
-      case "wifi":
+      case ConstantEnum.wifi:
         emit.call(state.copyWith(
             item: _getUpdatedItem(item, name,
                 wifi: WifiModel(
@@ -117,9 +121,11 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
                     encryption: state.networkEncryption,
                     isHidden: false))));
         break;
-      case "link":
+      case ConstantEnum.link:
         emit.call(state.copyWith(
             item: _getUpdatedItem(item, name, url: UrlModel(url: event.url))));
+        break;
+      default:
         break;
     }
     addNavigatedEvent(BackingHomePageEvent(state.item));

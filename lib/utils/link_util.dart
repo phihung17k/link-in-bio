@@ -118,6 +118,8 @@ class LinkUtil {
               }
               result =
                   ItemModel(url: UrlModel(url: "${category.webUrl}$rawValue"));
+            } else {
+              result = ItemModel(url: UrlModel(url: rawValue));
             }
           }
           break;

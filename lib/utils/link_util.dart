@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:link_in_bio/utils/enums.dart';
 
@@ -90,6 +91,8 @@ class LinkUtil {
       ConstantEnum schema = ConstantEnum.values.firstWhere(
           (element) => element.name == uri.scheme,
           orElse: () => ConstantEnum.unknow);
+      var itemCategories =
+          await ItemCategoryRepository.instance.getItemCategories();
       switch (schema) {
         case ConstantEnum.http:
         case ConstantEnum.https:
@@ -104,11 +107,8 @@ class LinkUtil {
               ConstantEnum.tiktok.name,
               ConstantEnum.twitch.name,
             ];
-            host = host.replaceAll(RegExp(r"(www\.)|(\.com)"), "");
+            host = host.replaceAll(RegExp(r"(www\.)|(\.com)|(\.tv)"), "");
             if (supportedHosts.contains(host)) {
-              var itemCategories =
-                  await ItemCategoryRepository.instance.getItemCategories();
-
               ItemCategoryModel? category = itemCategories
                   .firstWhere((c) => c.name?.toLowerCase() == host);
               //remove origin, ex: https://facebook.com
@@ -116,20 +116,26 @@ class LinkUtil {
               if (rawValue.startsWith("/")) {
                 rawValue = rawValue.substring(1);
               }
-              result = ItemModel(
-                  name: category.name,
-                  url: UrlModel(url: rawValue),
-                  category: category);
+              // result = ItemModel(
+              //     name: category.name,
+              //     url: UrlModel(url: rawValue),
+              //     category: category);
+              ConstantEnum constantEnum = ConstantEnum.values
+                  .firstWhere((element) => element.name == uri.host);
+              result = _setUpItem(itemCategories, constantEnum,
+                  url: UrlModel(url: rawValue));
             } else {
-              result = ItemModel(
-                  name: "Link",
-                  url: UrlModel(url: rawValue),
-                  category: const ItemCategoryModel(
-                      topic: "Others",
-                      name: "Link",
-                      image: "assets/images/network.png",
-                      appUrl: "",
-                      webUrl: ""));
+              result = _setUpItem(itemCategories, ConstantEnum.link,
+                  url: UrlModel(url: rawValue));
+              // result = ItemModel(
+              //     name: "Link",
+              //     url: UrlModel(url: rawValue),
+              //     category: const ItemCategoryModel(
+              //         topic: "Others",
+              //         name: "Link",
+              //         image: "assets/images/network.png",
+              //         appUrl: "",
+              //         webUrl: ""));
             }
           }
           break;
@@ -140,16 +146,28 @@ class LinkUtil {
           if (uri.queryParameters.containsKey('body')) {
             message = uri.queryParameters['body'];
           }
-          result =
-              ItemModel(sms: SmsModel(phoneNumber: uri.path, message: message));
+          result = _setUpItem(itemCategories, ConstantEnum.sms,
+              sms: SmsModel(phoneNumber: uri.path, message: message));
+          // result = ItemModel(
+          //     name: ConstantEnum.sms.name,
+          //     sms: SmsModel(phoneNumber: uri.path, message: message),
+          //     category: itemCategories.firstWhere(
+          //         (c) => c.name?.toLowerCase() == ConstantEnum.sms.name));
           break;
         case ConstantEnum.tel:
           // tel:1234,123
-          result = ItemModel(phone: PhoneModel(phoneNumber: uri.path));
+          result = _setUpItem(itemCategories, ConstantEnum.phone,
+              phone: PhoneModel(phoneNumber: uri.path));
+          // result = ItemModel(
+          //     name: ConstantEnum.phone.name,
+          //     phone: PhoneModel(phoneNumber: uri.path),
+          //     category: itemCategories.firstWhere(
+          //         (c) => c.name?.toLowerCase() == ConstantEnum.phone.name));
           break;
         case ConstantEnum.mailto:
           // mailto:address?cc=cc&bcc=bcc&subject=subject&body=body
-          result = ItemModel(phone: PhoneModel(phoneNumber: uri.path));
+          result = _setUpItem(itemCategories, ConstantEnum.email, email: null);
+          // result = ItemModel(phone: PhoneModel(phoneNumber: uri.path));
           break;
         case ConstantEnum.wifi:
           // WIFI:T:<authentication-type>;S:<network-ssid>;P:<network-password>;H:<hidden-network>;;
@@ -159,12 +177,18 @@ class LinkUtil {
             List<String> parts = element.split(":");
             map[parts.first] = parts.last;
           }
-          result = ItemModel(
+          result = _setUpItem(itemCategories, ConstantEnum.wifi,
               wifi: WifiModel(
                   networkName: map['S'],
                   encryption: map['T'],
                   password: map['P'],
                   isHidden: map['H'] == 'true'));
+          // result = ItemModel(
+          //     wifi: WifiModel(
+          //         networkName: map['S'],
+          //         encryption: map['T'],
+          //         password: map['P'],
+          //         isHidden: map['H'] == 'true'));
           break;
         default:
           //try http https again
@@ -172,5 +196,23 @@ class LinkUtil {
       }
     }
     return result;
+  }
+
+  static ItemModel _setUpItem(
+      List<ItemCategoryModel> itemCategories, ConstantEnum constantEnum,
+      {UrlModel? url,
+      SmsModel? sms,
+      PhoneModel? phone,
+      EmailModel? email,
+      WifiModel? wifi}) {
+    return ItemModel(
+        name: constantEnum.name,
+        url: url,
+        sms: sms,
+        phone: phone,
+        email: email,
+        wifi: wifi,
+        category: itemCategories
+            .firstWhere((c) => c.name?.toLowerCase() == constantEnum.name));
   }
 }

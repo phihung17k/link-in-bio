@@ -6,7 +6,6 @@ import 'package:link_in_bio/bloc/scanner/scanner_event.dart';
 import 'package:link_in_bio/bloc/scanner/scanner_state.dart';
 import 'package:link_in_bio/models/item_model.dart';
 import 'package:link_in_bio/routes.dart';
-import 'package:link_in_bio/utils/encryption.dart';
 import 'package:link_in_bio/utils/link_util.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
@@ -26,24 +25,12 @@ class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
         barcode.rawValue!.isNotEmpty) {
       try {
         if (state.previousPage == Routes.home) {
-          //convert to list of item model
-          //detect 1
+          //detect an item model
           ItemModel? item = await LinkUtil.convertQrCode(barcode.rawValue);
-
           if (item != null) {
             decodeSuccess = true;
-            addMessageEvent(barcode);
+            addMessageEvent(item);
           }
-
-          // Encryption encryption = Encryption();
-          // Object? decodeObject = encryption.decode(barcode.rawValue!);
-          // if (decodeObject != null) {
-          //   List<dynamic> tempItems = decodeObject as List<dynamic>;
-          //   // List<ItemModel> items = List<ItemModel>.from(
-          //   //     tempItems.map((element) => ItemModel.fromMap(element)));
-          //   decodeSuccess = true;
-          //   // addMessageEvent(items);
-          // }
         } else if (state.previousPage == Routes.itemInfo) {
           decodeSuccess = true;
           addMessageEvent(barcode);

@@ -102,7 +102,7 @@ class LinkUtil {
               ConstantEnum.twitter.name,
               ConstantEnum.youtube.name,
               ConstantEnum.tiktok.name,
-              ConstantEnum.twitch.name
+              ConstantEnum.twitch.name,
             ];
             host = host.replaceAll(RegExp(r"(www\.)|(\.com)"), "");
             if (supportedHosts.contains(host)) {
@@ -116,10 +116,20 @@ class LinkUtil {
               if (rawValue.startsWith("/")) {
                 rawValue = rawValue.substring(1);
               }
-              result =
-                  ItemModel(url: UrlModel(url: "${category.webUrl}$rawValue"));
+              result = ItemModel(
+                  name: category.name,
+                  url: UrlModel(url: rawValue),
+                  category: category);
             } else {
-              result = ItemModel(url: UrlModel(url: rawValue));
+              result = ItemModel(
+                  name: "Link",
+                  url: UrlModel(url: rawValue),
+                  category: const ItemCategoryModel(
+                      topic: "Others",
+                      name: "Link",
+                      image: "assets/images/network.png",
+                      appUrl: "",
+                      webUrl: ""));
             }
           }
           break;

@@ -121,7 +121,7 @@ class LinkUtil {
               //     url: UrlModel(url: rawValue),
               //     category: category);
               ConstantEnum constantEnum = ConstantEnum.values
-                  .firstWhere((element) => element.name == uri.host);
+                  .firstWhere((element) => element.name == host);
               result = _setUpItem(itemCategories, constantEnum,
                   url: UrlModel(url: rawValue));
             } else {

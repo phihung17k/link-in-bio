@@ -78,6 +78,7 @@ class EmailCard extends StatelessWidget {
                 ),
                 TextField(
                     controller: bodyController,
+                    maxLines: null,
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),

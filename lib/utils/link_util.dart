@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:link_in_bio/utils/enums.dart';
 
@@ -116,10 +115,6 @@ class LinkUtil {
               if (rawValue.startsWith("/")) {
                 rawValue = rawValue.substring(1);
               }
-              // result = ItemModel(
-              //     name: category.name,
-              //     url: UrlModel(url: rawValue),
-              //     category: category);
               ConstantEnum constantEnum = ConstantEnum.values
                   .firstWhere((element) => element.name == host);
               result = _setUpItem(itemCategories, constantEnum,
@@ -127,15 +122,6 @@ class LinkUtil {
             } else {
               result = _setUpItem(itemCategories, ConstantEnum.link,
                   url: UrlModel(url: rawValue));
-              // result = ItemModel(
-              //     name: "Link",
-              //     url: UrlModel(url: rawValue),
-              //     category: const ItemCategoryModel(
-              //         topic: "Others",
-              //         name: "Link",
-              //         image: "assets/images/network.png",
-              //         appUrl: "",
-              //         webUrl: ""));
             }
           }
           break;
@@ -148,26 +134,21 @@ class LinkUtil {
           }
           result = _setUpItem(itemCategories, ConstantEnum.sms,
               sms: SmsModel(phoneNumber: uri.path, message: message));
-          // result = ItemModel(
-          //     name: ConstantEnum.sms.name,
-          //     sms: SmsModel(phoneNumber: uri.path, message: message),
-          //     category: itemCategories.firstWhere(
-          //         (c) => c.name?.toLowerCase() == ConstantEnum.sms.name));
           break;
         case ConstantEnum.tel:
           // tel:1234,123
           result = _setUpItem(itemCategories, ConstantEnum.phone,
               phone: PhoneModel(phoneNumber: uri.path));
-          // result = ItemModel(
-          //     name: ConstantEnum.phone.name,
-          //     phone: PhoneModel(phoneNumber: uri.path),
-          //     category: itemCategories.firstWhere(
-          //         (c) => c.name?.toLowerCase() == ConstantEnum.phone.name));
           break;
         case ConstantEnum.mailto:
           // mailto:address?cc=cc&bcc=bcc&subject=subject&body=body
-          result = _setUpItem(itemCategories, ConstantEnum.email, email: null);
-          // result = ItemModel(phone: PhoneModel(phoneNumber: uri.path));
+          result = _setUpItem(itemCategories, ConstantEnum.email,
+              email: EmailModel(
+                  address: uri.path,
+                  cc: uri.queryParameters['cc'],
+                  bcc: uri.queryParameters['bcc'],
+                  subject: uri.queryParameters['subject'],
+                  body: uri.queryParameters['body']));
           break;
         case ConstantEnum.wifi:
           // WIFI:T:<authentication-type>;S:<network-ssid>;P:<network-password>;H:<hidden-network>;;
@@ -175,7 +156,7 @@ class LinkUtil {
           List<String> paths = uri.path.split(';');
           for (String element in paths) {
             List<String> parts = element.split(":");
-            map[parts.first] = parts.last;
+            map[parts.first.toUpperCase()] = parts.last;
           }
           result = _setUpItem(itemCategories, ConstantEnum.wifi,
               wifi: WifiModel(
@@ -183,12 +164,6 @@ class LinkUtil {
                   encryption: map['T'],
                   password: map['P'],
                   isHidden: map['H'] == 'true'));
-          // result = ItemModel(
-          //     wifi: WifiModel(
-          //         networkName: map['S'],
-          //         encryption: map['T'],
-          //         password: map['P'],
-          //         isHidden: map['H'] == 'true'));
           break;
         default:
           //try http https again

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:link_in_bio/bloc/scanner/scanner_bloc.dart';
-import 'package:link_in_bio/bloc/scanner/scanner_event.dart';
+import '../../bloc/scanner/scanner_bloc.dart';
+import '../../bloc/scanner/scanner_event.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-
 import '../../models/item_model.dart';
 import '../../routes.dart';
 import '../../utils/gallery.dart';

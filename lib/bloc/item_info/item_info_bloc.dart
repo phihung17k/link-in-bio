@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/models/data_model.dart';
+import '../../models/data_model.dart';
 import '../../utils/enums.dart';
 import 'item_info_event.dart';
 import 'item_info_state.dart';

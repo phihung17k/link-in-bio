@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import '../../../bloc/item_info/item_info_bloc.dart';
+import '../../bloc/item_info/item_info_bloc.dart';
 import '../../bloc/item_info/item_info_event.dart';
 import '../../models/item_model.dart';
 import '../../routes.dart';

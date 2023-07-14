@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
-
 import '../models/item_category_model.dart';
 
 class FileUtil {

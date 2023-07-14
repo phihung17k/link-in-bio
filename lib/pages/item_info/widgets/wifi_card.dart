@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_bloc.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_event.dart';
-import 'package:link_in_bio/bloc/item_info/item_info_state.dart';
+import '../../../bloc/item_info/item_info_bloc.dart';
+import '../../../bloc/item_info/item_info_event.dart';
+import '../../../bloc/item_info/item_info_state.dart';
 
 class WifiCard extends StatelessWidget {
   final TextEditingController? networkNameController;

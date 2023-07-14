@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/base_bloc.dart';
-import 'package:link_in_bio/bloc/scanner/scanner_event.dart';
-import 'package:link_in_bio/bloc/scanner/scanner_state.dart';
-import 'package:link_in_bio/models/item_model.dart';
-import 'package:link_in_bio/routes.dart';
-import 'package:link_in_bio/utils/link_util.dart';
+import '../../bloc/base_bloc.dart';
+import '../../bloc/scanner/scanner_event.dart';
+import '../../bloc/scanner/scanner_state.dart';
+import '../../models/item_model.dart';
+import '../../routes.dart';
+import '../../utils/link_util.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {

@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:link_in_bio/utils/enums.dart';
+import '../../utils/enums.dart';
 import '../../models/item_model.dart';
 
 class QRCodeState extends Equatable {

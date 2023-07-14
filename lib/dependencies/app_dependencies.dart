@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
-import '../dependencies/bloc_dependencies.dart';
-import '../dependencies/page_dependencies.dart';
+import 'bloc_dependencies.dart';
+import 'page_dependencies.dart';
 import '../utils/network_connectivity.dart';
 
 class AppDependencies {

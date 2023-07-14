@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/bloc/qr_code/qr_code_bloc.dart';
-import 'package:link_in_bio/models/item_model.dart';
+import '../../../bloc/qr_code/qr_code_bloc.dart';
+import '../../../models/item_model.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
 import '../../../bloc/qr_code/qr_code_state.dart';

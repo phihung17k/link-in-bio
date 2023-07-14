@@ -1,7 +1,5 @@
 import 'dart:async';
-
-import 'package:link_in_bio/utils/enums.dart';
-
+import '../utils/enums.dart';
 import '../models/models.dart';
 import '../repository/item_category_repository.dart';
 

@@ -64,8 +64,16 @@ class WifiCard extends StatelessWidget {
                       child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
                         bloc: context.read<ItemInfoBloc>(),
                         builder: (context, state) {
+                          String? value = state.networkEncryption;
+                          if ([
+                            'WPA',
+                            'WPA2'
+                          ].contains(state.networkEncryption?.toUpperCase())) {
+                            value = 'WPA/WPA2';
+                          }
+
                           return DropdownButton(
-                            value: state.networkEncryption ?? encryptions.first,
+                            value: value ?? encryptions.first,
                             underline: const SizedBox(),
                             alignment: Alignment.center,
                             onChanged: (value) {

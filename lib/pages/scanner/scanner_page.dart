@@ -47,7 +47,9 @@ class _ScannerPageState extends State<ScannerPage> {
               .closed
               .then((_) async {
             if (mounted) {
-              if (event is List<ItemModel>) {
+              if (event is ItemModel) {
+                Navigator.pop(context, event);
+              } else if (event is List<ItemModel>) {
                 await Navigator.pushNamed(
                   context,
                   Routes.bioPreview,

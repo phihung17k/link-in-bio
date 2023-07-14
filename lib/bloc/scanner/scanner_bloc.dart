@@ -6,7 +6,7 @@ import 'package:link_in_bio/bloc/scanner/scanner_event.dart';
 import 'package:link_in_bio/bloc/scanner/scanner_state.dart';
 import 'package:link_in_bio/models/item_model.dart';
 import 'package:link_in_bio/routes.dart';
-import 'package:link_in_bio/utils/encryption.dart';
+import 'package:link_in_bio/utils/link_util.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
@@ -16,7 +16,7 @@ class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
   }
 
   FutureOr<void> saveDetectedQRCode(
-      SaveDetectedQRCodeEvent event, Emitter<ScannerState> emit) {
+      SaveDetectedQRCodeEvent event, Emitter<ScannerState> emit) async {
     Barcode barcode = event.barcode.barcodes.first;
 
     bool decodeSuccess = false;
@@ -25,15 +25,11 @@ class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
         barcode.rawValue!.isNotEmpty) {
       try {
         if (state.previousPage == Routes.home) {
-          //convert to list of item model
-          Encryption encryption = Encryption();
-          Object? decodeObject = encryption.decode(barcode.rawValue!);
-          if (decodeObject != null) {
-            List<dynamic> tempItems = decodeObject as List<dynamic>;
-            List<ItemModel> items = List<ItemModel>.from(
-                tempItems.map((element) => ItemModel.fromMap(element)));
+          //detect an item model
+          ItemModel? item = await LinkUtil.convertQrCode(barcode.rawValue);
+          if (item != null) {
             decodeSuccess = true;
-            addMessageEvent(items);
+            addMessageEvent(item);
           }
         } else if (state.previousPage == Routes.itemInfo) {
           decodeSuccess = true;

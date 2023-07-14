@@ -71,6 +71,10 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         passwordController.text = wifi?.password ?? "";
         bloc?.add(SetNetworkEncryptionEvent(wifi?.encryption));
         break;
+      case "link":
+        UrlModel? url = item.url;
+        urlController.text = url?.url ?? "";
+        break;
     }
   }
 
@@ -128,6 +132,10 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         result = WifiCard(
             networkNameController: networkNameController,
             passwordController: passwordController);
+        break;
+      case 'link':
+        result = ItemDetailCard(
+            textController: urlController, category: category, label: "Link");
         break;
       default:
         result = const SizedBox();

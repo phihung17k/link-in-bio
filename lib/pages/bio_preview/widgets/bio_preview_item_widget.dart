@@ -8,22 +8,6 @@ class BioPreviewItemWidget extends StatelessWidget {
   final ItemModel item;
   const BioPreviewItemWidget(this.item, {super.key});
 
-  /// Example:
-  /// ```dart
-  /// final httpsUri = Uri(
-  ///     scheme: 'https',
-  ///     host: 'dart.dev',
-  ///     path: 'guides/libraries/library-tour',
-  ///     fragment: 'numbers');
-  /// print(httpsUri); // https://dart.dev/guides/libraries/library-tour#numbers
-  ///
-  /// final mailtoUri = Uri(
-  ///     scheme: 'mailto',
-  ///     path: 'John.Doe@example.com',
-  ///     queryParameters: {'subject': 'Example'});
-  /// print(mailtoUri); // mailto:John.Doe@example.com?subject=Example
-  /// ```
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

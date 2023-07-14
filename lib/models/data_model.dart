@@ -1,3 +1,4 @@
+//sms:phoneNumber?body=message
 class SmsModel {
   final String? phoneNumber;
   final String? message;
@@ -11,6 +12,7 @@ class UrlModel {
   UrlModel({this.url});
 }
 
+// tel:1234,123
 class PhoneModel {
   final String? phoneNumber;
 

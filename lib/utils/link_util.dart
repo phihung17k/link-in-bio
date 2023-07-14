@@ -79,7 +79,7 @@ class LinkUtil {
     if (rawValue!.trim().isEmpty) {
       return null;
     }
-    result = await _parseFromUri(rawValue.toLowerCase());
+    result = await _parseFromUri(rawValue);
     return result;
   }
 
@@ -88,7 +88,7 @@ class LinkUtil {
     Uri? uri = Uri.tryParse(rawValue);
     if (uri != null) {
       ConstantEnum schema = ConstantEnum.values.firstWhere(
-          (element) => element.name == uri.scheme,
+          (element) => element.name.toLowerCase() == uri.scheme.toLowerCase(),
           orElse: () => ConstantEnum.unknow);
       var itemCategories =
           await ItemCategoryRepository.instance.getItemCategories();

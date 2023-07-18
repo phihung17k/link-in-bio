@@ -67,7 +67,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    // Size size = MediaQuery.of(context).size;
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               child: Stack(children: [
                 Container(
                     padding: const EdgeInsets.all(8),
-                    width: size.width,
+                    width: MediaQuery.of(context).size.width,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -139,6 +139,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 FloatingButtonMenu(
                   key: UniqueKey(),
                   deleteController: deleteController,
+                  widthScreen: MediaQuery.of(context).size.width,
                 )
               ]),
             );

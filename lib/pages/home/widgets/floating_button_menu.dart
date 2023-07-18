@@ -9,7 +9,9 @@ import 'floating_button.dart';
 
 class FloatingButtonMenu extends StatefulWidget {
   final AnimationController? deleteController;
-  const FloatingButtonMenu({super.key, required this.deleteController});
+  final double? widthScreen;
+  const FloatingButtonMenu(
+      {super.key, required this.deleteController, this.widthScreen});
 
   @override
   State<FloatingButtonMenu> createState() => _FloatingButtonMenuState();
@@ -32,8 +34,9 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
     floatingButtonController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
 
-    expandAnimation = Tween<double>(begin: 0, end: 60).animate(CurvedAnimation(
-        parent: floatingButtonController!, curve: const Interval(0.7, 1)));
+    expandAnimation = Tween<double>(begin: 0, end: widget.widthScreen! / 6)
+        .animate(CurvedAnimation(
+            parent: floatingButtonController!, curve: const Interval(0.7, 1)));
 
     rotateAnimation = Tween<double>(begin: 0, end: pi / 4).animate(
         CurvedAnimation(

@@ -68,13 +68,14 @@ class _FloatingButtonState extends State<FloatingButton> {
                   ],
                 ),
                 padding: const EdgeInsets.all(10),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
+                child: Row(children: [
                   Icon(iconData),
                   SizedBox(
                     width: expandAnimation.value,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5),
-                      child: Text(expandAnimation.value > 57 ? label : ""),
+                      child: Text(label,
+                          overflow: TextOverflow.ellipsis, maxLines: 1),
                     ),
                   ),
                 ]),

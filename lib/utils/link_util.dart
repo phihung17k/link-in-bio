@@ -106,8 +106,8 @@ class LinkUtil {
             ];
             host = host.replaceAll(RegExp(r"(www\.)|(\.com)|(\.tv)"), "");
             if (supportedHosts.contains(host)) {
-              ItemCategoryModel? category = itemCategories
-                  .firstWhere((c) => c.name?.toLowerCase() == host);
+              // ItemCategoryModel? category = itemCategories
+              //     .firstWhere((c) => c.name?.toLowerCase() == host);
               //remove origin, ex: https://facebook.com
               rawValue = rawValue.replaceFirst(uri.origin, "");
               if (rawValue.startsWith("/")) {

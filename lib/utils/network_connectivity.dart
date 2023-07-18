@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 
 class NetworkConnectivity {
   final Connectivity _networkConnectivity = Connectivity();
@@ -23,8 +25,13 @@ class NetworkConnectivity {
   void _checkStatus(ConnectivityResult result) async {
     bool isOnline = false;
     try {
-      final list = await InternetAddress.lookup('example.com');
-      isOnline = list.isNotEmpty && list[0].rawAddress.isNotEmpty;
+      if (kIsWeb) {
+        final result = await http.get(Uri.parse('www.google.com'));
+        isOnline = result.statusCode == HttpStatus.ok;
+      } else {
+        final list = await InternetAddress.lookup('example.com');
+        isOnline = list.isNotEmpty && list[0].rawAddress.isNotEmpty;
+      }
     } on SocketException catch (_) {
       isOnline = false;
     }

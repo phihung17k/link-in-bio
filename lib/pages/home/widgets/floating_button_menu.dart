@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/home/home_bloc.dart';
@@ -7,43 +6,20 @@ import '../../../models/item_model.dart';
 import '../../../bloc/home/home_event.dart';
 import 'floating_button.dart';
 
-class FloatingButtonMenu extends StatefulWidget {
+class FloatingButtonMenu extends StatelessWidget {
   final AnimationController? deleteController;
-  const FloatingButtonMenu({super.key, required this.deleteController});
+  final AnimationController? floatingButtonController;
 
-  @override
-  State<FloatingButtonMenu> createState() => _FloatingButtonMenuState();
-}
-
-class _FloatingButtonMenuState extends State<FloatingButtonMenu>
-    with TickerProviderStateMixin {
-  HomeBloc? bloc;
-
-  AnimationController? floatingButtonController;
-  Animation? expandAnimation;
-  Animation? rotateAnimation;
-
-  AnimationController get deleteController => widget.deleteController!;
-
-  @override
-  void initState() {
-    super.initState();
-
-    floatingButtonController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 500));
-
-    expandAnimation = Tween<double>(begin: 0, end: 60).animate(CurvedAnimation(
-        parent: floatingButtonController!, curve: const Interval(0.7, 1)));
-
-    rotateAnimation = Tween<double>(begin: 0, end: pi / 4).animate(
-        CurvedAnimation(
-            parent: floatingButtonController!, curve: const Interval(0, 0.4)));
-
-    bloc = context.read<HomeBloc>();
-  }
+  const FloatingButtonMenu(
+      {super.key,
+      required this.deleteController,
+      required this.floatingButtonController})
+      : assert(deleteController != null),
+        assert(floatingButtonController != null);
 
   Future showSharingBottomSheet(BuildContext context) {
-    List<ItemModel>? items = bloc?.state.itemList;
+    HomeBloc bloc = context.read<HomeBloc>();
+    List<ItemModel>? items = bloc.state.itemList;
     return showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -79,9 +55,9 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                                 tileColor: Colors.transparent,
                                 onChanged: (value) {
                                   if (value!) {
-                                    bloc!.add(SelectingAllItemEvent());
+                                    bloc.add(SelectingAllItemEvent());
                                   } else {
-                                    bloc!.add(ResetSelectedItemsEvent());
+                                    bloc.add(ResetSelectedItemsEvent());
                                   }
                                 },
                                 title: const Text("Select all"),
@@ -98,7 +74,7 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                                       .textTheme
                                       .titleMedium!)),
                           onTap: () {
-                            if (bloc!.state.selectedIndexList!.isEmpty) {
+                            if (bloc.state.selectedIndexList!.isEmpty) {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(const SnackBar(
                                 content: Text("No items selected"),
@@ -125,9 +101,9 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                         value: state.selectedIndexList!.contains(index),
                         onChanged: (value) {
                           if (value!) {
-                            bloc!.add(AddingSelectedItemEvent(index));
+                            bloc.add(AddingSelectedItemEvent(index));
                           } else {
-                            bloc!.add(DeletingSelectedItemEvent(index));
+                            bloc.add(DeletingSelectedItemEvent(index));
                           }
                         },
                         title: Text(item.name!),
@@ -146,6 +122,8 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
 
   @override
   Widget build(BuildContext context) {
+    HomeBloc bloc = context.read<HomeBloc>();
+    double widthScreen = MediaQuery.of(context).size.width;
     return Stack(
       children: [
         //multiple animations with
@@ -156,40 +134,40 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
         FloatingButton(
           key: UniqueKey(),
           floatingButtonController: floatingButtonController,
-          expandAnimation: expandAnimation,
           lastAnimatedHeight: 296,
           label: "Create",
           iconData: Icons.add_circle_outline_outlined,
+          widthScreen: widthScreen,
           onTap: () {
-            bloc!.addNavigatedEvent(NavigatorItemInfoPageForCreatingEvent());
+            bloc.addNavigatedEvent(NavigatorItemInfoPageForCreatingEvent());
           },
         ),
         FloatingButton(
             key: UniqueKey(),
             floatingButtonController: floatingButtonController,
-            expandAnimation: expandAnimation,
             lastAnimatedHeight: 242,
             label: "Remove",
             iconData: Icons.remove_circle_outline_outlined,
+            widthScreen: widthScreen,
             onTap: () {
-              deleteController.isDismissed
-                  ? deleteController.forward()
-                  : deleteController.reverse();
+              deleteController!.isDismissed
+                  ? deleteController!.forward()
+                  : deleteController!.reverse();
             }),
         FloatingButton(
           key: UniqueKey(),
           floatingButtonController: floatingButtonController,
-          expandAnimation: expandAnimation,
           lastAnimatedHeight: 188,
           label: "Share",
           iconData: Icons.share_rounded,
+          widthScreen: widthScreen,
           onTap: () {
             showSharingBottomSheet(context).then((value) {
               if (value == null) {
-                bloc!.add(ResetSelectedItemsEvent());
+                bloc.add(ResetSelectedItemsEvent());
               } else {
-                if (bloc!.state.selectedIndexList!.isNotEmpty) {
-                  bloc!.addNavigatedEvent(NavigatorQRSharingPageEvent());
+                if (bloc.state.selectedIndexList!.isNotEmpty) {
+                  bloc.addNavigatedEvent(NavigatorQRSharingPageEvent());
                 }
               }
             });
@@ -198,21 +176,21 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
         FloatingButton(
           key: UniqueKey(),
           floatingButtonController: floatingButtonController,
-          expandAnimation: expandAnimation,
           lastAnimatedHeight: 134,
           label: "Scan QR",
           iconData: Icons.qr_code_scanner,
+          widthScreen: widthScreen,
           onTap: () {
-            bloc!.addNavigatedEvent(NavigatorScannerPageEvent());
+            bloc.addNavigatedEvent(NavigatorScannerPageEvent());
           },
         ),
         FloatingButton(
           key: UniqueKey(),
           floatingButtonController: floatingButtonController,
-          expandAnimation: expandAnimation,
           lastAnimatedHeight: 80,
           label: "Settings",
           iconData: Icons.settings,
+          widthScreen: widthScreen,
           onTap: () {},
         ),
         Positioned(
@@ -224,26 +202,28 @@ class _FloatingButtonMenuState extends State<FloatingButtonMenu>
                   ? floatingButtonController!.forward()
                   : floatingButtonController!.reverse();
             },
-            child: AnimatedBuilder(
-              animation: floatingButtonController!,
+            // prefer RepaintBoundary to AnimatedBuilder
+            child: RotationTransition(
+              turns: Tween<double>(begin: 0, end: 1 / 8).animate(
+                  CurvedAnimation(
+                      parent: floatingButtonController!,
+                      curve: const Interval(0, 0.4, curve: Curves.easeIn))),
               child: Icon(Icons.add, size: IconTheme.of(context).size! + 5),
-              builder: (context, child) {
-                return Transform.rotate(
-                  angle: rotateAnimation!.value,
-                  alignment: Alignment.center,
-                  child: child,
-                );
-              },
             ),
+            //     AnimatedBuilder(
+            //   animation: floatingButtonController!,
+            //   child: Icon(Icons.add, size: IconTheme.of(context).size! + 5),
+            //   builder: (context, child) {
+            //     return Transform.rotate(
+            //       angle: rotateAnimation!.value,
+            //       alignment: Alignment.center,
+            //       child: child,
+            //     );
+            //   },
+            // ),
           ),
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    floatingButtonController!.dispose();
-    super.dispose();
   }
 }

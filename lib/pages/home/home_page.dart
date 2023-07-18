@@ -21,6 +21,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   HomeBloc get bloc => widget.bloc;
 
   AnimationController? deleteController;
+  AnimationController? floatingButtonController;
 
   final NetworkConnectivity _networkConnectivity = NetworkConnectivity();
 
@@ -31,6 +32,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _networkConnectivity.initialize();
 
     deleteController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    floatingButtonController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 500));
 
     bloc.listenerStream.listen((event) {
@@ -109,7 +112,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     // final double elevation =
                                     //     lerpDouble(0, 5, animValue)!;
                                     return Material(
-                                        // elevation: elevation,
                                         elevation: 5,
                                         color: Colors.transparent,
                                         shadowColor: Colors.grey,
@@ -135,7 +137,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               FloatingButtonMenu(
                 key: UniqueKey(),
                 deleteController: deleteController,
-                widthScreen: MediaQuery.of(context).size.width,
+                floatingButtonController: floatingButtonController,
               )
             ]),
           )),
@@ -145,6 +147,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void dispose() {
     deleteController!.dispose();
+    floatingButtonController!.dispose();
     bloc.close();
     super.dispose();
   }

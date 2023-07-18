@@ -2,21 +2,21 @@ import 'package:flutter/material.dart';
 
 class FloatingButton extends StatefulWidget {
   final AnimationController? floatingButtonController;
-  final Animation? expandAnimation;
   final double? lastAnimatedHeight;
   final String? label;
   final IconData? iconData;
   final Function()? onTap;
   final Color? color;
+  final double? widthScreen;
   const FloatingButton(
       {super.key,
       required this.floatingButtonController,
-      required this.expandAnimation,
       required this.lastAnimatedHeight,
       required this.label,
       this.iconData = Icons.question_mark_rounded,
       this.onTap,
-      this.color = Colors.amber});
+      this.color = Colors.amber,
+      this.widthScreen});
 
   @override
   State<FloatingButton> createState() => _FloatingButtonState();
@@ -25,13 +25,13 @@ class FloatingButton extends StatefulWidget {
 class _FloatingButtonState extends State<FloatingButton> {
   AnimationController get floatingButtonController =>
       widget.floatingButtonController!;
-  Animation get expandAnimation => widget.expandAnimation!;
   double get lastAnimatedHeight => widget.lastAnimatedHeight!;
   String get label => widget.label!;
   IconData get iconData => widget.iconData!;
   Function() get onTap => widget.onTap!;
   Color get color => widget.color!;
   Animation? translateAnimation;
+  Animation? expandAnimation;
 
   @override
   void initState() {
@@ -41,6 +41,10 @@ class _FloatingButtonState extends State<FloatingButton> {
     translateAnimation = Tween<double>(begin: 19, end: lastAnimatedHeight)
         .animate(CurvedAnimation(
             parent: floatingButtonController, curve: const Interval(0, 0.7)));
+
+    expandAnimation = Tween<double>(begin: 0, end: widget.widthScreen! / 6)
+        .animate(CurvedAnimation(
+            parent: floatingButtonController, curve: const Interval(0.7, 1)));
   }
 
   @override
@@ -71,7 +75,7 @@ class _FloatingButtonState extends State<FloatingButton> {
                 child: Row(children: [
                   Icon(iconData),
                   SizedBox(
-                    width: expandAnimation.value,
+                    width: expandAnimation?.value,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5),
                       child: Text(label,

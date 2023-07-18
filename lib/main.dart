@@ -13,7 +13,6 @@ void main() async {
   await AppDependencies.setUp();
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]);
-
   runApp(MaterialApp(
     title: "Link In Bio",
     debugShowCheckedModeBanner: false,

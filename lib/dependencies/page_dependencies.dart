@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:link_in_bio/pages/settings/settings_page.dart';
 import '../pages/pages.dart';
 import '../routes.dart';
 
@@ -15,5 +16,7 @@ class PageDependencies {
         instanceName: Routes.bioPreview);
     injector.registerFactory<Widget>(() => ScannerPage(injector()),
         instanceName: Routes.scanner);
+    injector.registerFactory<Widget>(() => SettingsPage(),
+        instanceName: Routes.setting);
   }
 }

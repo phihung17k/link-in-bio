@@ -63,6 +63,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             bloc.add(AddingItemEvent(item));
           }
         });
+      } else if (event is NavigatorSettingPageEvent) {
+        Navigator.pushNamed(context, Routes.setting);
       }
     });
   }
@@ -89,11 +91,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   'assets/images/default_avatar.png'),
                             ),
                             const SizedBox(height: 10),
-                            const Text("Name",
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold)),
+                            Text("Name",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.bold)),
                             const SizedBox(height: 10),
-                            const Text("Personal information"),
+                            Text("Personal information",
+                                style: Theme.of(context).textTheme.titleMedium),
                             const SizedBox(height: 10),
                             Flexible(
                                 child: ReorderableListView(

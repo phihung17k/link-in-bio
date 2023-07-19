@@ -191,7 +191,9 @@ class FloatingButtonMenu extends StatelessWidget {
           label: "Settings",
           iconData: Icons.settings,
           widthScreen: widthScreen,
-          onTap: () {},
+          onTap: () {
+            bloc.addNavigatedEvent(NavigatorSettingPageEvent());
+          },
         ),
         Positioned(
           right: 15,

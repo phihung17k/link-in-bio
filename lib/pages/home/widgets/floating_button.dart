@@ -59,30 +59,28 @@ class _FloatingButtonState extends State<FloatingButton> {
             visible: floatingButtonController.isDismissed ? false : true,
             child: InkWell(
               onTap: onTap,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(50),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 5.0,
-                    ),
-                  ],
-                ),
-                padding: const EdgeInsets.all(10),
-                child: Row(children: [
-                  Icon(iconData),
-                  SizedBox(
-                    width: expandAnimation?.value,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(label,
-                          overflow: TextOverflow.ellipsis, maxLines: 1),
-                    ),
+              child: Material(
+                elevation: 2,
+                color: Theme.of(context).scaffoldBackgroundColor,
+                borderRadius: BorderRadius.circular(50),
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Row(
+                    children: [
+                      Icon(iconData),
+                      SizedBox(
+                        width: expandAnimation?.value,
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 5),
+                          child: Text(label,
+                              style: Theme.of(context).textTheme.bodyMedium,
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1),
+                        ),
+                      ),
+                    ],
                   ),
-                ]),
+                ),
               ),
             ),
           ),

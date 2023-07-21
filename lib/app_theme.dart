@@ -1,67 +1,159 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'utils/enums.dart';
+
+class AppThemeData {
+  final AppThemeEnum? theme;
+  final ThemeData? themeData;
+  final Color? color;
+  final Color? backgroundColor;
+
+  AppThemeData(
+      {required this.theme,
+      required this.themeData,
+      this.color,
+      this.backgroundColor});
+
+  AppThemeData copyWith(
+      {AppThemeEnum? theme,
+      ThemeData? themeData,
+      Color? color,
+      Color? backgroundColor}) {
+    return AppThemeData(
+        theme: theme ?? this.theme,
+        themeData: themeData ?? this.themeData,
+        color: color ?? this.color ?? themeData?.primaryColor,
+        backgroundColor: backgroundColor ?? this.backgroundColor);
+  }
+
+  // @override
+  // bool operator ==(Object other) =>
+  //     other is AppTheme &&
+  //     other.runtimeType == runtimeType &&
+  //     other.theme == value;
+
+  // @override
+  // int get hashCode => value.hashCode;
+}
 
 final _themeLight = ThemeData.light();
 final _themeDark = ThemeData.dark();
 
 final appThemeData = {
-  AppTheme.light: ThemeData.localize(
-      _themeLight, _getLightTextTheme(_themeLight.textTheme)),
-  AppTheme.dark:
-      ThemeData.localize(_themeDark, _getDarkTextTheme(_themeDark.textTheme)),
-  // AppTheme.light: ThemeData(
-  //     brightness: Brightness.light,
-  //     textTheme: _themeLight.textTheme
-  //         .apply(displayColor: Colors.black, bodyColor: Colors.black)
-  //  const TextTheme(
-  //   bodyLarge: TextStyle(color: Colors.black),
-  //   bodyMedium: TextStyle(color: Colors.black),
-  //   bodySmall: TextStyle(color: Colors.black),
-  //   labelLarge: TextStyle(color: Colors.black),
-  //   labelMedium: TextStyle(color: Colors.black),
-  //   labelSmall: TextStyle(color: Colors.black),
-  //   displayLarge: TextStyle(color: Colors.black),
-  //   displayMedium: TextStyle(color: Colors.black),
-  //   displaySmall: TextStyle(color: Colors.black),
-  //   headlineLarge: TextStyle(color: Colors.black),
-  //   headlineMedium: TextStyle(color: Colors.black),
-  //   headlineSmall: TextStyle(color: Colors.black),
-  //   titleLarge: TextStyle(color: Colors.black),
-  //   titleMedium: TextStyle(color: Colors.black),
-  //   titleSmall: TextStyle(color: Colors.black),
-  // )
+  AppThemeEnum.light: AppThemeData(
+    theme: AppThemeEnum.light,
+    themeData: ThemeData.localize(
+      _themeLight.copyWith(),
+      // _getLightTextTheme(_themeLight.textTheme),
+      _themeLight.textTheme,
+    ),
+    color: _themeLight.primaryColor,
+    backgroundColor: Colors.cyan,
+  ),
+  AppThemeEnum.dark: AppThemeData(
+    theme: AppThemeEnum.dark,
+    themeData: ThemeData.localize(
+      _themeDark,
+      // _getDarkTextTheme(_themeDark.textTheme),
+      _themeDark.textTheme,
+    ),
+    color: _themeDark.primaryColor,
+    backgroundColor: _themeDark.primaryColorLight,
+  ),
+  // AppThemeEnum.pink: AppThemeData(
+  //   theme: AppThemeEnum.pink,
+  // themeData: ThemeData.localize(
+  //   ThemeData.raw(
+  //       applyElevationOverlayColor: true,
+  //       cupertinoOverrideTheme: NoDefaultCupertinoThemeData(
+  //           brightness:
+  //               ThemeData.estimateBrightnessForColor(Color.fromHex())),
+  //       extensions: extensions,
+  //       inputDecorationTheme: inputDecorationTheme,
+  //       materialTapTargetSize: materialTapTargetSize,
+  //       pageTransitionsTheme: pageTransitionsTheme,
+  //       platform: platform,
+  //       scrollbarTheme: scrollbarTheme,
+  //       splashFactory: splashFactory,
+  //       useMaterial3: useMaterial3,
+  //       visualDensity: visualDensity,
+  //       canvasColor: canvasColor,
+  //       cardColor: cardColor,
+  //       colorScheme: colorScheme,
+  //       dialogBackgroundColor: dialogBackgroundColor,
+  //       disabledColor: disabledColor,
+  //       dividerColor: dividerColor,
+  //       focusColor: focusColor,
+  //       highlightColor: highlightColor,
+  //       hintColor: hintColor,
+  //       hoverColor: hoverColor,
+  //       indicatorColor: indicatorColor,
+  //       primaryColor: primaryColor,
+  //       primaryColorDark: primaryColorDark,
+  //       primaryColorLight: primaryColorLight,
+  //       scaffoldBackgroundColor: scaffoldBackgroundColor,
+  //       secondaryHeaderColor: secondaryHeaderColor,
+  //       shadowColor: shadowColor,
+  //       splashColor: splashColor,
+  //       unselectedWidgetColor: unselectedWidgetColor,
+  //       iconTheme: iconTheme,
+  //       primaryIconTheme: primaryIconTheme,
+  //       primaryTextTheme: primaryTextTheme,
+  //       textTheme: textTheme,
+  //       typography: typography,
+  //       appBarTheme: appBarTheme,
+  //       badgeTheme: badgeTheme,
+  //       bannerTheme: bannerTheme,
+  //       bottomAppBarTheme: bottomAppBarTheme,
+  //       bottomNavigationBarTheme: bottomNavigationBarTheme,
+  //       bottomSheetTheme: bottomSheetTheme,
+  //       buttonBarTheme: buttonBarTheme,
+  //       buttonTheme: buttonTheme,
+  //       cardTheme: cardTheme,
+  //       checkboxTheme: checkboxTheme,
+  //       chipTheme: chipTheme,
+  //       dataTableTheme: dataTableTheme,
+  //       dialogTheme: dialogTheme,
+  //       dividerTheme: dividerTheme,
+  //       drawerTheme: drawerTheme,
+  //       dropdownMenuTheme: dropdownMenuTheme,
+  //       elevatedButtonTheme: elevatedButtonTheme,
+  //       expansionTileTheme: expansionTileTheme,
+  //       filledButtonTheme: filledButtonTheme,
+  //       floatingActionButtonTheme: floatingActionButtonTheme,
+  //       iconButtonTheme: iconButtonTheme,
+  //       listTileTheme: listTileTheme,
+  //       menuBarTheme: menuBarTheme,
+  //       menuButtonTheme: menuButtonTheme,
+  //       menuTheme: menuTheme,
+  //       navigationBarTheme: navigationBarTheme,
+  //       navigationDrawerTheme: navigationDrawerTheme,
+  //       navigationRailTheme: navigationRailTheme,
+  //       outlinedButtonTheme: outlinedButtonTheme,
+  //       popupMenuTheme: popupMenuTheme,
+  //       progressIndicatorTheme: progressIndicatorTheme,
+  //       radioTheme: radioTheme,
+  //       segmentedButtonTheme: segmentedButtonTheme,
+  //       sliderTheme: sliderTheme,
+  //       snackBarTheme: snackBarTheme,
+  //       switchTheme: switchTheme,
+  //       tabBarTheme: tabBarTheme,
+  //       textButtonTheme: textButtonTheme,
+  //       textSelectionTheme: textSelectionTheme,
+  //       timePickerTheme: timePickerTheme,
+  //       toggleButtonsTheme: toggleButtonsTheme,
+  //       tooltipTheme: tooltipTheme),
+  //   // _getDarkTextTheme(_themeDark.textTheme),
+  //   _themeDark.textTheme,
   // ),
-  // AppTheme.dark:
-  //     // _themeDark.copyWith(textTheme: _getDarkTextTheme(_themeDark.textTheme)),
-  //     ThemeData(
-  //         brightness: Brightness.dark,
-  //         textTheme: _themeDark.textTheme
-  //             .apply(displayColor: Colors.white, bodyColor: Colors.white)
-  // const TextTheme(
-  //   bodyLarge: TextStyle(color: Colors.white),
-  //   bodyMedium: TextStyle(color: Colors.white),
-  //   bodySmall: TextStyle(color: Colors.white),
-  //   labelLarge: TextStyle(color: Colors.white),
-  //   labelMedium: TextStyle(color: Colors.white),
-  //   labelSmall: TextStyle(color: Colors.white),
-  //   displayLarge: TextStyle(color: Colors.white),
-  //   displayMedium: TextStyle(color: Colors.white),
-  //   displaySmall: TextStyle(color: Colors.white),
-  //   headlineLarge: TextStyle(color: Colors.white),
-  //   headlineMedium: TextStyle(color: Colors.white),
-  //   headlineSmall: TextStyle(color: Colors.white),
-  //   titleLarge: TextStyle(color: Colors.white),
-  //   titleMedium: TextStyle(color: Colors.white),
-  //   titleSmall: TextStyle(color: Colors.white),
-  // )
   // ),
 };
 
 TextTheme _getLightTextTheme(TextTheme base) {
   return base.apply(
-      displayColor: Colors.black,
-      bodyColor: Colors.black,
-      decorationColor: Colors.black);
+    displayColor: Colors.black,
+    bodyColor: Colors.black,
+  );
   // base.copyWith(
   //   bodyLarge: base.bodyLarge?.copyWith(color: Colors.black),
   //   bodyMedium: base.bodyMedium?.copyWith(color: Colors.black),
@@ -83,9 +175,9 @@ TextTheme _getLightTextTheme(TextTheme base) {
 
 TextTheme _getDarkTextTheme(TextTheme base) {
   return base.apply(
-      displayColor: Colors.white,
-      bodyColor: Colors.white,
-      decorationColor: Colors.white);
+    displayColor: Colors.white,
+    bodyColor: Colors.white,
+  );
   // base.copyWith(
   //   bodyLarge: base.bodyLarge?.copyWith(color: Colors.white),
   //   bodyMedium: base.bodyMedium?.copyWith(color: Colors.white),

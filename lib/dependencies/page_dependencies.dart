@@ -16,7 +16,7 @@ class PageDependencies {
         instanceName: Routes.bioPreview);
     injector.registerFactory<Widget>(() => ScannerPage(injector()),
         instanceName: Routes.scanner);
-    injector.registerFactory<Widget>(() => SettingsPage(),
+    injector.registerFactory<Widget>(() => const SettingsPage(),
         instanceName: Routes.setting);
   }
 }

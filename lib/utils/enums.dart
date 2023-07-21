@@ -18,4 +18,4 @@ enum ConstantEnum {
   https
 }
 
-enum AppTheme { light, dark }
+enum AppThemeEnum { light, dark, pink }

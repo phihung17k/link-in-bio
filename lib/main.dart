@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/app_theme.dart';
 import '../dependencies/app_dependencies.dart';
 import 'bloc/theme/theme_bloc.dart';
 import 'bloc/theme/theme_state.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             initialRoute: Routes.home,
             onGenerateRoute: (settings) => Routes.getRoutes(settings),
-            theme: state.themeData,
+            theme: appThemeData[state.appTheme]?.themeData,
           );
         },
       ),

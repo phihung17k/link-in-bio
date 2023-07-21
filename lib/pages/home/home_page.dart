@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
-          backgroundColor: Colors.cyan.shade100,
+          backgroundColor: Theme.of(context).primaryColorLight,
           body: SafeArea(
             child: Stack(children: [
               Padding(

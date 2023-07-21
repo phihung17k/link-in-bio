@@ -1,15 +1,16 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
+
+import '../../utils/enums.dart';
 
 class ThemeState extends Equatable {
-  final ThemeData? themeData;
+  final AppThemeEnum? appTheme;
 
-  const ThemeState({this.themeData});
+  const ThemeState({this.appTheme});
 
-  ThemeState copyWith({ThemeData? themeData}) {
-    return ThemeState(themeData: themeData ?? this.themeData);
+  ThemeState copyWith({AppThemeEnum? appTheme}) {
+    return ThemeState(appTheme: appTheme ?? this.appTheme);
   }
 
   @override
-  List<Object?> get props => [themeData];
+  List<Object?> get props => [appTheme];
 }

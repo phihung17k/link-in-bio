@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:link_in_bio/app_theme.dart';
 import 'package:link_in_bio/bloc/theme/theme_bloc.dart';
 import 'package:link_in_bio/bloc/theme/theme_event.dart';
 import 'package:link_in_bio/utils/enums.dart';
@@ -22,16 +21,21 @@ class _SettingsPageState extends State<SettingsPage> {
         title: const Text("Settings"),
       ),
       body: Center(
-          child: Switch(
-        value: themeBloc.state.themeData == appThemeData[AppTheme.light],
-        onChanged: (value) {
-          var theme = AppTheme.light;
-          if (themeBloc.state.themeData == appThemeData[AppTheme.light]) {
-            theme = AppTheme.dark;
-          }
-          themeBloc.add(SwitchingThemeEvent(theme));
-        },
-      )),
+        child: Column(
+          children: [
+            for (AppThemeEnum theme in AppThemeEnum.values)
+              RadioListTile(
+                value: theme,
+                groupValue: 0,
+                onChanged: (value) {
+                  themeBloc.add(SwitchingThemeEvent(value as AppThemeEnum));
+                },
+                selected: themeBloc.state.appTheme == theme,
+                title: Text(theme.name),
+              )
+          ],
+        ),
+      ),
     );
   }
 }

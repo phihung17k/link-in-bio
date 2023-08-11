@@ -1,18 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'utils/color_util.dart';
 import 'utils/enums.dart';
+import 'utils/extensions.dart';
 
 class AppThemeData {
   final AppThemeEnum? theme;
   final ThemeData? themeData;
-  final Color? color;
-  final Color? backgroundColor;
+  // final Color? color;
+  // final Color? backgroundColor;
 
-  AppThemeData(
-      {required this.theme,
-      required this.themeData,
-      this.color,
-      this.backgroundColor});
+  AppThemeData({required this.theme, required this.themeData});
 
   AppThemeData copyWith(
       {AppThemeEnum? theme,
@@ -20,10 +18,7 @@ class AppThemeData {
       Color? color,
       Color? backgroundColor}) {
     return AppThemeData(
-        theme: theme ?? this.theme,
-        themeData: themeData ?? this.themeData,
-        color: color ?? this.color ?? themeData?.primaryColor,
-        backgroundColor: backgroundColor ?? this.backgroundColor);
+        theme: theme ?? this.theme, themeData: themeData ?? this.themeData);
   }
 
   // @override
@@ -36,117 +31,41 @@ class AppThemeData {
   // int get hashCode => value.hashCode;
 }
 
-final _themeLight = ThemeData.light();
-final _themeDark = ThemeData.dark();
+final _lightTheme = ThemeData.light();
+final _darkTheme = ThemeData.dark();
+final _lightPinkTheme = ThemeData.from(
+    colorScheme: ColorSchemes.lightPinkScheme, useMaterial3: true);
+final _darkPinkTheme = ThemeData.from(
+    colorScheme: ColorSchemes.darkPinkScheme, useMaterial3: true);
 
 final appThemeData = {
   AppThemeEnum.light: AppThemeData(
-    theme: AppThemeEnum.light,
-    themeData: ThemeData.localize(
-      _themeLight.copyWith(),
-      // _getLightTextTheme(_themeLight.textTheme),
-      _themeLight.textTheme,
-    ),
-    color: _themeLight.primaryColor,
-    backgroundColor: Colors.cyan,
-  ),
+      theme: AppThemeEnum.light,
+      themeData: ThemeData.localize(
+        _lightTheme.copyWith(),
+        // _getLightTextTheme(_themeLight.textTheme),
+        _lightTheme.textTheme,
+      )),
   AppThemeEnum.dark: AppThemeData(
-    theme: AppThemeEnum.dark,
+      theme: AppThemeEnum.dark,
+      themeData: ThemeData.localize(
+        _darkTheme,
+        _darkTheme.textTheme,
+      )),
+  AppThemeEnum.lightPink: AppThemeData(
+    theme: AppThemeEnum.lightPink,
     themeData: ThemeData.localize(
-      _themeDark,
-      // _getDarkTextTheme(_themeDark.textTheme),
-      _themeDark.textTheme,
+      _lightPinkTheme,
+      _lightPinkTheme.textTheme,
     ),
-    color: _themeDark.primaryColor,
-    backgroundColor: _themeDark.primaryColorLight,
   ),
-  // AppThemeEnum.pink: AppThemeData(
-  //   theme: AppThemeEnum.pink,
-  // themeData: ThemeData.localize(
-  //   ThemeData.raw(
-  //       applyElevationOverlayColor: true,
-  //       cupertinoOverrideTheme: NoDefaultCupertinoThemeData(
-  //           brightness:
-  //               ThemeData.estimateBrightnessForColor(Color.fromHex())),
-  //       extensions: extensions,
-  //       inputDecorationTheme: inputDecorationTheme,
-  //       materialTapTargetSize: materialTapTargetSize,
-  //       pageTransitionsTheme: pageTransitionsTheme,
-  //       platform: platform,
-  //       scrollbarTheme: scrollbarTheme,
-  //       splashFactory: splashFactory,
-  //       useMaterial3: useMaterial3,
-  //       visualDensity: visualDensity,
-  //       canvasColor: canvasColor,
-  //       cardColor: cardColor,
-  //       colorScheme: colorScheme,
-  //       dialogBackgroundColor: dialogBackgroundColor,
-  //       disabledColor: disabledColor,
-  //       dividerColor: dividerColor,
-  //       focusColor: focusColor,
-  //       highlightColor: highlightColor,
-  //       hintColor: hintColor,
-  //       hoverColor: hoverColor,
-  //       indicatorColor: indicatorColor,
-  //       primaryColor: primaryColor,
-  //       primaryColorDark: primaryColorDark,
-  //       primaryColorLight: primaryColorLight,
-  //       scaffoldBackgroundColor: scaffoldBackgroundColor,
-  //       secondaryHeaderColor: secondaryHeaderColor,
-  //       shadowColor: shadowColor,
-  //       splashColor: splashColor,
-  //       unselectedWidgetColor: unselectedWidgetColor,
-  //       iconTheme: iconTheme,
-  //       primaryIconTheme: primaryIconTheme,
-  //       primaryTextTheme: primaryTextTheme,
-  //       textTheme: textTheme,
-  //       typography: typography,
-  //       appBarTheme: appBarTheme,
-  //       badgeTheme: badgeTheme,
-  //       bannerTheme: bannerTheme,
-  //       bottomAppBarTheme: bottomAppBarTheme,
-  //       bottomNavigationBarTheme: bottomNavigationBarTheme,
-  //       bottomSheetTheme: bottomSheetTheme,
-  //       buttonBarTheme: buttonBarTheme,
-  //       buttonTheme: buttonTheme,
-  //       cardTheme: cardTheme,
-  //       checkboxTheme: checkboxTheme,
-  //       chipTheme: chipTheme,
-  //       dataTableTheme: dataTableTheme,
-  //       dialogTheme: dialogTheme,
-  //       dividerTheme: dividerTheme,
-  //       drawerTheme: drawerTheme,
-  //       dropdownMenuTheme: dropdownMenuTheme,
-  //       elevatedButtonTheme: elevatedButtonTheme,
-  //       expansionTileTheme: expansionTileTheme,
-  //       filledButtonTheme: filledButtonTheme,
-  //       floatingActionButtonTheme: floatingActionButtonTheme,
-  //       iconButtonTheme: iconButtonTheme,
-  //       listTileTheme: listTileTheme,
-  //       menuBarTheme: menuBarTheme,
-  //       menuButtonTheme: menuButtonTheme,
-  //       menuTheme: menuTheme,
-  //       navigationBarTheme: navigationBarTheme,
-  //       navigationDrawerTheme: navigationDrawerTheme,
-  //       navigationRailTheme: navigationRailTheme,
-  //       outlinedButtonTheme: outlinedButtonTheme,
-  //       popupMenuTheme: popupMenuTheme,
-  //       progressIndicatorTheme: progressIndicatorTheme,
-  //       radioTheme: radioTheme,
-  //       segmentedButtonTheme: segmentedButtonTheme,
-  //       sliderTheme: sliderTheme,
-  //       snackBarTheme: snackBarTheme,
-  //       switchTheme: switchTheme,
-  //       tabBarTheme: tabBarTheme,
-  //       textButtonTheme: textButtonTheme,
-  //       textSelectionTheme: textSelectionTheme,
-  //       timePickerTheme: timePickerTheme,
-  //       toggleButtonsTheme: toggleButtonsTheme,
-  //       tooltipTheme: tooltipTheme),
-  //   // _getDarkTextTheme(_themeDark.textTheme),
-  //   _themeDark.textTheme,
-  // ),
-  // ),
+  AppThemeEnum.darkPink: AppThemeData(
+    theme: AppThemeEnum.darkPink,
+    themeData: ThemeData.localize(
+      _darkPinkTheme,
+      _darkPinkTheme.textTheme,
+    ),
+  ),
 };
 
 TextTheme _getLightTextTheme(TextTheme base) {

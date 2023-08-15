@@ -57,32 +57,65 @@ class _FloatingButtonState extends State<FloatingButton> {
           bottom: translateAnimation!.value,
           child: Visibility(
             visible: floatingButtonController.isDismissed ? false : true,
-            child: InkWell(
-              onTap: onTap,
-              child: Material(
-                elevation: 2,
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: BorderRadius.circular(50),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Row(
-                    children: [
-                      Icon(iconData),
-                      SizedBox(
-                        width: expandAnimation?.value,
-                        child: Padding(
-                          padding: const EdgeInsets.only(left: 5),
-                          child: Text(label,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1),
-                        ),
+            child: TextButton(
+              onPressed: onTap,
+              style: TextButton.styleFrom(
+                elevation: 4,
+                backgroundColor: Theme.of(context).buttonColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                padding: EdgeInsets.zero,
+                // maximumSize: Size.fromWidth(expandAnimation?.value),
+                minimumSize: const Size(50, 50),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(iconData),
+                    SizedBox(
+                      width: expandAnimation?.value,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Text(label,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
+            //     InkWell(
+            //   onTap: onTap,
+            //   child: Material(
+            //     elevation: 2,
+            //     color: Theme.of(context).scaffoldBackgroundColor,
+            //     borderRadius: BorderRadius.circular(50),
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(10),
+            //       child: Row(
+            //         children: [
+            //           Icon(iconData),
+            //           SizedBox(
+            //             width: 0,
+            //             child: Padding(
+            //               padding: const EdgeInsets.only(left: 5),
+            //               child: Text(label,
+            //                   style: Theme.of(context).textTheme.bodyMedium,
+            //                   overflow: TextOverflow.ellipsis,
+            //                   maxLines: 1),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ),
         );
       },

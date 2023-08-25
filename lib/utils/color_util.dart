@@ -1,5 +1,19 @@
 import 'package:flutter/material.dart';
 
+// Primary: base, key component: FAB, button, active state
+//  => On Primary: content(icon, text, etc.) on top of primary
+// Primary container: less emphasis than primary
+//  => On Primary Container: content(icon, text, .) on top of primary container
+
+// Neutral: Surfaces and Outlines, Background
+
+// Secondary: less prominent components: filter chips, etc.
+
+// Tertiary: balance primary and secondary,  bring attention to an element,
+//such as an input field.
+
+// Surface: contained area from a background and other elements
+
 class ColorSchemes {
   static ColorScheme get lightPinkScheme => const ColorScheme(
         brightness: Brightness.light,

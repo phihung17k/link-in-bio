@@ -57,11 +57,11 @@ class _FloatingButtonState extends State<FloatingButton> {
           bottom: translateAnimation!.value,
           child: Visibility(
             visible: floatingButtonController.isDismissed ? false : true,
-            child: TextButton(
+            child: ElevatedButton(
               onPressed: onTap,
-              style: TextButton.styleFrom(
+              style: ElevatedButton.styleFrom(
                 elevation: 4,
-                backgroundColor: Theme.of(context).buttonColor,
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
                 ),
@@ -75,13 +75,20 @@ class _FloatingButtonState extends State<FloatingButton> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(iconData),
+                    Icon(iconData,
+                        color: Theme.of(context).colorScheme.onPrimary),
                     SizedBox(
                       width: expandAnimation?.value,
                       child: Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: Text(label,
-                            style: Theme.of(context).textTheme.bodyMedium,
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
                             overflow: TextOverflow.ellipsis,
                             maxLines: 1),
                       ),

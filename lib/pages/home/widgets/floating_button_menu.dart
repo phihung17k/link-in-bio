@@ -199,6 +199,8 @@ class FloatingButtonMenu extends StatelessWidget {
           right: 15,
           bottom: 15,
           child: FloatingActionButton(
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            foregroundColor: Theme.of(context).colorScheme.onPrimary,
             onPressed: () {
               floatingButtonController!.isDismissed
                   ? floatingButtonController!.forward()

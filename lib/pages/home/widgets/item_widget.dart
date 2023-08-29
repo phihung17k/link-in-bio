@@ -26,7 +26,7 @@ class ItemWidget extends StatelessWidget {
           elevation: 5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
-          color: Theme.of(context).colorScheme.inversePrimary,
+          color: Theme.of(context).colorScheme.tertiary,
           child: Padding(
             padding: const EdgeInsets.all(5),
             child: Row(
@@ -43,7 +43,7 @@ class ItemWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 15, right: 15),
                     child: Text(item!.name!,
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.primaryContainer,
+                          color: Theme.of(context).colorScheme.onTertiary,
                         ),
                         overflow: TextOverflow.ellipsis),
                   ),

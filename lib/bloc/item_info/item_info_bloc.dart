@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/services/i_services/i_item_info_service.dart';
 import '../../models/data_model.dart';
 import '../../utils/enums.dart';
 import 'item_info_event.dart';
@@ -10,7 +11,9 @@ import '../../repository/item_category_repository.dart';
 import '../base_bloc.dart';
 
 class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
-  ItemInfoBloc()
+  final IItemInfoService _service;
+
+  ItemInfoBloc(this._service)
       : super(
             const ItemInfoState(itemCategories: [], selectedCategoryIndex: 0)) {
     on<InitialDataEvent>(initData);
@@ -23,6 +26,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
 
   FutureOr<void> initData(
       InitialDataEvent event, Emitter<ItemInfoState> emit) async {
+    _service.getAll();
     List<ItemCategoryModel> itemCategories =
         await ItemCategoryRepository.instance.getItemCategories();
     ItemCategoryModel category = itemCategories.first;

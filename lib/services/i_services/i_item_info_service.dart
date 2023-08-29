@@ -1,3 +1,3 @@
 abstract class IItemInfoService {
-  // void seedItemCategories();
+  Future getAll();
 }

@@ -1,12 +1,14 @@
+import 'package:link_in_bio/repository/i_app_repository.dart';
+
 import 'i_services/i_item_info_service.dart';
 
 class ItemInfoService implements IItemInfoService {
-  // @override
-  // void seedItemCategories() async {
-  //   final db = await DatabaseHelper.instance.database;
-  //   await db.insert(
-  //     DatabaseHelper.itemCategoryTable,
+  final IAppRepository _appRepository;
 
-  //   );
-  // }
+  ItemInfoService(this._appRepository);
+
+  @override
+  Future getAll() async {
+    await _appRepository.queryAll();
+  }
 }

@@ -8,7 +8,7 @@ import '../bloc/qr_code/qr_code_bloc.dart';
 class BlocDependencies {
   static Future setUp(GetIt injector) async {
     injector.registerFactory(() => HomeBloc());
-    injector.registerFactory(() => ItemInfoBloc());
+    injector.registerFactory(() => ItemInfoBloc(injector()));
     injector.registerFactory(() => QRCodeBloc());
     injector.registerFactory(() => BioPreviewBloc());
     injector.registerFactory(() => ScannerBloc());

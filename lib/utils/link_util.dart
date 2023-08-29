@@ -88,8 +88,7 @@ class LinkUtil {
       ConstantEnum schema = ConstantEnum.values.firstWhere(
           (element) => element.name.toLowerCase() == uri.scheme.toLowerCase(),
           orElse: () => ConstantEnum.unknow);
-      var itemCategories =
-          await ItemCategoryRepository.instance.getItemCategories();
+      var itemCategories = await ItemCategoryRepository.instance.itemCategories;
       switch (schema) {
         case ConstantEnum.http:
         case ConstantEnum.https:

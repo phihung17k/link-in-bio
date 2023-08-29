@@ -1,14 +1,16 @@
 import 'dart:async';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/services/i_services/i_item_info_service.dart';
+
 import '../../models/data_model.dart';
-import '../../utils/enums.dart';
-import 'item_info_event.dart';
-import 'item_info_state.dart';
 import '../../models/item_category_model.dart';
 import '../../models/item_model.dart';
 import '../../repository/item_category_repository.dart';
+import '../../utils/enums.dart';
 import '../base_bloc.dart';
+import 'item_info_event.dart';
+import 'item_info_state.dart';
 
 class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
   final IItemInfoService _service;
@@ -26,9 +28,8 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
 
   FutureOr<void> initData(
       InitialDataEvent event, Emitter<ItemInfoState> emit) async {
-    _service.getAll();
     List<ItemCategoryModel> itemCategories =
-        await ItemCategoryRepository.instance.getItemCategories();
+        await _service.getAllItemCategory();
     ItemCategoryModel category = itemCategories.first;
     emit.call(state.copyWith(
         itemCategories: itemCategories,

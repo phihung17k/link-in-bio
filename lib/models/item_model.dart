@@ -43,7 +43,7 @@ class ItemModel extends Equatable {
       url: json['url']);
 
   Map<String, dynamic> toJson() =>
-      {'name': name, 'category': category?.toJson(), 'url': url};
+      {'name': name, 'category': category?.toMap(), 'url': url};
 
   @override
   List<Object?> get props => [name, category, url, sms, phone, email, wifi];

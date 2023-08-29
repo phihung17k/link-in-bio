@@ -32,12 +32,10 @@ class ItemCategoryModel extends Equatable {
           appUrl: json['appUrl'] ?? "",
           webUrl: json['webUrl'] ?? "");
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         'topic': topic,
         'name': name,
         'image': image,
-        'appUrl': appUrl,
-        'webUrl': webUrl
       };
 
   @override

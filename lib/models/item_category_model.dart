@@ -36,6 +36,8 @@ class ItemCategoryModel extends Equatable {
         'topic': topic,
         'name': name,
         'image': image,
+        'app_url': appUrl,
+        'web_url': webUrl,
       };
 
   @override

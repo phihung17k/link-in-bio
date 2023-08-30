@@ -1,20 +1,29 @@
 import 'dart:io';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DatabaseHelper {
   final String _databaseName = "link_in_bio.db";
   final int _databaseVersion = 1;
-  final String itemCategoryTable = "ItemCategory";
+  static const String itemCategory = "item_category";
+  static const String item = "item";
+
+  Database? _database;
 
   Future<Database> getDatabase() async {
+    _database ??= await _initDatabase();
+    return _database!;
+  }
+
+  Future<Database> _initDatabase() async {
     String path = await _initDatabaseLocation();
-    Database database = await openDatabase(
+    _database = await openDatabase(
       path,
       version: _databaseVersion,
       onCreate: _onCreate,
     );
-    return database;
+    return _database!;
   }
 
   Future<String> _initDatabaseLocation() async {
@@ -29,13 +38,13 @@ class DatabaseHelper {
 
   Future _onCreate(Database db, int version) async {
     await db.transaction((txn) async {
-      await txn.execute('''CREATE TABLE item_category (
+      await txn.execute('''CREATE TABLE $itemCategory (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               topic TEXT,
               name TEXT,
               image TEXT
               )''');
-      await txn.execute('''CREATE TABLE item (
+      await txn.execute('''CREATE TABLE $item (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               name TEXT,
               phone_number TEXT,

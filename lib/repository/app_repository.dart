@@ -41,12 +41,14 @@ class AppRepository implements IAppRepository {
     Database? db;
     try {
       db = await _databaseHelper.getDatabase();
-      Batch batch = db.batch();
-      for (var values in valueList) {
-        batch.insert(table, values,
-            conflictAlgorithm: ConflictAlgorithm.rollback);
-      }
-      await batch.commit(noResult: true);
+      await db.transaction((txn) async {
+        Batch batch = txn.batch();
+        for (var values in valueList) {
+          batch.insert(table, values,
+              conflictAlgorithm: ConflictAlgorithm.rollback);
+        }
+        await batch.commit(noResult: true);
+      });
     } catch (e) {
       throw Exception(e);
     } finally {

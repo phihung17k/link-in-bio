@@ -12,7 +12,10 @@ class DatabaseHelper {
   Database? _database;
 
   Future<Database> getDatabase() async {
-    _database ??= await _initDatabase();
+    if (_database == null || !_database!.isOpen) {
+      _database = await _initDatabase();
+    }
+
     return _database!;
   }
 
@@ -42,7 +45,9 @@ class DatabaseHelper {
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               topic TEXT,
               name TEXT,
-              image TEXT
+              image TEXT,
+              app_url TEXT,
+              web_url TEXT
               )''');
       await txn.execute('''CREATE TABLE $item (
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

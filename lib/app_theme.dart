@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'utils/color_util.dart';
 import 'utils/enums.dart';
-import 'utils/extensions.dart';
 
 class AppThemeData {
   final AppThemeEnum? theme;

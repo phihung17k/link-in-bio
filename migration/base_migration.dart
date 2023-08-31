@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -42,23 +41,21 @@ class BaseMigration {
       path,
       version: version,
       onConfigure: (db) {
-        debugPrint(" print Configure ");
+        // debugPrint(" print Configure ");
       },
       onCreate: (db, version) {
-        debugPrint(" print Create: $version ");
+        // debugPrint(" print Create: $version ");
       },
       onUpgrade: (db, oldVersion, newVersion) async {
-        debugPrint(
-            " print Upgrade: oldVersion $oldVersion --- newVersion $newVersion ");
+        // debugPrint(" print Upgrade: oldVersion $oldVersion --- newVersion $newVersion ");
         await onUpgrade(db, oldVersion, newVersion);
       },
       onDowngrade: (db, oldVersion, newVersion) async {
-        debugPrint(
-            " print Downgrade: oldVersion $oldVersion --- newVersion $newVersion ");
+        // debugPrint(" print Downgrade: oldVersion $oldVersion --- newVersion $newVersion ");
         await onDowngrade(db, oldVersion, newVersion);
       },
       onOpen: (db) {
-        debugPrint(" print Open ");
+        // debugPrint(" print Open ");
       },
     );
 

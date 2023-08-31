@@ -6,7 +6,6 @@ import 'package:link_in_bio/services/i_services/i_item_info_service.dart';
 import '../../models/data_model.dart';
 import '../../models/item_category_model.dart';
 import '../../models/item_model.dart';
-import '../../repository/item_category_repository.dart';
 import '../../utils/enums.dart';
 import '../base_bloc.dart';
 import 'item_info_event.dart';
@@ -16,10 +15,9 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
   final IItemInfoService _service;
 
   ItemInfoBloc(this._service)
-      : super(
-            const ItemInfoState(itemCategories: [], selectedCategoryIndex: 0)) {
+      : super(const ItemInfoState(itemCategories: [], selectedCategoryId: 1)) {
     on<InitialDataEvent>(initData);
-    on<SetCategoryIndexEvent>(setCategoryIndex);
+    on<SelectingCategoryEvent>(selectCategory);
     on<UpdatingCurrentItemEvent>(updateCurrentItem);
     on<SetItemFromQrCodeEvent>(setItemFromQRCode);
     on<SetItemInfoEvent>(setItemInfo);
@@ -33,35 +31,36 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
     ItemCategoryModel category = itemCategories.first;
     emit.call(state.copyWith(
         itemCategories: itemCategories,
-        item: ItemModel(name: category.name, category: category)));
+        item:
+            state.item ?? ItemModel(name: category.name, category: category)));
   }
 
-  FutureOr<void> setCategoryIndex(
-      SetCategoryIndexEvent event, Emitter<ItemInfoState> emit) {
-    if (event.selectedCategoryIndex != state.selectedCategoryIndex) {
-      ItemCategoryModel category =
-          state.itemCategories![event.selectedCategoryIndex!];
+  FutureOr<void> selectCategory(
+      SelectingCategoryEvent event, Emitter<ItemInfoState> emit) {
+    if (event.selectedCategoryId != state.selectedCategoryId) {
+      ItemCategoryModel category = state.itemCategories!
+          .firstWhere((ic) => ic.id == event.selectedCategoryId!);
       emit.call(state.copyWith(
-          selectedCategoryIndex: event.selectedCategoryIndex,
-          item: state.item!.copyWith(
-              name: category.name,
-              category: state.itemCategories![event.selectedCategoryIndex!])));
+        selectedCategoryId: category.id,
+        item: state.item!.copyWith(
+          name: category.name,
+          category: category,
+        ),
+      ));
     }
   }
 
   FutureOr<void> updateCurrentItem(
       UpdatingCurrentItemEvent event, Emitter<ItemInfoState> emit) {
-    ItemModel item = event.item;
-    int? categoryIndex = state.itemCategories
-        ?.indexWhere((category) => category.name == item.category?.name);
-    emit.call(
-        state.copyWith(item: event.item, selectedCategoryIndex: categoryIndex));
+    emit.call(state.copyWith(
+        item: event.item, selectedCategoryId: event.item.category!.id));
   }
 
   FutureOr<void> setItemFromQRCode(
       SetItemFromQrCodeEvent event, Emitter<ItemInfoState> emit) {
-    int selectedIndex = state.itemCategories
-            ?.indexWhere((category) => category.name == "Link") ??
+    int selectedCategoryId = state.itemCategories!
+            .firstWhere((category) => category.name == "Link")
+            .id ??
         0;
     emit.call(state.copyWith(
         item: ItemModel(
@@ -72,11 +71,11 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
                 image: "assets/images/network.png",
                 webUrl: ""),
             url: UrlModel(url: event.barcode.rawValue)),
-        selectedCategoryIndex: selectedIndex));
+        selectedCategoryId: selectedCategoryId));
   }
 
   FutureOr<void> setItemInfo(
-      SetItemInfoEvent event, Emitter<ItemInfoState> emit) {
+      SetItemInfoEvent event, Emitter<ItemInfoState> emit) async {
     ItemModel item = state.item!;
     String? name = event.name;
     if (name == null || name.trim().isEmpty) {
@@ -88,50 +87,50 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
         orElse: () => ConstantEnum.unknow);
     switch (categoryName) {
       case ConstantEnum.sms:
-        emit.call(state.copyWith(
-            item: _getUpdatedItem(item, name,
-                sms: SmsModel(
-                    phoneNumber: event.phoneNumber, message: event.message))));
+        item = _getUpdatedItem(item, name,
+            sms: SmsModel(
+                phoneNumber: event.phoneNumber, message: event.message));
         break;
       case ConstantEnum.facebook:
       case ConstantEnum.twitter:
       case ConstantEnum.youtube:
       case ConstantEnum.tiktok:
       case ConstantEnum.twitch:
-        emit.call(state.copyWith(
-            item: _getUpdatedItem(item, name, url: UrlModel(url: event.url))));
+        item = _getUpdatedItem(item, name, url: UrlModel(url: event.url));
         break;
       case ConstantEnum.phone:
-        emit.call(state.copyWith(
-            item: _getUpdatedItem(item, name,
-                phone: PhoneModel(phoneNumber: event.phoneNumber))));
+        item = _getUpdatedItem(item, name,
+            phone: PhoneModel(phoneNumber: event.phoneNumber));
         break;
       case ConstantEnum.email:
-        emit.call(state.copyWith(
-            item: _getUpdatedItem(item, name,
-                email: EmailModel(
-                    address: event.address,
-                    cc: event.cc,
-                    bcc: event.bcc,
-                    subject: event.subject,
-                    body: event.body))));
+        item = _getUpdatedItem(item, name,
+            email: EmailModel(
+                address: event.address,
+                cc: event.cc,
+                bcc: event.bcc,
+                subject: event.subject,
+                body: event.body));
         break;
       case ConstantEnum.wifi:
-        emit.call(state.copyWith(
-            item: _getUpdatedItem(item, name,
-                wifi: WifiModel(
-                    networkName: event.networkName,
-                    password: event.password,
-                    encryption: state.networkEncryption,
-                    isHidden: false))));
+        item = _getUpdatedItem(item, name,
+            wifi: WifiModel(
+                networkName: event.networkName,
+                password: event.password,
+                encryption: state.networkEncryption,
+                isHidden: false));
         break;
       case ConstantEnum.link:
-        emit.call(state.copyWith(
-            item: _getUpdatedItem(item, name, url: UrlModel(url: event.url))));
+        item = _getUpdatedItem(item, name, url: UrlModel(url: event.url));
         break;
       default:
         break;
     }
+    if (item.id == null) {
+      await _service.addItem(item.toMap());
+    } else {
+      // update
+    }
+    emit.call(state.copyWith(item: item));
     addNavigatedEvent(BackingHomePageEvent(state.item));
   }
 

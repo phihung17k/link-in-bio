@@ -7,10 +7,10 @@ abstract class ItemInfoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SetCategoryIndexEvent extends ItemInfoEvent {
-  final int? selectedCategoryIndex;
+class SelectingCategoryEvent extends ItemInfoEvent {
+  final int? selectedCategoryId;
 
-  SetCategoryIndexEvent({this.selectedCategoryIndex});
+  SelectingCategoryEvent({this.selectedCategoryId});
 }
 
 class InitialDataEvent extends ItemInfoEvent {}

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../utils/enums.dart';
 import 'widgets/email_card.dart';
 import 'widgets/sms_card.dart';
 import 'widgets/wifi_card.dart';
@@ -39,25 +40,28 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
   ItemInfoBloc? bloc;
 
   void initValue(ItemModel item) {
-    switch (item.category!.name!.toLowerCase()) {
-      case "sms":
+    String name = item.category!.name!.toLowerCase();
+    ConstantEnum categoryName = ConstantEnum.values
+        .firstWhere((ce) => ce.name == name, orElse: () => ConstantEnum.unknow);
+    switch (categoryName) {
+      case ConstantEnum.sms:
         SmsModel? sms = item.sms;
         phoneNumberController.text = sms?.phoneNumber ?? "";
         messageController.text = sms?.message ?? "";
         break;
-      case "facebook":
-      case "twitter":
-      case "youtube":
-      case "tiktok":
-      case "twitch":
+      case ConstantEnum.facebook:
+      case ConstantEnum.twitter:
+      case ConstantEnum.youtube:
+      case ConstantEnum.tiktok:
+      case ConstantEnum.twitch:
         UrlModel? url = item.url;
         urlController.text = url?.url ?? "";
         break;
-      case "phone":
+      case ConstantEnum.phone:
         PhoneModel? phone = item.phone;
         phoneNumberController.text = phone?.phoneNumber ?? "";
         break;
-      case "email":
+      case ConstantEnum.email:
         EmailModel? email = item.email;
         addressController.text = email?.address ?? "";
         ccController.text = email?.cc ?? "";
@@ -65,15 +69,17 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         subjectController.text = email?.subject ?? "";
         bodyController.text = email?.body ?? "";
         break;
-      case "wifi":
+      case ConstantEnum.wifi:
         WifiModel? wifi = item.wifi;
         networkNameController.text = wifi?.networkName ?? "";
         passwordController.text = wifi?.password ?? "";
         bloc?.add(SetNetworkEncryptionEvent(wifi?.encryption));
         break;
-      case "link":
+      case ConstantEnum.link:
         UrlModel? url = item.url;
         urlController.text = url?.url ?? "";
+        break;
+      default:
         break;
     }
   }
@@ -93,19 +99,22 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
 
   Widget getItemDetailCard(ItemCategoryModel category) {
     Widget result;
-    switch (category.name!.toLowerCase()) {
-      case "sms":
+    String name = category.name!.toLowerCase();
+    ConstantEnum categoryName = ConstantEnum.values
+        .firstWhere((ce) => ce.name == name, orElse: () => ConstantEnum.unknow);
+    switch (categoryName) {
+      case ConstantEnum.sms:
         result = SmsCard(
           phoneNumerController: phoneNumberController,
           messageController: messageController,
           category: category,
         );
         break;
-      case "facebook":
-      case "twitter":
-      case "youtube":
-      case "tiktok":
-      case "twitch":
+      case ConstantEnum.facebook:
+      case ConstantEnum.twitter:
+      case ConstantEnum.youtube:
+      case ConstantEnum.tiktok:
+      case ConstantEnum.twitch:
         result = ItemDetailCard(
           textController: urlController,
           category: category,
@@ -113,13 +122,13 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
           showDetailLink: true,
         );
         break;
-      case "phone":
+      case ConstantEnum.phone:
         result = ItemDetailCard(
             textController: phoneNumberController,
             category: category,
             label: "Phone");
         break;
-      case "email":
+      case ConstantEnum.email:
         result = EmailCard(
             addressController: addressController,
             ccController: ccController,
@@ -128,12 +137,12 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
             bodyController: bodyController,
             category: category);
         break;
-      case 'wifi':
+      case ConstantEnum.wifi:
         result = WifiCard(
             networkNameController: networkNameController,
             passwordController: passwordController);
         break;
-      case 'link':
+      case ConstantEnum.link:
         result = ItemDetailCard(
             textController: urlController, category: category, label: "Link");
         break;
@@ -154,12 +163,11 @@ class _ItemContentSubPageState extends State<ItemContentSubPage> {
         child: BlocBuilder<ItemInfoBloc, ItemInfoState>(
           bloc: bloc,
           buildWhen: (previous, current) {
-            return previous.selectedCategoryIndex !=
-                current.selectedCategoryIndex;
+            return previous.selectedCategoryId != current.selectedCategoryId;
           },
           builder: (context, state) {
-            ItemCategoryModel category =
-                state.itemCategories![state.selectedCategoryIndex!];
+            ItemCategoryModel category = state.itemCategories!
+                .firstWhere((ic) => ic.id == state.selectedCategoryId!);
             return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

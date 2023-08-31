@@ -8,9 +8,18 @@ class AppRepository implements IAppRepository {
   AppRepository(this._databaseHelper);
 
   @override
-  Future queryAll() async {
-    Database db = await _databaseHelper.getDatabase();
-    db.query('item', columns: []);
+  Future<List<Map<String, Object?>>> queryAll(String table) async {
+    List<Map<String, Object?>> result;
+    Database? db;
+    try {
+      db = await _databaseHelper.getDatabase();
+      result = await db.query(table);
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      await db?.close();
+    }
+    return result;
   }
 
   @override

@@ -39,8 +39,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     bloc.listenerStream.listen((event) {
       if (event is NavigatorItemInfoPageForCreatingEvent) {
         Navigator.pushNamed(context, Routes.itemInfo).then((item) {
-          if (item is ItemModel) {
-            bloc.add(AddingItemEvent(item));
+          // if (item is ItemModel) {
+          //   bloc.add(AddingItemEvent(item));
+          // }
+
+          if (item is bool && item) {
+            bloc.add(ReloadAllItemEvent());
           }
         });
       } else if (event is NavigatorItemInfoPageForUpdatingEvent) {
@@ -126,15 +130,19 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                   child: child,
                                 );
                               },
-                              children: [
-                                for (int i = 0; i < state.itemList!.length; i++)
-                                  ItemWidget(
-                                    key: UniqueKey(),
-                                    index: i,
-                                    item: state.itemList![i],
-                                    deleteController: deleteController,
-                                  )
-                              ],
+                              children: state.itemList!.isNotEmpty
+                                  ? [
+                                      for (int i = 0;
+                                          i < state.itemList!.length;
+                                          i++)
+                                        ItemWidget(
+                                          key: UniqueKey(),
+                                          index: i,
+                                          item: state.itemList![i],
+                                          deleteController: deleteController,
+                                        )
+                                    ]
+                                  : [],
                             )),
                           ],
                         );

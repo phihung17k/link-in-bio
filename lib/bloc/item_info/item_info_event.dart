@@ -16,9 +16,10 @@ class SelectingCategoryEvent extends ItemInfoEvent {
 class InitialDataEvent extends ItemInfoEvent {}
 
 class BackingHomePageEvent extends ItemInfoEvent {
-  final ItemModel? item;
+  // final ItemModel? item;
+  final bool isSuccess;
 
-  BackingHomePageEvent(this.item);
+  BackingHomePageEvent(this.isSuccess);
 }
 
 class UpdatingCurrentItemEvent extends ItemInfoEvent {

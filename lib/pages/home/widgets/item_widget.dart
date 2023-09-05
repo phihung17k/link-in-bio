@@ -54,11 +54,11 @@ class ItemWidget extends StatelessWidget {
                   child: IconButton(
                     onPressed: () {
                       HomeBloc bloc = context.read<HomeBloc>();
-                      if (bloc.state.itemList?.length == 1 &&
-                          deleteController!.isCompleted) {
-                        deleteController!.reverse();
-                      }
-                      bloc.add(DeletingItemEvent(index!));
+                      // if (bloc.state.itemList?.length == 1 &&
+                      //     deleteController!.isCompleted) {
+                      // deleteController!.reverse();
+                      // }
+                      bloc.add(DeletingItemEvent(item!.id!));
                     },
                     padding: const EdgeInsets.only(right: 5),
                     constraints:

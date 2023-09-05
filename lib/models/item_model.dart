@@ -42,10 +42,9 @@ class ItemModel extends Equatable {
   }
 
   factory ItemModel.fromMap(Map<String, dynamic> map) => ItemModel(
-      id: map['id'],
-      name: map['name'],
-      category: ItemCategoryModel.fromMap(map['category']),
-      url: map['url']);
+        id: map['id'],
+        name: map['name'],
+      );
 
   Map<String, dynamic> toMap() => {
         'id': id,

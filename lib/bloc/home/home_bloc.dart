@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/services/i_services/i_home_service.dart';
 import '../../models/item_model.dart';
 import '../base_bloc.dart';
 import 'home_event.dart';
 import 'home_state.dart';
 
 class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
-  HomeBloc()
+  final IHomeService _service;
+
+  HomeBloc(this._service)
       : super(const HomeState(
             itemList: [], selectedIndexList: [], isSelectAll: false)) {
     on<AddingItemEvent>(_addItem);
+    on<ReloadAllItemEvent>(_reloadAllItem);
     on<UpdatingItemEvent>(_updateItem);
     on<DeletingItemEvent>(_deleteItem);
     on<ReorderItemEvent>(_reorderItem);
@@ -34,10 +38,21 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
     emit.call(state.copyWith(itemList: tempList));
   }
 
-  FutureOr<void> _deleteItem(DeletingItemEvent event, Emitter<HomeState> emit) {
-    List<ItemModel> tempList = state.itemList!.toList();
-    tempList.removeAt(event.index);
-    emit.call(state.copyWith(itemList: tempList));
+  FutureOr<void> _reloadAllItem(
+      ReloadAllItemEvent event, Emitter<HomeState> emit) async {
+    // call items from db
+    List<ItemModel> items = await _service.getAllItem();
+    if (items.isNotEmpty) {
+      emit.call(state.copyWith(itemList: items));
+    }
+  }
+
+  FutureOr<void> _deleteItem(
+      DeletingItemEvent event, Emitter<HomeState> emit) async {
+    bool isSuccess = await _service.deleteItem(event.id);
+    if (isSuccess) {
+      await _reloadAllItem(ReloadAllItemEvent(), emit);
+    }
   }
 
   FutureOr<void> _reorderItem(ReorderItemEvent event, Emitter<HomeState> emit) {

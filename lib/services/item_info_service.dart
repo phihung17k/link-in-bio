@@ -52,9 +52,10 @@ class ItemInfoService implements IItemInfoService {
   }
 
   @override
-  Future<int> addItem(Map<String, Object?> values) async {
+  Future<bool> addItem(Map<String, Object?> values) async {
     try {
-      return await _appRepository.insert(DatabaseHelper.item, values);
+      int id = await _appRepository.insert(DatabaseHelper.item, values);
+      return id != 0;
     } catch (e) {
       throw Exception(e);
     }

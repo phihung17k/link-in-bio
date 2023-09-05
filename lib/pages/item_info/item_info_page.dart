@@ -26,7 +26,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
 
     bloc.listenerStream.listen((event) async {
       if (event is BackingHomePageEvent) {
-        Navigator.pop(context, event.item);
+        Navigator.pop(context, event.isSuccess);
       } else if (event is NavigatorScannerPageEvent) {
         var result = await Navigator.pushNamed(context, Routes.scanner,
             arguments: Routes.itemInfo);

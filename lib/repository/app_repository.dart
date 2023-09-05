@@ -65,4 +65,35 @@ class AppRepository implements IAppRepository {
     }
     return true;
   }
+
+  @override
+  Future<Map<String, Object?>> queryFromId(String table, int id) async {
+    Database? db;
+    try {
+      db = await _databaseHelper.getDatabase();
+      var queryResult = await db.query(table, where: 'id = ?', whereArgs: [id]);
+      if (queryResult.isNotEmpty) {
+        return queryResult.first;
+      }
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      await db?.close();
+    }
+    return {};
+  }
+
+  @override
+  Future<bool> delete(String table, int id) async {
+    Database? db;
+    try {
+      db = await _databaseHelper.getDatabase();
+      int count = await db.delete(table, where: 'id = ?', whereArgs: [id]);
+      return count > 0;
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      await db?.close();
+    }
+  }
 }

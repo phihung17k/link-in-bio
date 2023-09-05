@@ -4,5 +4,5 @@ import '../../models/item_model.dart';
 abstract class IItemInfoService {
   Future<List<ItemModel>> getAllItem();
   Future<List<ItemCategoryModel>> getAllItemCategory();
-  Future<int> addItem(Map<String, Object?> values);
+  Future<bool> addItem(Map<String, Object?> values);
 }

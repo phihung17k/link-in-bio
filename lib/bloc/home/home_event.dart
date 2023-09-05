@@ -23,9 +23,9 @@ class AddingItemEvent extends HomeEvent {
 }
 
 class DeletingItemEvent extends HomeEvent {
-  final int index;
+  final int id;
 
-  DeletingItemEvent(this.index);
+  DeletingItemEvent(this.id);
 }
 
 class NavigatorItemInfoPageForCreatingEvent extends HomeEvent {}
@@ -66,3 +66,5 @@ class NavigatorQRSharingPageEvent extends HomeEvent {}
 class NavigatorScannerPageEvent extends HomeEvent {}
 
 class NavigatorSettingPageEvent extends HomeEvent {}
+
+class ReloadAllItemEvent extends HomeEvent {}

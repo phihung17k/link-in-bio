@@ -125,13 +125,14 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       default:
         break;
     }
+
+    bool result = false;
     if (item.id == null) {
-      await _service.addItem(item.toMap());
+      result = await _service.addItem(item.toMap());
     } else {
       // update
     }
-    emit.call(state.copyWith(item: item));
-    addNavigatedEvent(BackingHomePageEvent(state.item));
+    addNavigatedEvent(BackingHomePageEvent(result));
   }
 
   ItemModel _getUpdatedItem(ItemModel item, String? name,

@@ -27,6 +27,7 @@ class HomeService implements IHomeService {
             var category = ItemCategoryModel.fromMap(categoryMap);
             var item = ItemModel.fromMap(itemMap);
             item = item.copyWith(category: category);
+
             ConstantEnum categoryName = ConstantEnum.values.firstWhere(
                 (ce) => ce.name == category.name?.toLowerCase(),
                 orElse: () => ConstantEnum.unknow);

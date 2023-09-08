@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/services/i_services/i_item_info_service.dart';
+import 'package:link_in_bio/utils/general_util.dart';
 
 import '../../models/data_model.dart';
 import '../../models/item_category_model.dart';
@@ -11,7 +12,8 @@ import '../base_bloc.dart';
 import 'item_info_event.dart';
 import 'item_info_state.dart';
 
-class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
+class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState>
+    with GeneralUtil {
   final IItemInfoService _service;
 
   ItemInfoBloc(this._service)
@@ -82,49 +84,8 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       name = item.category!.name;
     }
 
-    ConstantEnum categoryName = ConstantEnum.values.firstWhere(
-        (element) => element.name == item.category!.name!.toLowerCase(),
-        orElse: () => ConstantEnum.unknow);
-    switch (categoryName) {
-      case ConstantEnum.sms:
-        item = _getUpdatedItem(item, name,
-            sms: SmsModel(
-                phoneNumber: event.phoneNumber, message: event.message));
-        break;
-      case ConstantEnum.facebook:
-      case ConstantEnum.twitter:
-      case ConstantEnum.youtube:
-      case ConstantEnum.tiktok:
-      case ConstantEnum.twitch:
-        item = _getUpdatedItem(item, name, url: UrlModel(url: event.url));
-        break;
-      case ConstantEnum.phone:
-        item = _getUpdatedItem(item, name,
-            phone: PhoneModel(phoneNumber: event.phoneNumber));
-        break;
-      case ConstantEnum.email:
-        item = _getUpdatedItem(item, name,
-            email: EmailModel(
-                address: event.address,
-                cc: event.cc,
-                bcc: event.bcc,
-                subject: event.subject,
-                body: event.body));
-        break;
-      case ConstantEnum.wifi:
-        item = _getUpdatedItem(item, name,
-            wifi: WifiModel(
-                networkName: event.networkName,
-                password: event.password,
-                encryption: state.networkEncryption,
-                isHidden: false));
-        break;
-      case ConstantEnum.link:
-        item = _getUpdatedItem(item, name, url: UrlModel(url: event.url));
-        break;
-      default:
-        break;
-    }
+    item = handleCategorCase(item.category!.name!, params: [item, name, event])
+        as ItemModel;
 
     bool result = false;
     if (item.id == null) {
@@ -133,6 +94,67 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState> {
       // update
     }
     addNavigatedEvent(BackingHomePageEvent(result));
+  }
+
+  @override
+  Object? onSms({List<Object?>? params}) {
+    var item = params![0] as ItemModel;
+    String name = params[1] as String;
+    var event = params[2] as SetItemInfoEvent;
+    return _getUpdatedItem(item, name,
+        sms: SmsModel(phoneNumber: event.phoneNumber, message: event.message));
+  }
+
+  @override
+  Object? onUrl({List<Object?>? params}) {
+    var item = params![0] as ItemModel;
+    String name = params[1] as String;
+    var event = params[2] as SetItemInfoEvent;
+    return _getUpdatedItem(item, name, url: UrlModel(url: event.url));
+  }
+
+  @override
+  Object? onPhone({List<Object?>? params}) {
+    var item = params![0] as ItemModel;
+    String name = params[1] as String;
+    var event = params[2] as SetItemInfoEvent;
+    return _getUpdatedItem(item, name,
+        phone: PhoneModel(phoneNumber: event.phoneNumber));
+  }
+
+  @override
+  Object? onEmail({List<Object?>? params}) {
+    var item = params![0] as ItemModel;
+    String name = params[1] as String;
+    var event = params[2] as SetItemInfoEvent;
+    return _getUpdatedItem(item, name,
+        email: EmailModel(
+            address: event.address,
+            cc: event.cc,
+            bcc: event.bcc,
+            subject: event.subject,
+            body: event.body));
+  }
+
+  @override
+  Object? onWifi({List<Object?>? params}) {
+    var item = params![0] as ItemModel;
+    String name = params[1] as String;
+    var event = params[2] as SetItemInfoEvent;
+    return _getUpdatedItem(item, name,
+        wifi: WifiModel(
+            networkName: event.networkName,
+            password: event.password,
+            encryption: state.networkEncryption,
+            isHidden: false));
+  }
+
+  @override
+  Object? onLink({List<Object?>? params}) {
+    var item = params![0] as ItemModel;
+    String name = params[1] as String;
+    var event = params[2] as SetItemInfoEvent;
+    return _getUpdatedItem(item, name, url: UrlModel(url: event.url));
   }
 
   ItemModel _getUpdatedItem(ItemModel item, String? name,

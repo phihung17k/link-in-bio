@@ -105,45 +105,47 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                 style: Theme.of(context).textTheme.titleMedium),
                             const SizedBox(height: 10),
                             Flexible(
-                                child: ReorderableListView(
-                              onReorder: (oldIndex, newIndex) {
-                                bloc.add(ReorderItemEvent(
-                                    oldIndex: oldIndex, newIndex: newIndex));
-                              },
-                              proxyDecorator: (child, index, animation) {
-                                return AnimatedBuilder(
-                                  animation: animation,
-                                  builder:
-                                      (BuildContext context, Widget? child) {
-                                    // animation's effect for reorder item
-                                    // final double animValue = Curves.easeInOut
-                                    //     .transform(animation.value);
-                                    // final double elevation =
-                                    //     lerpDouble(0, 5, animValue)!;
-                                    return Material(
-                                        elevation: 5,
-                                        color: Colors.transparent,
-                                        shadowColor: Colors.grey,
-                                        borderRadius: BorderRadius.circular(30),
-                                        child: child);
-                                  },
-                                  child: child,
-                                );
-                              },
-                              children: state.itemList!.isNotEmpty
-                                  ? [
-                                      for (int i = 0;
-                                          i < state.itemList!.length;
-                                          i++)
-                                        ItemWidget(
-                                          key: UniqueKey(),
-                                          index: i,
-                                          item: state.itemList![i],
-                                          deleteController: deleteController,
-                                        )
-                                    ]
-                                  : [],
-                            )),
+                              child: ReorderableListView(
+                                onReorder: (oldIndex, newIndex) {
+                                  bloc.add(ReorderItemEvent(
+                                      oldIndex: oldIndex, newIndex: newIndex));
+                                },
+                                proxyDecorator: (child, index, animation) {
+                                  return AnimatedBuilder(
+                                    animation: animation,
+                                    builder:
+                                        (BuildContext context, Widget? child) {
+                                      // animation's effect for reorder item
+                                      // final double animValue = Curves.easeInOut
+                                      //     .transform(animation.value);
+                                      // final double elevation =
+                                      //     lerpDouble(0, 5, animValue)!;
+                                      return Material(
+                                          elevation: 5,
+                                          color: Colors.transparent,
+                                          shadowColor: Colors.grey,
+                                          borderRadius:
+                                              BorderRadius.circular(30),
+                                          child: child);
+                                    },
+                                    child: child,
+                                  );
+                                },
+                                children: state.itemList!.isNotEmpty
+                                    ? [
+                                        for (int i = 0;
+                                            i < state.itemList!.length;
+                                            i++)
+                                          ItemWidget(
+                                            key: UniqueKey(),
+                                            index: i,
+                                            item: state.itemList![i],
+                                            deleteController: deleteController,
+                                          )
+                                      ]
+                                    : [],
+                              ),
+                            ),
                           ],
                         );
                       })),

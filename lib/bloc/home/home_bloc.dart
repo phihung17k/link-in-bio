@@ -42,9 +42,7 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
       ReloadAllItemEvent event, Emitter<HomeState> emit) async {
     // call items from db
     List<ItemModel> items = await _service.getAllItem();
-    if (items.isNotEmpty) {
-      emit.call(state.copyWith(itemList: items));
-    }
+    emit.call(state.copyWith(itemList: items));
   }
 
   FutureOr<void> _deleteItem(

@@ -6,6 +6,12 @@ abstract class HomeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class RefreshItemsFromSplashPageEvent extends HomeEvent {
+  final List<ItemModel> items;
+
+  RefreshItemsFromSplashPageEvent(this.items);
+}
+
 class UpdatingItemEvent extends HomeEvent {
   final int index;
   final ItemModel item;

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:link_in_bio/pages/settings/settings_page.dart';
+import 'package:link_in_bio/pages/splash_page.dart';
 import '../pages/pages.dart';
 import '../routes.dart';
 
 class PageDependencies {
   static Future setUp(GetIt injector) async {
+    injector.registerFactory<Widget>(() => SplashPage(injector()),
+        instanceName: Routes.splash);
     injector.registerFactory<Widget>(() => HomePage(injector()),
         instanceName: Routes.home);
     injector.registerFactory<Widget>(() => ItemInfoPage(injector()),

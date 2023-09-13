@@ -1,5 +1,6 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:get_it/get_it.dart';
 import 'package:link_in_bio/bloc/home/home_bloc.dart';
 import 'package:link_in_bio/bloc/home/home_event.dart';
 import 'package:link_in_bio/bloc/home/home_state.dart';
@@ -16,7 +17,7 @@ void main() {
     late ItemModel updatedItem;
 
     setUp(() {
-      homeBloc = HomeBloc();
+      homeBloc = GetIt.I.get<HomeBloc>();
       defaultItem = ItemModel(
           name: "name_test",
           category: const ItemCategoryModel(

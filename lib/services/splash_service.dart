@@ -1,16 +1,15 @@
 import 'package:link_in_bio/models/data_model.dart';
 import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/models/item_model.dart';
-import 'package:link_in_bio/services/i_services/i_home_service.dart';
-
+import 'package:link_in_bio/services/i_services/i_splash_service.dart';
 import '../repository/database_helper.dart';
 import '../repository/i_app_repository.dart';
-import '../utils/general_util.dart';
+import 'package:link_in_bio/utils/general_util.dart';
 
-class HomeService with GeneralUtil implements IHomeService {
+class SplashService with GeneralUtil implements ISplashService {
   final IAppRepository _appRepository;
 
-  HomeService(this._appRepository);
+  SplashService(this._appRepository);
 
   @override
   Future<List<ItemModel>> getAllItem() async {
@@ -100,14 +99,5 @@ class HomeService with GeneralUtil implements IHomeService {
     var item = params![0] as ItemModel;
     var itemMap = params[1] as Map<String, dynamic>;
     return item.copyWith(url: UrlModel(url: itemMap['url']));
-  }
-
-  @override
-  Future<bool> deleteItem(int id) async {
-    try {
-      return await _appRepository.delete(DatabaseHelper.item, id);
-    } catch (e) {
-      throw Exception(e);
-    }
   }
 }

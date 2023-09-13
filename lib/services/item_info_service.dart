@@ -2,7 +2,6 @@ import 'package:link_in_bio/models/item_category_model.dart';
 import 'package:link_in_bio/repository/database_helper.dart';
 import 'package:link_in_bio/repository/i_app_repository.dart';
 
-import '../models/item_model.dart';
 import '../utils/file_util.dart';
 import 'i_services/i_item_info_service.dart';
 
@@ -10,17 +9,6 @@ class ItemInfoService implements IItemInfoService {
   final IAppRepository _appRepository;
 
   ItemInfoService(this._appRepository);
-
-  @override
-  Future<List<ItemModel>> getAllItem() async {
-    try {
-      var rawItems = await _appRepository.queryAll(DatabaseHelper.item);
-      //continue to show all items into home page
-    } catch (e) {
-      throw Exception(e);
-    }
-    return [];
-  }
 
   @override
   Future<List<ItemCategoryModel>> getAllItemCategory() async {

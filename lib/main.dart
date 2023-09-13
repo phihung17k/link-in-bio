@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             title: "Link In Bio",
             debugShowCheckedModeBanner: false,
-            initialRoute: Routes.home,
+            initialRoute: Routes.splash,
             onGenerateRoute: (settings) => Routes.getRoutes(settings),
             theme: appThemeData[state.appTheme]?.themeData,
           );

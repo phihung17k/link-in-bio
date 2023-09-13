@@ -12,6 +12,7 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
   HomeBloc(this._service)
       : super(const HomeState(
             itemList: [], selectedIndexList: [], isSelectAll: false)) {
+    on<RefreshItemsFromSplashPageEvent>(_refreshItemsFromSplashPage);
     on<AddingItemEvent>(_addItem);
     on<ReloadAllItemEvent>(_reloadAllItem);
     on<UpdatingItemEvent>(_updateItem);
@@ -22,6 +23,11 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
     on<DeletingSelectedItemEvent>(_deleteSelectedItem);
     on<ResetSelectedItemsEvent>(_resetSelectedItems);
     on<SelectingAllItemEvent>(_selectAllItem);
+  }
+
+  FutureOr<void> _refreshItemsFromSplashPage(
+      RefreshItemsFromSplashPageEvent event, Emitter<HomeState> emit) {
+    emit.call(state.copyWith(itemList: event.items));
   }
 
   FutureOr<void> _updateItem(UpdatingItemEvent event, Emitter<HomeState> emit) {

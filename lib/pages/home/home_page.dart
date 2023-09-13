@@ -74,6 +74,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    RouteSettings setting = ModalRoute.of(context)!.settings;
+    if (setting.arguments != null && setting.arguments is List<ItemModel>) {
+      var items = setting.arguments as List<ItemModel>;
+      bloc.add(RefreshItemsFromSplashPageEvent(items));
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return BlocProvider.value(
       value: bloc,

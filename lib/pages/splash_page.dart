@@ -22,8 +22,7 @@ class _SplashPageState extends State<SplashPage> {
 
     bloc.listenerStream.listen((event) {
       if (event is NavigatorToHomePageEvent) {
-        Navigator.pushReplacementNamed(context, Routes.home,
-            arguments: event.items);
+        Navigator.pushReplacementNamed(context, Routes.home);
       }
     });
 

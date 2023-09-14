@@ -8,12 +8,27 @@ class AppRepository implements IAppRepository {
   AppRepository(this._databaseHelper);
 
   @override
+  Future<bool> initData() async {
+    bool result;
+    Database? db;
+    try {
+      db = await _databaseHelper.getDatabase();
+      result = db != null;
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      await db?.close();
+    }
+    return result;
+  }
+
+  @override
   Future<List<Map<String, Object?>>> queryAll(String table) async {
     List<Map<String, Object?>> result;
     Database? db;
     try {
       db = await _databaseHelper.getDatabase();
-      result = await db.query(table);
+      result = await db!.query(table);
     } catch (e) {
       throw Exception(e);
     } finally {
@@ -31,8 +46,8 @@ class AppRepository implements IAppRepository {
     int id = 0;
     try {
       db = await _databaseHelper.getDatabase();
-      id = await db.insert(table, values,
-          conflictAlgorithm: ConflictAlgorithm.rollback);
+      id = await db!
+          .insert(table, values, conflictAlgorithm: ConflictAlgorithm.rollback);
     } catch (e) {
       throw Exception(e);
     } finally {
@@ -50,7 +65,7 @@ class AppRepository implements IAppRepository {
     Database? db;
     try {
       db = await _databaseHelper.getDatabase();
-      await db.transaction((txn) async {
+      await db!.transaction((txn) async {
         Batch batch = txn.batch();
         for (var values in valueList) {
           batch.insert(table, values,
@@ -71,7 +86,8 @@ class AppRepository implements IAppRepository {
     Database? db;
     try {
       db = await _databaseHelper.getDatabase();
-      var queryResult = await db.query(table, where: 'id = ?', whereArgs: [id]);
+      var queryResult =
+          await db!.query(table, where: 'id = ?', whereArgs: [id]);
       if (queryResult.isNotEmpty) {
         return queryResult.first;
       }
@@ -88,8 +104,25 @@ class AppRepository implements IAppRepository {
     Database? db;
     try {
       db = await _databaseHelper.getDatabase();
-      int count = await db.delete(table, where: 'id = ?', whereArgs: [id]);
+      int count = await db!.delete(table, where: 'id = ?', whereArgs: [id]);
       return count > 0;
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      await db?.close();
+    }
+  }
+
+  @override
+  Future<int> update(String table, Map<String, Object?> values) async {
+    Database? db;
+    try {
+      db = await _databaseHelper.getDatabase();
+      int count = await db!.update(table, values,
+          where: 'id = ?',
+          whereArgs: [values['id']],
+          conflictAlgorithm: ConflictAlgorithm.rollback);
+      return count;
     } catch (e) {
       throw Exception(e);
     } finally {

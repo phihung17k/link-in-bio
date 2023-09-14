@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../models/item_model.dart';
 import '../../services/i_services/i_splash_service.dart';
 import '../base_bloc.dart';
 import 'dart:async';
@@ -14,7 +13,7 @@ class SplashBloc extends BaseBloc<SplashEvent, SplashState> {
 
   FutureOr<void> _initData(
       InitialDataEvent event, Emitter<SplashState> emit) async {
-    List<ItemModel> items = await _service.getAllItem();
-    addNavigatedEvent(NavigatorToHomePageEvent(items));
+    await _service.initData();
+    addNavigatedEvent(NavigatorToHomePageEvent());
   }
 }

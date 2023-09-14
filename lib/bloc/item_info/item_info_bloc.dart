@@ -19,7 +19,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState>
       : super(const ItemInfoState(itemCategories: [], selectedCategoryId: 1)) {
     on<InitialDataEvent>(initData);
     on<SelectingCategoryEvent>(selectCategory);
-    on<UpdatingCurrentItemEvent>(updateCurrentItem);
+    on<LoadingItemFromHomePageEvent>(updateCurrentItem);
     on<SetItemFromQrCodeEvent>(setItemFromQRCode);
     on<SetItemInfoEvent>(setItemInfo);
     on<SetNetworkEncryptionEvent>(setNetworkEncryptionEvent);
@@ -52,7 +52,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState>
   }
 
   FutureOr<void> updateCurrentItem(
-      UpdatingCurrentItemEvent event, Emitter<ItemInfoState> emit) {
+      LoadingItemFromHomePageEvent event, Emitter<ItemInfoState> emit) {
     emit.call(state.copyWith(
         item: event.item, selectedCategoryId: event.item.category!.id));
   }
@@ -90,7 +90,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState>
     if (item.id == null) {
       result = await _service.addItem(item.toMap());
     } else {
-      // update
+      result = await _service.updateItem(item.toMap());
     }
     addNavigatedEvent(BackingHomePageEvent(result));
   }

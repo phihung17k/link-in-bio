@@ -11,12 +11,12 @@ class DatabaseHelper {
 
   Database? _database;
 
-  Future<Database> getDatabase() async {
+  Future<Database?> getDatabase() async {
     if (_database == null || !_database!.isOpen) {
       _database = await _initDatabase();
     }
 
-    return _database!;
+    return _database;
   }
 
   Future<Database> _initDatabase() async {

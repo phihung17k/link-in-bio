@@ -50,7 +50,7 @@ class QrCodeItemPage extends StatelessWidget {
                         padding: const EdgeInsets.all(30.0),
                         child: Hero(
                             tag: item.name!,
-                            child: QrImage(
+                            child: QrImageView(
                                 data: LinkUtil.getUriString(item),
                                 version: QrVersions.auto)),
                       ),

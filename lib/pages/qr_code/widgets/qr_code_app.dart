@@ -19,7 +19,7 @@ class QRCodeAppWidget extends StatelessWidget {
             return previous.appQR != current.appQR;
           },
           builder: (context, state) {
-            return QrImage(data: state.appQR!, version: QrVersions.auto);
+            return QrImageView(data: state.appQR!, version: QrVersions.auto);
           },
         ),
       ),

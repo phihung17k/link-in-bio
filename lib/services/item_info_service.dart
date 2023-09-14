@@ -48,4 +48,14 @@ class ItemInfoService implements IItemInfoService {
       throw Exception(e);
     }
   }
+
+  @override
+  Future<bool> updateItem(Map<String, Object?> values) async {
+    try {
+      int id = await _appRepository.update(DatabaseHelper.item, values);
+      return id != 0;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

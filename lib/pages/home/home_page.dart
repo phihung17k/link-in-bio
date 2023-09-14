@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/utils/network_connectivity.dart';
+
 import '../../bloc/home/home_bloc.dart';
+import '../../bloc/home/home_event.dart';
 import '../../bloc/home/home_state.dart';
 import '../../models/item_model.dart';
-import '../../utils/network_connectivity.dart';
-import '../../bloc/home/home_event.dart';
 import '../../routes.dart';
 import 'widgets/floating_button_menu.dart';
 import 'widgets/item_widget.dart';
 
 class HomePage extends StatefulWidget {
   final HomeBloc bloc;
+
   const HomePage(this.bloc, {super.key});
 
   @override
@@ -38,20 +40,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
     bloc.listenerStream.listen((event) {
       if (event is NavigatorItemInfoPageForCreatingEvent) {
-        Navigator.pushNamed(context, Routes.itemInfo).then((item) {
-          // if (item is ItemModel) {
-          //   bloc.add(AddingItemEvent(item));
-          // }
-
-          if (item is bool && item) {
+        Navigator.pushNamed(context, Routes.itemInfo).then((isSuccess) {
+          if (isSuccess is bool && isSuccess) {
             bloc.add(ReloadAllItemEvent());
           }
         });
       } else if (event is NavigatorItemInfoPageForUpdatingEvent) {
         Navigator.pushNamed(context, Routes.itemInfo, arguments: event.item)
-            .then((value) {
-          if (value is ItemModel) {
-            bloc.add(UpdatingItemEvent(event.index, value));
+            .then((isSuccess) {
+          if (isSuccess is bool && isSuccess) {
+            bloc.add(ReloadAllItemEvent());
           }
         });
       } else if (event is NavigatorQRSharingPageEvent) {
@@ -71,16 +69,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         Navigator.pushNamed(context, Routes.setting);
       }
     });
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    RouteSettings setting = ModalRoute.of(context)!.settings;
-    if (setting.arguments != null && setting.arguments is List<ItemModel>) {
-      var items = setting.arguments as List<ItemModel>;
-      bloc.add(RefreshItemsFromSplashPageEvent(items));
-    }
+    bloc.add(ReloadAllItemEvent());
   }
 
   @override

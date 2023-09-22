@@ -8,6 +8,7 @@ import '../../bloc/home/home_state.dart';
 import '../../models/item_model.dart';
 import '../../routes.dart';
 import 'widgets/floating_button_menu.dart';
+import 'widgets/item_animated_builder.dart';
 import 'widgets/item_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -75,80 +76,68 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    // final ColorScheme colorScheme = Theme.of(context).colorScheme;
+    // final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
+    // final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(
           backgroundColor: Theme.of(context).colorScheme.background,
           body: SafeArea(
             child: Stack(children: [
-              Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: BlocBuilder<HomeBloc, HomeState>(
-                      bloc: bloc,
-                      builder: (context, state) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const CircleAvatar(
-                              radius: 50,
-                              backgroundImage: AssetImage(
-                                  'assets/images/default_avatar.png'),
-                            ),
-                            const SizedBox(height: 10),
-                            Text("Name",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(fontWeight: FontWeight.bold)),
-                            const SizedBox(height: 10),
-                            Text("Personal information",
-                                style: Theme.of(context).textTheme.titleMedium),
-                            const SizedBox(height: 10),
-                            Flexible(
-                              child: ReorderableListView(
-                                onReorder: (oldIndex, newIndex) {
-                                  bloc.add(ReorderItemEvent(
-                                      oldIndex: oldIndex, newIndex: newIndex));
-                                },
-                                proxyDecorator: (child, index, animation) {
-                                  return AnimatedBuilder(
-                                    animation: animation,
-                                    builder:
-                                        (BuildContext context, Widget? child) {
-                                      // animation's effect for reorder item
-                                      // final double animValue = Curves.easeInOut
-                                      //     .transform(animation.value);
-                                      // final double elevation =
-                                      //     lerpDouble(0, 5, animValue)!;
-                                      return Material(
-                                          elevation: 5,
-                                          color: Colors.transparent,
-                                          shadowColor: Colors.grey,
-                                          borderRadius:
-                                              BorderRadius.circular(30),
-                                          child: child);
-                                    },
-                                    child: child,
-                                  );
-                                },
-                                children: state.itemList!.isNotEmpty
-                                    ? [
-                                        for (int i = 0;
-                                            i < state.itemList!.length;
-                                            i++)
-                                          ItemWidget(
-                                            key: UniqueKey(),
-                                            index: i,
-                                            item: state.itemList![i],
-                                            deleteController: deleteController,
-                                          )
-                                      ]
-                                    : [],
-                              ),
-                            ),
-                          ],
-                        );
-                      })),
+              BlocBuilder<HomeBloc, HomeState>(
+                  bloc: bloc,
+                  builder: (context, state) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        const CircleAvatar(
+                          radius: 50,
+                          backgroundImage:
+                              AssetImage('assets/images/default_avatar.png'),
+                        ),
+                        const SizedBox(height: 10),
+                        Text("Name",
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(fontWeight: FontWeight.bold)),
+                        const SizedBox(height: 10),
+                        Text("Personal information",
+                            style: Theme.of(context).textTheme.titleMedium),
+                        const SizedBox(height: 10),
+                        Flexible(
+                          child: ReorderableListView.builder(
+                            padding: const EdgeInsets.all(8),
+                            onReorder: (oldIndex, newIndex) {
+                              // bug of newIndex in ReorderableListView
+                              if (oldIndex < newIndex) {
+                                newIndex -= 1;
+                              }
+                              bloc.add(ReorderItemEvent(
+                                  oldIndex: oldIndex, newIndex: newIndex));
+                            },
+                            itemCount: state.itemList?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              var item = state.itemList?[index];
+                              return ItemWidget(
+                                key: ValueKey(item),
+                                item: item,
+                                deleteController: deleteController,
+                              );
+                            },
+                            proxyDecorator: (child, index, animation) {
+                              return ItemAnimatedBuilder(
+                                key: ValueKey(child),
+                                animation: animation,
+                                child: child,
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
               FloatingButtonMenu(
                 key: UniqueKey(),
                 deleteController: deleteController,

@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'models.dart';
 
 class ItemModel extends Equatable {
+  final int? ordinal;
   final int? id;
   final String? name;
   final ItemCategoryModel? category;
@@ -12,7 +13,8 @@ class ItemModel extends Equatable {
   final WifiModel? wifi;
 
   const ItemModel(
-      {this.id,
+      {this.ordinal,
+      this.id,
       this.name,
       this.category,
       this.url,
@@ -22,7 +24,8 @@ class ItemModel extends Equatable {
       this.wifi});
 
   ItemModel copyWith(
-      {int? id,
+      {int? ordinal,
+      int? id,
       String? name,
       ItemCategoryModel? category,
       UrlModel? url,
@@ -31,6 +34,7 @@ class ItemModel extends Equatable {
       EmailModel? email,
       WifiModel? wifi}) {
     return ItemModel(
+        ordinal: ordinal ?? this.ordinal,
         id: id ?? this.id,
         name: name ?? this.name,
         category: category ?? this.category,
@@ -42,11 +46,13 @@ class ItemModel extends Equatable {
   }
 
   factory ItemModel.fromMap(Map<String, dynamic> map) => ItemModel(
+        ordinal: map['ordinal'],
         id: map['id'],
         name: map['name'],
       );
 
   Map<String, dynamic> toMap() => {
+        'ordinal': ordinal,
         'id': id,
         'name': name,
         'item_category_id': category?.id,
@@ -65,5 +71,6 @@ class ItemModel extends Equatable {
       };
 
   @override
-  List<Object?> get props => [id, name, category, url, sms, phone, email, wifi];
+  List<Object?> get props =>
+      [ordinal, id, name, category, url, sms, phone, email, wifi];
 }

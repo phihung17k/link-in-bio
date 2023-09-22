@@ -15,7 +15,8 @@ class HomeService with GeneralUtil implements IHomeService {
   @override
   Future<List<ItemModel>> getAllItem() async {
     try {
-      var rawItems = await _appRepository.queryAll(DatabaseHelper.item);
+      var rawItems = await _appRepository.queryAll(DatabaseHelper.item,
+          orderBy: DatabaseHelper.ordinal);
       if (rawItems.isNotEmpty) {
         List<ItemModel> result = [];
 
@@ -106,6 +107,15 @@ class HomeService with GeneralUtil implements IHomeService {
   Future<bool> deleteItem(int id) async {
     try {
       return await _appRepository.delete(DatabaseHelper.item, id);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<bool> reorderItem(Map<int, int> idOrdinalMap) async {
+    try {
+      return await _appRepository.reorder(DatabaseHelper.item, idOrdinalMap);
     } catch (e) {
       throw Exception(e);
     }

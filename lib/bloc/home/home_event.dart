@@ -37,10 +37,9 @@ class DeletingItemEvent extends HomeEvent {
 class NavigatorItemInfoPageForCreatingEvent extends HomeEvent {}
 
 class NavigatorItemInfoPageForUpdatingEvent extends HomeEvent {
-  final int index;
   final ItemModel item;
 
-  NavigatorItemInfoPageForUpdatingEvent(this.index, this.item);
+  NavigatorItemInfoPageForUpdatingEvent(this.item);
 }
 
 class ReorderItemEvent extends HomeEvent {

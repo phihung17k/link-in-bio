@@ -23,12 +23,13 @@ class AppRepository implements IAppRepository {
   }
 
   @override
-  Future<List<Map<String, Object?>>> queryAll(String table) async {
+  Future<List<Map<String, Object?>>> queryAll(String table,
+      {String? orderBy}) async {
     List<Map<String, Object?>> result;
     Database? db;
     try {
       db = await _databaseHelper.getDatabase();
-      result = await db!.query(table);
+      result = await db!.query(table, orderBy: orderBy);
     } catch (e) {
       throw Exception(e);
     } finally {
@@ -123,6 +124,29 @@ class AppRepository implements IAppRepository {
           whereArgs: [values['id']],
           conflictAlgorithm: ConflictAlgorithm.rollback);
       return count;
+    } catch (e) {
+      throw Exception(e);
+    } finally {
+      await db?.close();
+    }
+  }
+
+  @override
+  Future<bool> reorder(String table, Map<int, int> idOrdinalMap) async {
+    Database? db;
+    try {
+      db = await _databaseHelper.getDatabase();
+      await db!.transaction((txn) async {
+        Batch batch = txn.batch();
+        idOrdinalMap.forEach((key, value) {
+          batch.rawUpdate('''UPDATE $table
+                              SET ordinal = ?
+                              WHERE id = ?;
+                          ''', [value, key]);
+        });
+        await batch.commit(noResult: true);
+      });
+      return true;
     } catch (e) {
       throw Exception(e);
     } finally {

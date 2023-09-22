@@ -6,21 +6,18 @@ import '../../../models/item_model.dart';
 
 class ItemWidget extends StatelessWidget {
   final double itemRadius = 20;
-  final int? index;
   final ItemModel? item;
   final AnimationController? deleteController;
   const ItemWidget(
-      {super.key,
-      required this.item,
-      required this.index,
-      required this.deleteController});
+      {super.key, required this.item, required this.deleteController});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          context.read<HomeBloc>().addNavigatedEvent(
-              NavigatorItemInfoPageForUpdatingEvent(index!, item!));
+          context
+              .read<HomeBloc>()
+              .addNavigatedEvent(NavigatorItemInfoPageForUpdatingEvent(item!));
         },
         child: Card(
           elevation: 5,

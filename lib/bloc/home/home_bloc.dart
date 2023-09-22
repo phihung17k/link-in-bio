@@ -1,6 +1,9 @@
 import 'dart:async';
+
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:link_in_bio/services/i_services/i_home_service.dart';
+
 import '../../models/item_model.dart';
 import '../base_bloc.dart';
 import 'home_event.dart';
@@ -59,15 +62,48 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
     }
   }
 
-  FutureOr<void> _reorderItem(ReorderItemEvent event, Emitter<HomeState> emit) {
+  FutureOr<void> _reorderItem(
+      ReorderItemEvent event, Emitter<HomeState> emit) async {
     int oldIndex = event.oldIndex!;
     int newIndex = event.newIndex!;
 
-    if (oldIndex < newIndex) newIndex -= 1;
     List<ItemModel> items = state.itemList!.toList();
-    ItemModel item = items.removeAt(oldIndex);
-    items.insert(newIndex, item);
-    emit.call(state.copyWith(itemList: items));
+    Map<int, int> idOrdinalMap = {};
+    // update old item with new ordinal
+    items[oldIndex] =
+        items[oldIndex].copyWith(ordinal: items[newIndex].ordinal);
+    idOrdinalMap[items[oldIndex].id!] = items[oldIndex].ordinal!;
+    bool isPullDown = oldIndex < newIndex;
+    // update ordinal of items with index from oldIndex to newIndex
+    do {
+      // 0 1 [2] 3 4 5 6
+      // 0 1 [5] 2 3 4 6
+      // o: 2; n: 5 pull down
+      if (isPullDown) {
+        oldIndex++;
+        var nextItem = items[oldIndex];
+        items[oldIndex] = nextItem.copyWith(ordinal: nextItem.ordinal! - 1);
+        idOrdinalMap[nextItem.id!] = items[oldIndex].ordinal!;
+      } else {
+        // 0 1 2 3 4 [5] 6
+        // 0 1 3 4 5 [2] 6
+        // o: 5; n: 2 push up
+        oldIndex--;
+        var previousItem = items[oldIndex];
+        items[oldIndex] =
+            previousItem.copyWith(ordinal: previousItem.ordinal! + 1);
+        idOrdinalMap[previousItem.id!] = items[oldIndex].ordinal!;
+      }
+    } while (isPullDown ? oldIndex < newIndex : oldIndex > newIndex);
+
+    ItemModel item = items.removeAt(event.oldIndex!);
+    items.insert(event.newIndex!, item);
+
+    emit(state.copyWith(itemList: items));
+
+    _service.reorderItem(idOrdinalMap).then(
+        (value) => debugPrint("REORDER: $value"),
+        onError: (e) => debugPrint("REORDER: FAIL"));
   }
 
   FutureOr<void> _addSelectedItem(

@@ -8,6 +8,7 @@ class DatabaseHelper {
   final int _databaseVersion = 1;
   static const String itemCategory = "item_category";
   static const String item = "item";
+  static const String ordinal = "ordinal";
 
   Database? _database;
 
@@ -50,6 +51,7 @@ class DatabaseHelper {
               web_url TEXT
               )''');
       await txn.execute('''CREATE TABLE $item (
+              ordinal INTEGER,
               id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
               name TEXT,
               phone_number TEXT,
@@ -67,6 +69,27 @@ class DatabaseHelper {
               item_category_id INTEGER NOT NULL,
               FOREIGN KEY (item_category_id) REFERENCES item_category (id) ON DELETE NO ACTION
               )''');
+      await txn.execute('''CREATE TRIGGER auto_increment_item_trigger
+              AFTER INSERT ON $item
+              WHEN new.ordinal IS NULL
+              BEGIN
+                  UPDATE $item
+                  SET ordinal = (SELECT IFNULL(MAX(ordinal), 0) + 1 FROM $item)
+                  WHERE id = new.id;
+              END;''');
+      // await txn.execute('''
+      //       CREATE TRIGGER reorder_trigger_$item
+      //         AFTER UPDATE OF ordinal ON $item
+      //         WHEN new.ordinal <> old.ordinal
+      //         BEGIN
+      //           UPDATE $item
+      //           SET ordinal = ordinal - 1
+      //           WHERE new.ordinal > old.ordinal and $item.id != old.id and $item.ordinal <= new.ordinal and $item.ordinal > old.ordinal;
+      //           UPDATE $item
+      //           SET ordinal = ordinal + 1
+      //           WHERE new.ordinal < old.ordinal and $item.id != old.id and $item.ordinal >= new.ordinal  and $item.ordinal < old.ordinal;
+      //         END;
+      //       ''');
     });
   }
 }

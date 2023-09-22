@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'models.dart';
 
 class ItemModel extends Equatable {
+  final int? ordinal;
+  final int? id;
   final String? name;
   final ItemCategoryModel? category;
   final UrlModel? url;
@@ -11,7 +13,9 @@ class ItemModel extends Equatable {
   final WifiModel? wifi;
 
   const ItemModel(
-      {this.name,
+      {this.ordinal,
+      this.id,
+      this.name,
       this.category,
       this.url,
       this.sms,
@@ -20,7 +24,9 @@ class ItemModel extends Equatable {
       this.wifi});
 
   ItemModel copyWith(
-      {String? name,
+      {int? ordinal,
+      int? id,
+      String? name,
       ItemCategoryModel? category,
       UrlModel? url,
       SmsModel? sms,
@@ -28,6 +34,8 @@ class ItemModel extends Equatable {
       EmailModel? email,
       WifiModel? wifi}) {
     return ItemModel(
+        ordinal: ordinal ?? this.ordinal,
+        id: id ?? this.id,
         name: name ?? this.name,
         category: category ?? this.category,
         url: url ?? this.url,
@@ -37,14 +45,32 @@ class ItemModel extends Equatable {
         wifi: wifi ?? this.wifi);
   }
 
-  factory ItemModel.fromMap(Map<String, dynamic> json) => ItemModel(
-      name: json['name'],
-      category: ItemCategoryModel.fromMap(json['category']),
-      url: json['url']);
+  factory ItemModel.fromMap(Map<String, dynamic> map) => ItemModel(
+        ordinal: map['ordinal'],
+        id: map['id'],
+        name: map['name'],
+      );
 
-  Map<String, dynamic> toJson() =>
-      {'name': name, 'category': category?.toJson(), 'url': url};
+  Map<String, dynamic> toMap() => {
+        'ordinal': ordinal,
+        'id': id,
+        'name': name,
+        'item_category_id': category?.id,
+        'url': url?.url,
+        'phone_number': sms?.phoneNumber ?? phone?.phoneNumber,
+        'message': sms?.message,
+        'address': email?.address,
+        'cc': email?.cc,
+        'bcc': email?.bcc,
+        'subject': email?.subject,
+        'body': email?.body,
+        'network_name': wifi?.networkName,
+        'password': wifi?.password,
+        'encryption': wifi?.encryption,
+        'is_hidden': wifi?.isHidden ?? false,
+      };
 
   @override
-  List<Object?> get props => [name, category, url, sms, phone, email, wifi];
+  List<Object?> get props =>
+      [ordinal, id, name, category, url, sms, phone, email, wifi];
 }

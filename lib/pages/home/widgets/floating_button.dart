@@ -57,34 +57,72 @@ class _FloatingButtonState extends State<FloatingButton> {
           bottom: translateAnimation!.value,
           child: Visibility(
             visible: floatingButtonController.isDismissed ? false : true,
-            child: InkWell(
-              onTap: onTap,
-              child: Container(
-                decoration: BoxDecoration(
-                  color: color,
+            child: ElevatedButton(
+              onPressed: onTap,
+              style: ElevatedButton.styleFrom(
+                elevation: 4,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(50),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.grey,
-                      offset: Offset(0.0, 1.0), //(x,y)
-                      blurRadius: 5.0,
+                ),
+                padding: EdgeInsets.zero,
+                // maximumSize: Size.fromWidth(expandAnimation?.value),
+                minimumSize: const Size(50, 50),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(iconData,
+                        color: Theme.of(context).colorScheme.onPrimary),
+                    SizedBox(
+                      width: expandAnimation?.value,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 5),
+                        child: Text(label,
+                            style: Theme.of(context)
+                                .primaryTextTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimary),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1),
+                      ),
                     ),
                   ],
                 ),
-                padding: const EdgeInsets.all(10),
-                child: Row(children: [
-                  Icon(iconData),
-                  SizedBox(
-                    width: expandAnimation?.value,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 5),
-                      child: Text(label,
-                          overflow: TextOverflow.ellipsis, maxLines: 1),
-                    ),
-                  ),
-                ]),
               ),
             ),
+            //     InkWell(
+            //   onTap: onTap,
+            //   child: Material(
+            //     elevation: 2,
+            //     color: Theme.of(context).scaffoldBackgroundColor,
+            //     borderRadius: BorderRadius.circular(50),
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(10),
+            //       child: Row(
+            //         children: [
+            //           Icon(iconData),
+            //           SizedBox(
+            //             width: 0,
+            //             child: Padding(
+            //               padding: const EdgeInsets.only(left: 5),
+            //               child: Text(label,
+            //                   style: Theme.of(context).textTheme.bodyMedium,
+            //                   overflow: TextOverflow.ellipsis,
+            //                   maxLines: 1),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ),
         );
       },

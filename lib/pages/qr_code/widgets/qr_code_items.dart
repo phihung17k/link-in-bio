@@ -31,7 +31,7 @@ class QRCodeItemsWidget extends StatelessWidget {
                     side: const BorderSide(width: 0.5, color: Colors.grey)),
                 child: ListTile(
                     title: Text(item.name!),
-                    trailing: QrImage(
+                    trailing: QrImageView(
                         data: "${item.category!.webUrl}${item.url}",
                         version: QrVersions.auto),
                     onTap: () {

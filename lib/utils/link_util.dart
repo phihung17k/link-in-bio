@@ -1,7 +1,6 @@
 import 'dart:async';
 import '../utils/enums.dart';
 import '../models/models.dart';
-import '../repository/item_category_repository.dart';
 
 class LinkUtil {
   // parse the inputted item info into Uri for creating QR code
@@ -88,8 +87,8 @@ class LinkUtil {
       ConstantEnum schema = ConstantEnum.values.firstWhere(
           (element) => element.name.toLowerCase() == uri.scheme.toLowerCase(),
           orElse: () => ConstantEnum.unknow);
-      var itemCategories =
-          await ItemCategoryRepository.instance.getItemCategories();
+      // var itemCategories = ItemCategoryRepository.i.itemCategories;
+      var itemCategories = <ItemCategoryModel>[];
       switch (schema) {
         case ConstantEnum.http:
         case ConstantEnum.https:

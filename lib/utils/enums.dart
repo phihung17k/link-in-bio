@@ -17,3 +17,5 @@ enum ConstantEnum {
   http,
   https
 }
+
+enum AppThemeEnum { light, dark, lightPink, darkPink }

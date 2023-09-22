@@ -26,7 +26,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
 
     bloc.listenerStream.listen((event) async {
       if (event is BackingHomePageEvent) {
-        Navigator.pop(context, event.item);
+        Navigator.pop(context, event.isSuccess);
       } else if (event is NavigatorScannerPageEvent) {
         var result = await Navigator.pushNamed(context, Routes.scanner,
             arguments: Routes.itemInfo);
@@ -43,7 +43,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
     RouteSettings setting = ModalRoute.of(context)!.settings;
     if (setting.arguments != null && setting.arguments is ItemModel) {
       ItemModel item = setting.arguments as ItemModel;
-      bloc.add(UpdatingCurrentItemEvent(item));
+      bloc.add(LoadingItemFromHomePageEvent(item));
     }
   }
 

@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 
 class Routes {
+  static String get splash => "/";
   static String get home => "home";
   static String get itemInfo => "itemInfo";
   static String get qrCodeSharing => "qrCodeSharing";
   static String get bioPreview => "bioPreview";
   static String get scanner => "scanner";
+  static String get setting => "settings";
 
   static MaterialPageRoute getRoutes(RouteSettings settings) {
     Widget widget;

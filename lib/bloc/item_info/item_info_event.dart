@@ -7,24 +7,25 @@ abstract class ItemInfoEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SetCategoryIndexEvent extends ItemInfoEvent {
-  final int? selectedCategoryIndex;
+class SelectingCategoryEvent extends ItemInfoEvent {
+  final int? selectedCategoryId;
 
-  SetCategoryIndexEvent({this.selectedCategoryIndex});
+  SelectingCategoryEvent({this.selectedCategoryId});
 }
 
 class InitialDataEvent extends ItemInfoEvent {}
 
 class BackingHomePageEvent extends ItemInfoEvent {
-  final ItemModel? item;
+  // final ItemModel? item;
+  final bool isSuccess;
 
-  BackingHomePageEvent(this.item);
+  BackingHomePageEvent(this.isSuccess);
 }
 
-class UpdatingCurrentItemEvent extends ItemInfoEvent {
+class LoadingItemFromHomePageEvent extends ItemInfoEvent {
   final ItemModel item;
 
-  UpdatingCurrentItemEvent(this.item);
+  LoadingItemFromHomePageEvent(this.item);
 }
 
 class NavigatorScannerPageEvent extends ItemInfoEvent {}

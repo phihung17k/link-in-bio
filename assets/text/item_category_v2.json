@@ -5,32 +5,32 @@
             {
                 "name": "Facebook",
                 "image": "Facebook_Logo.png",
-                "appUrl": "fb://page/",
-                "webUrl": "https://www.facebook.com/"
+                "app_url": "fb://page/",
+                "web_url": "https://www.facebook.com/"
             },
             {
                 "name": "Twitter",
                 "image": "tw_logo.png",
-                "appUrl": "",
-                "webUrl": "https://twitter.com/"
+                "app_url": "",
+                "web_url": "https://twitter.com/"
             },
             {
                 "name": "Youtube",
                 "image": "yt_logo.png",
-                "appUrl": "",
-                "webUrl": "https://youtube.com/"
+                "app_url": "",
+                "web_url": "https://youtube.com/"
             },
             {
                 "name": "Tiktok",
                 "image": "tiktok_logo.png",
-                "appUrl": "",
-                "webUrl": "https://tiktok.com/"
+                "app_url": "",
+                "web_url": "https://tiktok.com/"
             },
             {
                 "name": "Twitch",
                 "image": "twitch_logo.png",
-                "appUrl": "",
-                "webUrl": "https://twitch.tv/"
+                "app_url": "",
+                "web_url": "https://twitch.tv/"
             }
         ]
     },
@@ -40,29 +40,29 @@
             {
                 "name": "SMS",
                 "image": "sms.png",
-                "appUrl": "sms",
-                "webUrl": "",
+                "app_url": "sms",
+                "web_url": "",
                 "example": "sms:191?body=hello there"
             },
             {
                 "name": "Phone",
                 "image": "phone.png",
-                "appUrl": "",
-                "webUrl": "",
+                "app_url": "",
+                "web_url": "",
                 "example": "tel:2125551212"
             },
             {
                 "name": "Email",
                 "image": "email.png",
-                "appUrl": "",
-                "webUrl": "",
+                "app_url": "",
+                "web_url": "",
                 "example": "mailto::2125551212"
             },
             {
                 "name": "WiFi",
                 "image": "wifi.png",
-                "appUrl": "",
-                "webUrl": "",
+                "app_url": "",
+                "web_url": "",
                 "example": ""
             }
         ]
@@ -73,8 +73,8 @@
             {
                 "name": "Link",
                 "image": "network.png",
-                "appUrl": "",
-                "webUrl": ""
+                "app_url": "",
+                "web_url": ""
             }
         ]
     }

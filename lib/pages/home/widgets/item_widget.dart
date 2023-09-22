@@ -6,26 +6,24 @@ import '../../../models/item_model.dart';
 
 class ItemWidget extends StatelessWidget {
   final double itemRadius = 20;
-  final int? index;
   final ItemModel? item;
   final AnimationController? deleteController;
   const ItemWidget(
-      {super.key,
-      required this.item,
-      required this.index,
-      required this.deleteController});
+      {super.key, required this.item, required this.deleteController});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
-          context.read<HomeBloc>().addNavigatedEvent(
-              NavigatorItemInfoPageForUpdatingEvent(index!, item!));
+          context
+              .read<HomeBloc>()
+              .addNavigatedEvent(NavigatorItemInfoPageForUpdatingEvent(item!));
         },
         child: Card(
           elevation: 5,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          color: Theme.of(context).colorScheme.tertiary,
           child: Padding(
             padding: const EdgeInsets.all(5),
             child: Row(
@@ -40,7 +38,11 @@ class ItemWidget extends StatelessWidget {
                 Flexible(
                   child: Container(
                     padding: const EdgeInsets.only(left: 15, right: 15),
-                    child: Text(item!.name!, overflow: TextOverflow.ellipsis),
+                    child: Text(item!.name!,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onTertiary,
+                        ),
+                        overflow: TextOverflow.ellipsis),
                   ),
                 ),
                 SizeTransition(
@@ -49,11 +51,11 @@ class ItemWidget extends StatelessWidget {
                   child: IconButton(
                     onPressed: () {
                       HomeBloc bloc = context.read<HomeBloc>();
-                      if (bloc.state.itemList?.length == 1 &&
-                          deleteController!.isCompleted) {
-                        deleteController!.reverse();
-                      }
-                      bloc.add(DeletingItemEvent(index!));
+                      // if (bloc.state.itemList?.length == 1 &&
+                      //     deleteController!.isCompleted) {
+                      // deleteController!.reverse();
+                      // }
+                      bloc.add(DeletingItemEvent(item!.id!));
                     },
                     padding: const EdgeInsets.only(right: 5),
                     constraints:

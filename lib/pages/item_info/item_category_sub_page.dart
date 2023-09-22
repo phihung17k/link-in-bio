@@ -77,15 +77,8 @@ class _ItemCategorySubPageState extends State<ItemCategorySubPage> {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, indexItem) {
-                      ItemCategoryModel selectedCategory =
-                          categories[indexItem];
-                      if (indexCategory > 0) {
-                        for (var i = 1; i <= indexCategory; i++) {
-                          indexItem += topics[indexCategory - i].length;
-                        }
-                      }
                       return ItemCategoryWidget(
-                          index: indexItem, selectedCategory: selectedCategory);
+                          selectedCategory: categories[indexItem]);
                     },
                   ),
                   const SizedBox(height: 20)

@@ -6,6 +6,12 @@ abstract class HomeEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class RefreshItemsFromSplashPageEvent extends HomeEvent {
+  final List<ItemModel> items;
+
+  RefreshItemsFromSplashPageEvent(this.items);
+}
+
 class UpdatingItemEvent extends HomeEvent {
   final int index;
   final ItemModel item;
@@ -23,18 +29,17 @@ class AddingItemEvent extends HomeEvent {
 }
 
 class DeletingItemEvent extends HomeEvent {
-  final int index;
+  final int id;
 
-  DeletingItemEvent(this.index);
+  DeletingItemEvent(this.id);
 }
 
 class NavigatorItemInfoPageForCreatingEvent extends HomeEvent {}
 
 class NavigatorItemInfoPageForUpdatingEvent extends HomeEvent {
-  final int index;
   final ItemModel item;
 
-  NavigatorItemInfoPageForUpdatingEvent(this.index, this.item);
+  NavigatorItemInfoPageForUpdatingEvent(this.item);
 }
 
 class ReorderItemEvent extends HomeEvent {
@@ -64,3 +69,7 @@ class SelectingAllItemEvent extends HomeEvent {}
 class NavigatorQRSharingPageEvent extends HomeEvent {}
 
 class NavigatorScannerPageEvent extends HomeEvent {}
+
+class NavigatorSettingPageEvent extends HomeEvent {}
+
+class ReloadAllItemEvent extends HomeEvent {}

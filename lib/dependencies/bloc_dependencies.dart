@@ -13,6 +13,6 @@ class BlocDependencies {
     injector.registerFactory(() => ItemInfoBloc(injector()));
     injector.registerFactory(() => QRCodeBloc());
     injector.registerFactory(() => BioPreviewBloc());
-    injector.registerFactory(() => ScannerBloc());
+    injector.registerFactory(() => ScannerBloc(injector()));
   }
 }

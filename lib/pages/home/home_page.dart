@@ -76,9 +76,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    // final ColorScheme colorScheme = Theme.of(context).colorScheme;
-    // final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
-    // final Color evenItemColor = colorScheme.primary.withOpacity(0.15);
     return BlocProvider.value(
       value: bloc,
       child: Scaffold(

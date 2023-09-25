@@ -31,7 +31,6 @@ class _ScannerPageState extends State<ScannerPage> {
     bloc.listenerStream.listen((event) async {
       if (isCall) {
         if (event != null) {
-          // if (event is List<ItemModel>) {
           isCall = false;
           ScaffoldMessengerState scaffoldMessenger =
               ScaffoldMessenger.of(context);
@@ -47,7 +46,7 @@ class _ScannerPageState extends State<ScannerPage> {
               .then((_) async {
             if (mounted) {
               if (event is ItemModel) {
-                Navigator.pop(context, event);
+                Navigator.pushNamed(context, Routes.itemInfo, arguments: event);
               } else if (event is List<ItemModel>) {
                 await Navigator.pushNamed(
                   context,
@@ -61,7 +60,6 @@ class _ScannerPageState extends State<ScannerPage> {
               isCall = true;
             }
           });
-          // }
         } else {
           isCall = false;
           ScaffoldMessenger.of(context)
@@ -107,7 +105,7 @@ class _ScannerPageState extends State<ScannerPage> {
                 },
                 fit: BoxFit.contain,
                 onDetect: (barcode) {
-                  bloc.add(SaveDetectedQRCodeEvent(barcode));
+                  bloc.add(DetectingQRCodeEvent(barcode));
                 },
                 scanWindow: scanWindow,
                 placeholderBuilder: (p0, p1) => SizedBox(
@@ -238,6 +236,7 @@ class _ScannerPageState extends State<ScannerPage> {
 
   @override
   void dispose() {
+    debugPrint("MobileScannerController dispose");
     controller.dispose();
     bloc.close();
     super.dispose();

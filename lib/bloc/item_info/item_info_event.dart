@@ -22,10 +22,10 @@ class BackingHomePageEvent extends ItemInfoEvent {
   BackingHomePageEvent(this.isSuccess);
 }
 
-class LoadingItemFromHomePageEvent extends ItemInfoEvent {
+class LoadingItemFromOtherPageEvent extends ItemInfoEvent {
   final ItemModel item;
 
-  LoadingItemFromHomePageEvent(this.item);
+  LoadingItemFromOtherPageEvent(this.item);
 }
 
 class NavigatorScannerPageEvent extends ItemInfoEvent {}

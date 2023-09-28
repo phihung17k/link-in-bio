@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+
 import '../../bloc/scanner/scanner_bloc.dart';
 import '../../bloc/scanner/scanner_event.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../models/item_model.dart';
 import '../../routes.dart';
 import '../../utils/gallery.dart';
@@ -10,6 +11,7 @@ import 'scanner_overlay.dart';
 
 class ScannerPage extends StatefulWidget {
   final ScannerBloc bloc;
+
   const ScannerPage(this.bloc, {super.key});
 
   @override
@@ -46,7 +48,8 @@ class _ScannerPageState extends State<ScannerPage> {
               .then((_) async {
             if (mounted) {
               if (event is ItemModel) {
-                Navigator.pushNamed(context, Routes.itemInfo, arguments: event);
+                Navigator.pushReplacementNamed(context, Routes.itemInfo,
+                    arguments: event);
               } else if (event is List<ItemModel>) {
                 await Navigator.pushNamed(
                   context,
@@ -75,6 +78,10 @@ class _ScannerPageState extends State<ScannerPage> {
         }
       }
     });
+
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
+      debugPrint("MobileScannerController ---------- ${controller.isStarting}");
+    });
   }
 
   @override
@@ -101,7 +108,7 @@ class _ScannerPageState extends State<ScannerPage> {
               MobileScanner(
                 controller: controller,
                 errorBuilder: (context, error, child) {
-                  return Text("error $Error");
+                  return Text("error detail ${error.errorDetails?.message}");
                 },
                 fit: BoxFit.contain,
                 onDetect: (barcode) {

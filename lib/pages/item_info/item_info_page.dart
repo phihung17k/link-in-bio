@@ -43,7 +43,7 @@ class _ItemInfoPageState extends State<ItemInfoPage> {
     RouteSettings setting = ModalRoute.of(context)!.settings;
     if (setting.arguments != null && setting.arguments is ItemModel) {
       ItemModel item = setting.arguments as ItemModel;
-      bloc.add(LoadingItemFromHomePageEvent(item));
+      bloc.add(LoadingItemFromOtherPageEvent(item));
     }
   }
 

@@ -8,6 +8,10 @@ class GeneralUtil {
         (element) => element.name == nameLower,
         orElse: () => ConstantEnum.unknow);
     switch (constant) {
+      case ConstantEnum.http:
+      case ConstantEnum.https:
+        result = onHttps(params: params);
+        break;
       case ConstantEnum.sms:
         result = onSms(params: params);
         break;
@@ -34,6 +38,10 @@ class GeneralUtil {
         break;
     }
     return result;
+  }
+
+  Object? onHttps({List<Object?>? params}) {
+    return null;
   }
 
   Object? onSms({List<Object?>? params}) {

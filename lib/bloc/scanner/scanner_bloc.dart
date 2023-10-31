@@ -1,22 +1,25 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:link_in_bio/services/i_services/i_scanner_service.dart';
 import '../../bloc/base_bloc.dart';
 import '../../bloc/scanner/scanner_event.dart';
 import '../../bloc/scanner/scanner_state.dart';
-import '../../models/item_model.dart';
+import '../../models/models.dart';
 import '../../routes.dart';
 import '../../utils/link_util.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
 class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
-  ScannerBloc() : super(const ScannerState(message: "")) {
-    on<SaveDetectedQRCodeEvent>(saveDetectedQRCode);
+  final IScannerService _service;
+
+  ScannerBloc(this._service) : super(const ScannerState(message: "")) {
+    on<DetectingQRCodeEvent>(detectedQRCode);
     on<SavePreviousPageEvent>(savePreviousPage);
   }
 
-  FutureOr<void> saveDetectedQRCode(
-      SaveDetectedQRCodeEvent event, Emitter<ScannerState> emit) async {
+  FutureOr<void> detectedQRCode(
+      DetectingQRCodeEvent event, Emitter<ScannerState> emit) async {
     Barcode barcode = event.barcode.barcodes.first;
 
     bool decodeSuccess = false;
@@ -26,7 +29,10 @@ class ScannerBloc extends BaseBloc<ScannerEvent, ScannerState> {
       try {
         if (state.previousPage == Routes.home) {
           //detect an item model
-          ItemModel? item = await LinkUtil.convertQrCode(barcode.rawValue);
+          List<ItemCategoryModel> itemCategories =
+              await _service.getAllItemCategory();
+          ItemModel? item =
+              await LinkUtil().convertQrCode(barcode.rawValue, itemCategories);
           if (item != null) {
             decodeSuccess = true;
             addMessageEvent(item);

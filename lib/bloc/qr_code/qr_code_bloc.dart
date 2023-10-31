@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../utils/encryption.dart';
-import '../../utils/native_communication.dart';
-import '../../utils/enums.dart';
-import '../base_bloc.dart';
+
 import '../../bloc/qr_code/qr_code_event.dart';
 import '../../bloc/qr_code/qr_code_state.dart';
+import '../../utils/encryption.dart';
+import '../../utils/enums.dart';
+import '../../utils/native_communication.dart';
+import '../base_bloc.dart';
 
 class QRCodeBloc extends BaseBloc<QRCodeEvent, QRCodeState> {
   QRCodeBloc()
@@ -41,18 +41,18 @@ class QRCodeBloc extends BaseBloc<QRCodeEvent, QRCodeState> {
     if (state.internetInfo == InternetStatusEnum.connected) {
       // get android id
       String androidId = await NativeCommunication.getAndroidId();
-      FirebaseFirestore db = FirebaseFirestore.instance;
-      Map<String, String> data = {
-        'data': state.appQR!,
-        'time': DateTime.now().toString()
-      };
-      try {
-        DocumentReference doc = await db.collection(androidId).add(data);
-        emit.call(state.copyWith(
-            webQR: "https://wwww.link-in-bio.com/$androidId/${doc.id}"));
-      } catch (e) {
-        log("Upload data to firestore fail: $e");
-      }
+      // FirebaseFirestore db = FirebaseFirestore.instance;
+      // Map<String, String> data = {
+      //   'data': state.appQR!,
+      //   'time': DateTime.now().toString()
+      // };
+      // try {
+      //   DocumentReference doc = await db.collection(androidId).add(data);
+      //   emit.call(state.copyWith(
+      //       webQR: "https://wwww.link-in-bio.com/$androidId/${doc.id}"));
+      // } catch (e) {
+      //   log("Upload data to firestore fail: $e");
+      // }
     }
   }
 }

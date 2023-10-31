@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+
 import '../../bloc/scanner/scanner_bloc.dart';
 import '../../bloc/scanner/scanner_event.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../models/item_model.dart';
 import '../../routes.dart';
 import '../../utils/gallery.dart';
@@ -10,6 +11,7 @@ import 'scanner_overlay.dart';
 
 class ScannerPage extends StatefulWidget {
   final ScannerBloc bloc;
+
   const ScannerPage(this.bloc, {super.key});
 
   @override
@@ -31,7 +33,6 @@ class _ScannerPageState extends State<ScannerPage> {
     bloc.listenerStream.listen((event) async {
       if (isCall) {
         if (event != null) {
-          // if (event is List<ItemModel>) {
           isCall = false;
           ScaffoldMessengerState scaffoldMessenger =
               ScaffoldMessenger.of(context);
@@ -47,7 +48,8 @@ class _ScannerPageState extends State<ScannerPage> {
               .then((_) async {
             if (mounted) {
               if (event is ItemModel) {
-                Navigator.pop(context, event);
+                Navigator.pushReplacementNamed(context, Routes.itemInfo,
+                    arguments: event);
               } else if (event is List<ItemModel>) {
                 await Navigator.pushNamed(
                   context,
@@ -61,7 +63,6 @@ class _ScannerPageState extends State<ScannerPage> {
               isCall = true;
             }
           });
-          // }
         } else {
           isCall = false;
           ScaffoldMessenger.of(context)
@@ -76,6 +77,10 @@ class _ScannerPageState extends State<ScannerPage> {
               .then((_) => isCall = true);
         }
       }
+    });
+
+    WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback((_) {
+      debugPrint("MobileScannerController ---------- ${controller.isStarting}");
     });
   }
 
@@ -103,11 +108,11 @@ class _ScannerPageState extends State<ScannerPage> {
               MobileScanner(
                 controller: controller,
                 errorBuilder: (context, error, child) {
-                  return Text("error $Error");
+                  return Text("error detail ${error.errorDetails?.message}");
                 },
                 fit: BoxFit.contain,
                 onDetect: (barcode) {
-                  bloc.add(SaveDetectedQRCodeEvent(barcode));
+                  bloc.add(DetectingQRCodeEvent(barcode));
                 },
                 scanWindow: scanWindow,
                 placeholderBuilder: (p0, p1) => SizedBox(
@@ -238,6 +243,7 @@ class _ScannerPageState extends State<ScannerPage> {
 
   @override
   void dispose() {
+    debugPrint("MobileScannerController dispose");
     controller.dispose();
     bloc.close();
     super.dispose();

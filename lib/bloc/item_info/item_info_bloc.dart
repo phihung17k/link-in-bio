@@ -19,7 +19,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState>
       : super(const ItemInfoState(itemCategories: [], selectedCategoryId: 1)) {
     on<InitialDataEvent>(initData);
     on<SelectingCategoryEvent>(selectCategory);
-    on<LoadingItemFromHomePageEvent>(updateCurrentItem);
+    on<LoadingItemFromOtherPageEvent>(updateCurrentItem);
     on<SetItemFromQrCodeEvent>(setItemFromQRCode);
     on<SetItemInfoEvent>(setItemInfo);
     on<SetNetworkEncryptionEvent>(setNetworkEncryptionEvent);
@@ -52,7 +52,7 @@ class ItemInfoBloc extends BaseBloc<ItemInfoEvent, ItemInfoState>
   }
 
   FutureOr<void> updateCurrentItem(
-      LoadingItemFromHomePageEvent event, Emitter<ItemInfoState> emit) {
+      LoadingItemFromOtherPageEvent event, Emitter<ItemInfoState> emit) {
     emit.call(state.copyWith(
         item: event.item, selectedCategoryId: event.item.category!.id));
   }

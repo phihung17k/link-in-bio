@@ -1,8 +1,11 @@
 import 'dart:async';
 import '../utils/enums.dart';
 import '../models/models.dart';
+import 'general_util.dart';
 
-class LinkUtil {
+enum LinkUtilEnum { convertQRCode }
+
+class LinkUtil with GeneralUtil {
   // parse the inputted item info into Uri for creating QR code
   static Uri? getUri(ItemModel? item) {
     Uri? result = Uri.tryParse(getUriString(item));
@@ -71,103 +74,199 @@ class LinkUtil {
   }
 
   // convert QR code into the item info
-  static Future<ItemModel?> convertQrCode(String? rawValue) async {
+  Future<ItemModel?> convertQrCode(
+      String? rawValue, List<ItemCategoryModel> itemCategories) async {
     ItemModel? result;
     if (rawValue!.trim().isEmpty) {
       return null;
     }
-    result = await _parseFromUri(rawValue);
+    result = await _parseFromUri(rawValue, itemCategories);
     return result;
   }
 
-  static Future<ItemModel?> _parseFromUri(String rawValue) async {
+  Future<ItemModel?> _parseFromUri(
+      String rawValue, List<ItemCategoryModel> itemCategories) async {
     ItemModel? result;
     Uri? uri = Uri.tryParse(rawValue);
     if (uri != null) {
-      ConstantEnum schema = ConstantEnum.values.firstWhere(
-          (element) => element.name.toLowerCase() == uri.scheme.toLowerCase(),
-          orElse: () => ConstantEnum.unknow);
-      // var itemCategories = ItemCategoryRepository.i.itemCategories;
-      var itemCategories = <ItemCategoryModel>[];
-      switch (schema) {
-        case ConstantEnum.http:
-        case ConstantEnum.https:
-          // regex: \/\/[\w\d. -]+\/?
-          String host = uri.host;
-          if (host.isNotEmpty) {
-            //standardized data
-            List<String> supportedHosts = [
-              ConstantEnum.facebook.name,
-              ConstantEnum.twitter.name,
-              ConstantEnum.youtube.name,
-              ConstantEnum.tiktok.name,
-              ConstantEnum.twitch.name,
-            ];
-            host = host.replaceAll(RegExp(r"(www\.)|(\.com)|(\.tv)"), "");
-            if (supportedHosts.contains(host)) {
-              // ItemCategoryModel? category = itemCategories
-              //     .firstWhere((c) => c.name?.toLowerCase() == host);
-              //remove origin, ex: https://facebook.com
-              rawValue = rawValue.replaceFirst(uri.origin, "");
-              if (rawValue.startsWith("/")) {
-                rawValue = rawValue.substring(1);
-              }
-              ConstantEnum constantEnum = ConstantEnum.values
-                  .firstWhere((element) => element.name == host);
-              result = _setUpItem(itemCategories, constantEnum,
-                  url: UrlModel(url: rawValue));
-            } else {
-              result = _setUpItem(itemCategories, ConstantEnum.link,
-                  url: UrlModel(url: rawValue));
-            }
-          }
-          break;
-        case ConstantEnum.sms:
-          // sms:12345?body=abc
-          // String? message = uri.queryParameters['body'] ?? "";
-          String? message;
-          if (uri.queryParameters.containsKey('body')) {
-            message = uri.queryParameters['body'];
-          }
-          result = _setUpItem(itemCategories, ConstantEnum.sms,
-              sms: SmsModel(phoneNumber: uri.path, message: message));
-          break;
-        case ConstantEnum.tel:
-          // tel:1234,123
-          result = _setUpItem(itemCategories, ConstantEnum.phone,
-              phone: PhoneModel(phoneNumber: uri.path));
-          break;
-        case ConstantEnum.mailto:
-          // mailto:address?cc=cc&bcc=bcc&subject=subject&body=body
-          result = _setUpItem(itemCategories, ConstantEnum.email,
-              email: EmailModel(
-                  address: uri.path,
-                  cc: uri.queryParameters['cc'],
-                  bcc: uri.queryParameters['bcc'],
-                  subject: uri.queryParameters['subject'],
-                  body: uri.queryParameters['body']));
-          break;
-        case ConstantEnum.wifi:
-          // WIFI:T:<authentication-type>;S:<network-ssid>;P:<network-password>;H:<hidden-network>;;
-          Map<String, String> map = {};
-          List<String> paths = uri.path.split(';');
-          for (String element in paths) {
-            List<String> parts = element.split(":");
-            map[parts.first.toUpperCase()] = parts.last;
-          }
-          result = _setUpItem(itemCategories, ConstantEnum.wifi,
-              wifi: WifiModel(
-                  networkName: map['S'],
-                  encryption: map['T'],
-                  password: map['P'],
-                  isHidden: map['H'] == 'true'));
-          break;
-        default:
-          //try http https again
-          break;
-      }
+      result =
+          handleCategorCase(uri.scheme, params: [uri, rawValue, itemCategories])
+              as ItemModel;
+
+      // ConstantEnum schema = ConstantEnum.values.firstWhere(
+      //     (element) => element.name.toLowerCase() == uri.scheme.toLowerCase(),
+      //     orElse: () => ConstantEnum.unknow);
+      // switch (schema) {
+      //   case ConstantEnum.http:
+      //   case ConstantEnum.https:
+      //     // regex: \/\/[\w\d. -]+\/?
+      //     String host = uri.host;
+      //     if (host.isNotEmpty) {
+      //       //standardized data
+      //       List<String> supportedHosts = [
+      //         ConstantEnum.facebook.name,
+      //         ConstantEnum.twitter.name,
+      //         ConstantEnum.youtube.name,
+      //         ConstantEnum.tiktok.name,
+      //         ConstantEnum.twitch.name,
+      //       ];
+      //       host = host.replaceAll(RegExp(r"(www\.)|(\.com)|(\.tv)"), "");
+      //       if (supportedHosts.contains(host)) {
+      //         // ItemCategoryModel? category = itemCategories
+      //         //     .firstWhere((c) => c.name?.toLowerCase() == host);
+      //         //remove origin, ex: https://facebook.com
+      //         rawValue = rawValue.replaceFirst(uri.origin, "");
+      //         if (rawValue.startsWith("/")) {
+      //           rawValue = rawValue.substring(1);
+      //         }
+      //         ConstantEnum constantEnum = ConstantEnum.values
+      //             .firstWhere((element) => element.name == host);
+      //         result = _setUpItem(itemCategories, constantEnum,
+      //             url: UrlModel(url: rawValue));
+      //       } else {
+      //         result = _setUpItem(itemCategories, ConstantEnum.link,
+      //             url: UrlModel(url: rawValue));
+      //       }
+      //     }
+      //     break;
+      //   case ConstantEnum.sms:
+      //     // sms:12345?body=abc
+      //     // String? message = uri.queryParameters['body'] ?? "";
+      //     String? message;
+      //     if (uri.queryParameters.containsKey('body')) {
+      //       message = uri.queryParameters['body'];
+      //     }
+      //     result = _setUpItem(itemCategories, ConstantEnum.sms,
+      //         sms: SmsModel(phoneNumber: uri.path, message: message));
+      //     break;
+      //   case ConstantEnum.tel:
+      //     // tel:1234,123
+      //     result = _setUpItem(itemCategories, ConstantEnum.phone,
+      //         phone: PhoneModel(phoneNumber: uri.path));
+      //     break;
+      //   case ConstantEnum.mailto:
+      //     // mailto:address?cc=cc&bcc=bcc&subject=subject&body=body
+      //     result = _setUpItem(itemCategories, ConstantEnum.email,
+      //         email: EmailModel(
+      //             address: uri.path,
+      //             cc: uri.queryParameters['cc'],
+      //             bcc: uri.queryParameters['bcc'],
+      //             subject: uri.queryParameters['subject'],
+      //             body: uri.queryParameters['body']));
+      //     break;
+      //   case ConstantEnum.wifi:
+      //     // WIFI:T:<authentication-type>;S:<network-ssid>;P:<network-password>;H:<hidden-network>;;
+      //     Map<String, String> map = {};
+      //     List<String> paths = uri.path.split(';');
+      //     for (String element in paths) {
+      //       List<String> parts = element.split(":");
+      //       map[parts.first.toUpperCase()] = parts.last;
+      //     }
+      //     result = _setUpItem(itemCategories, ConstantEnum.wifi,
+      //         wifi: WifiModel(
+      //             networkName: map['S'],
+      //             encryption: map['T'],
+      //             password: map['P'],
+      //             isHidden: map['H'] == 'true'));
+      //     break;
+      //   default:
+      //     //try http https again
+      //     break;
+      // }
     }
     return result;
+  }
+
+  @override
+  Object? onHttps({List<Object?>? params}) {
+    var uri = params![0] as Uri;
+    var rawValue = params[1] as String;
+    var itemCategories = params[2] as List<ItemCategoryModel>;
+    // regex: \/\/[\w\d. -]+\/?
+    String host = uri.host;
+    if (host.isNotEmpty) {
+      //standardized data
+      List<String> supportedHosts = [
+        ConstantEnum.facebook.name,
+        ConstantEnum.twitter.name,
+        ConstantEnum.youtube.name,
+        ConstantEnum.tiktok.name,
+        ConstantEnum.twitch.name,
+      ];
+      host = host.replaceAll(RegExp(r"(www\.)|(\.com)|(\.tv)"), "");
+      if (supportedHosts.contains(host)) {
+        // ItemCategoryModel? category = itemCategories
+        //     .firstWhere((c) => c.name?.toLowerCase() == host);
+        //remove origin, ex: https://facebook.com
+        rawValue = rawValue.replaceFirst(uri.origin, "");
+        if (rawValue.startsWith("/")) {
+          rawValue = rawValue.substring(1);
+        }
+        ConstantEnum constantEnum =
+            ConstantEnum.values.firstWhere((element) => element.name == host);
+        return _setUpItem(itemCategories, constantEnum,
+            url: UrlModel(url: rawValue));
+      }
+      return _setUpItem(itemCategories, ConstantEnum.link,
+          url: UrlModel(url: rawValue));
+    }
+    return null;
+  }
+
+  @override
+  Object? onSms({List<Object?>? params}) {
+    var uri = params![0] as Uri;
+    var itemCategories = params[2] as List<ItemCategoryModel>;
+    // sms:12345?body=abc
+    // String? message = uri.queryParameters['body'] ?? "";
+    String? message;
+    if (uri.queryParameters.containsKey('body')) {
+      message = uri.queryParameters['body'];
+    }
+    return _setUpItem(itemCategories, ConstantEnum.sms,
+        sms: SmsModel(phoneNumber: uri.path, message: message));
+  }
+
+  @override
+  Object? onPhone({List<Object?>? params}) {
+    var uri = params![0] as Uri;
+    var itemCategories = params[2] as List<ItemCategoryModel>;
+    // tel:1234,123
+    return _setUpItem(itemCategories, ConstantEnum.phone,
+        phone: PhoneModel(phoneNumber: uri.path));
+  }
+
+  @override
+  Object? onEmail({List<Object?>? params}) {
+    var uri = params![0] as Uri;
+    var itemCategories = params[2] as List<ItemCategoryModel>;
+    // mailto:address?cc=cc&bcc=bcc&subject=subject&body=body
+    return _setUpItem(itemCategories, ConstantEnum.email,
+        email: EmailModel(
+            address: uri.path,
+            cc: uri.queryParameters['cc'],
+            bcc: uri.queryParameters['bcc'],
+            subject: uri.queryParameters['subject'],
+            body: uri.queryParameters['body']));
+  }
+
+  @override
+  Object? onWifi({List<Object?>? params}) {
+    var uri = params![0] as Uri;
+    var itemCategories = params[2] as List<ItemCategoryModel>;
+    // WIFI:T:<authentication-type>;S:<network-ssid>;P:<network-password>;H:<hidden-network>;;
+    Map<String, String> map = {};
+    List<String> paths = uri.path.split(';');
+    for (String element in paths) {
+      List<String> parts = element.split(":");
+      map[parts.first.toUpperCase()] = parts.last;
+    }
+    return _setUpItem(itemCategories, ConstantEnum.wifi,
+        wifi: WifiModel(
+            networkName: map['S'],
+            encryption: map['T'],
+            password: map['P'],
+            isHidden: map['H'] == 'true'));
   }
 
   static ItemModel _setUpItem(

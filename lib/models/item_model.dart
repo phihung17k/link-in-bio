@@ -67,7 +67,7 @@ class ItemModel extends Equatable {
         'network_name': wifi?.networkName,
         'password': wifi?.password,
         'encryption': wifi?.encryption,
-        'is_hidden': wifi?.isHidden ?? false,
+        'is_hidden': (wifi?.isHidden ?? false) ? 1 : 0,
       };
 
   @override
